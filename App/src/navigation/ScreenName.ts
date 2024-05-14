@@ -1,0 +1,9 @@
+const ROOT_SCREEN = {
+  HOME: 'HOME',
+  USER_DETAIL: 'USER_DETAIL',
+  NEWS: 'NEWS',
+  LIKE: 'LIKE',
+  SEARCH: 'SEARCH',
+};
+
+export {ROOT_SCREEN};
