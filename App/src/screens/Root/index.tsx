@@ -1,18 +1,18 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import SVG_NAME from '@/assets/svgs';
-import {ROOT_SCREEN} from '@/navigation/ScreenName';
+import {ROOT_SCREEN} from '../../navigation/ScreenName';
 
 import HomeScreen from '../Home';
 import UserDetail from '../UserDetail';
 
-import {colors} from '@/themes';
+import {colors} from '../../themes/index';
+import {SVGName} from '../../assets/svg/index';
 
 const Tab = createBottomTabNavigator();
 
-const IconHandle = (activeIc: any, inActiveIc: any, focused: boolean) => {
-  return focused ? activeIc : inActiveIc;
+const IconHandle = (iconName: string, focused: boolean = true) => {
+  return <SVGName title={iconName} isInactive={focused} />;
 };
 
 export default function RootScreen() {
@@ -32,11 +32,7 @@ export default function RootScreen() {
         component={HomeScreen}
         options={{
           tabBarIcon: ({focused}) => {
-            return IconHandle(
-              <SVG_NAME.HOME />,
-              <SVG_NAME.INACTIVE_HOME />,
-              focused,
-            );
+            return IconHandle(ROOT_SCREEN.HOME, focused);
           },
         }}
       />
@@ -45,11 +41,7 @@ export default function RootScreen() {
         component={UserDetail}
         options={{
           tabBarIcon: ({focused}) => {
-            return IconHandle(
-              <SVG_NAME.SEARCH />,
-              <SVG_NAME.INACTIVE_SEARCH />,
-              focused,
-            );
+            return IconHandle(ROOT_SCREEN.SEARCH, focused);
           },
         }}
       />
@@ -57,8 +49,8 @@ export default function RootScreen() {
         name={ROOT_SCREEN.NEWS}
         component={UserDetail}
         options={{
-          tabBarIcon: ({focused}) => {
-            return IconHandle(<SVG_NAME.NEWS />, <SVG_NAME.NEWS />, focused);
+          tabBarIcon: ({}) => {
+            return IconHandle(ROOT_SCREEN.NEWS);
           },
         }}
       />
@@ -67,11 +59,7 @@ export default function RootScreen() {
         component={UserDetail}
         options={{
           tabBarIcon: ({focused}) => {
-            return IconHandle(
-              <SVG_NAME.LIKE />,
-              <SVG_NAME.INACTIVE_LIKE />,
-              focused,
-            );
+            return IconHandle(ROOT_SCREEN.LIKE, focused);
           },
         }}
       />
@@ -80,11 +68,7 @@ export default function RootScreen() {
         component={UserDetail}
         options={{
           tabBarIcon: ({focused}) => {
-            return IconHandle(
-              <SVG_NAME.USER />,
-              <SVG_NAME.INACTIVE_USER />,
-              focused,
-            );
+            return IconHandle(ROOT_SCREEN.USER_DETAIL, focused);
           },
         }}
       />

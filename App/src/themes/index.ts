@@ -1,4 +1,4 @@
-import {DefaultTheme, ExtendedTheme} from '@react-navigation/native';
+// import {DefaultTheme, ExtendedTheme} from '@react-navigation/native';
 
 export const colors = {
   primary: '#000000',
