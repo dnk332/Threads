@@ -1,11 +1,12 @@
-import {Text, View} from 'react-native';
 import React from 'react';
+import AppContainer from '@components/AppContainer';
+import AppText from '@components/AppText';
 
 const SearchScreenView = () => {
   return (
-    <View>
-      <Text>SearchScreenView</Text>
-    </View>
+    <AppContainer>
+      <AppText>SearchScreenView</AppText>
+    </AppContainer>
   );
 };
 

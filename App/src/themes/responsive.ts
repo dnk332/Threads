@@ -15,8 +15,8 @@ const statusBarHeight = StatusBar.currentHeight;
 
 const screenHeightIncludeNavBar = deviceHeight - statusBarHeight;
 
-const guidelineBaseWidth = 414;
-const guidelineBaseHeight = 896;
+const guidelineBaseWidth = 390;
+const guidelineBaseHeight = 844;
 
 const toHeight = (percent: number) => {
   return screenHeight * (percent / 100);
@@ -67,7 +67,7 @@ type NamedStyles<T> = {
     | TextStyle
     | ImageStyle;
 };
-export const XStyleSheet = {
+export const AppStyleSheet = {
   ...StyleSheet,
   create: <T extends NamedStyles<T> | NamedStyles<any>>(
     styles: T | NamedStyles<T>,
