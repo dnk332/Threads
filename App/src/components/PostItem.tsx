@@ -1,20 +1,34 @@
 import {View} from 'react-native';
 import React from 'react';
-import {AppImage, AppText} from '@components/index';
+import {AppText, Avatar} from '@components/index';
 import {layout, colors} from '@themes/index';
 import {AppStyleSheet, ResponsiveWidth} from '@themes/responsive';
 import {SVGName} from '@assets/svg';
+import {User, Post} from '../types/index';
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en'
 
-const PostItem = () => {
+interface PostItemProps {
+  userData: User;
+  postData: Post;
+}
+
+const PostItem = ({userData, postData}: PostItemProps) => {
+  TimeAgo.addDefaultLocale(en)
+
+  // Create formatter (English).
+  const timeAgo = new TimeAgo('en-US')
+
   return (
     <View style={[layout.row, styles.container, layout.fill]}>
-      <AppImage
-        source={{
-          uri: 'https://images.pexels.com/photos/22644812/pexels-photo-22644812/free-photo-of-anh-sang-dan-ong-nh-ng-ng-i-ngh-thu-t.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-        }}
-        containerStyle={styles.imageContainer}
-        style={styles.image}
-      />
+      <View>
+        <Avatar
+          source={{
+            uri: userData.avatar,
+          }}
+        />
+        <View style={styles.line} />
+      </View>
       <View style={styles.contentContainer}>
         <View
           style={[
@@ -22,15 +36,15 @@ const PostItem = () => {
             layout.justifyContentBetween,
             layout.alignItemsCenter,
           ]}>
-          <AppText style={styles.userName} fontSize={16} fontWeight={600}>
-            Ruchi_shah
-          </AppText>
           <View style={[layout.row, layout.alignItemsCenter]}>
-            <AppText style={styles.time} fontSize={12} fontWeight={400}>
-              49m
+            <AppText style={styles.userName} fontSize={16} fontWeight={600}>
+              {userData.username}
             </AppText>
-            <SVGName title={'three_dot'} />
+            <AppText style={styles.time} fontSize={12} fontWeight={400}>
+              {timeAgo.format(postData.time)}
+            </AppText>
           </View>
+          <SVGName title={'three_dot'} />
         </View>
         <AppText fontSize={16} fontWeight={400}>
           Failures are stepping stones to success. Embrace them, learn from
@@ -38,7 +52,9 @@ const PostItem = () => {
         </AppText>
         <View
           style={[layout.row, layout.justifyContentBetween, styles.feature]}>
-          <SVGName title={'red_heart'} />
+          <View>
+            <SVGName title={'red_heart'} />
+          </View>
           <SVGName title={'message'} />
           <SVGName title={'report'} />
           <SVGName title={'send'} />
@@ -54,14 +70,10 @@ const PostItem = () => {
 export default PostItem;
 
 const styles = AppStyleSheet.create({
-  imageContainer: {width: 40, height: 40},
   container: {
     padding: 16,
     borderBottomColor: colors.border_dark,
     borderBottomWidth: 1,
-  },
-  image: {
-    borderRadius: 40,
   },
   contentContainer: {
     flexShrink: 1,
@@ -69,6 +81,7 @@ const styles = AppStyleSheet.create({
   },
   userName: {
     marginVertical: 4,
+    marginRight: 8,
   },
   time: {
     marginRight: 8,
@@ -76,5 +89,14 @@ const styles = AppStyleSheet.create({
   feature: {
     maxWidth: ResponsiveWidth(132),
     marginVertical: 8,
+  },
+  line: {
+    width: 2,
+    height: '100%',
+    backgroundColor: colors.border,
+    flex: 1,
+    alignSelf: 'center',
+    marginTop: 8,
+    borderRadius: 2,
   },
 });

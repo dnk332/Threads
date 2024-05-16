@@ -3,17 +3,21 @@ import React, {useCallback} from 'react';
 import PostItem from '@components/PostItem';
 import AppContainer from '@components/AppContainer';
 
+import {dummyPost} from '@constants/dummyData';
+
 const HomeScreenView = () => {
-  const _renderItem = useCallback(({}) => {
-    return <PostItem />;
+  const _renderItem = useCallback(({item}) => {
+    let data = item.postData[0];
+
+    return <PostItem postData={data.post} userData={data.userData} />;
   }, []);
 
   return (
     <AppContainer statusBarProps={{barStyle: 'light-content'}}>
       <FlatList
         // refreshControl={}
-        data={['1', '2', '3', '4', '5']}
-        keyExtractor={item => item}
+        data={dummyPost}
+        keyExtractor={item => item.id.toString()}
         renderItem={_renderItem}
       />
     </AppContainer>
