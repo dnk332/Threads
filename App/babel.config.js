@@ -1,10 +1,10 @@
-module.exports = {
+module.exports = api => ({
   presets: ['module:metro-react-native-babel-preset'],
   plugins: [
     [
       'module-resolver',
       {
-        root: ['.'],
+        root: ['./src'],
         extensions: [
           '.ios.js',
           '.android.js',
@@ -17,23 +17,23 @@ module.exports = {
           '.tsx',
         ],
         alias: {
-          '*': './src',
-          '@services/*': './src/services',
-          '@assets/*': './src/assets',
-          '@components/*': './src/components',
-          '@screens/*': './src/screens',
-          '@themes/*': './src/themes',
-          '@utils/*': './src/utils',
-          '@constants/*': './src/constants',
-          '@hooks/*': './src/hooks',
-          '@navigation/*': './src/navigation',
-          '@types/*': './src/types',
-          '@locales/*': './src/locales',
-          '@root/*': 'src/screens/Root',
+          '@services': './src/services',
+          '@assets': './src/assets',
+          '@components': './src/components',
+          '@screens': './src/screens',
+          '@themes': './src/themes',
+          '@utils': './src/utils',
+          '@constants': './src/constants',
+          '@hooks': './src/hooks',
+          '@navigation': './src/navigation',
+          '@types': './src/types',
+          '@locales': './src/locales',
+          '@root': './src/screens/Root',
         },
       },
     ],
     'inline-dotenv',
     'react-native-reanimated/plugin',
+    ...(api.env() !== 'development' ? ['transform-remove-console'] : []),
   ],
-};
+});

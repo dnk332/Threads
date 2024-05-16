@@ -6,7 +6,7 @@ import {ROOT_SCREEN} from '../../navigation/ScreenName';
 import HomeScreen from '../Home';
 import UserDetail from '../UserDetail';
 
-import {colors} from '../../themes/index';
+import {colors} from '@themes/index';
 import {SVGName} from '../../assets/svg/index';
 
 const Tab = createBottomTabNavigator();
