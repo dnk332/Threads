@@ -1,20 +1,60 @@
 import {View} from 'react-native';
-import React from 'react';
-import {AppImage, AppText} from '@components/index';
+import React, {ReactElement} from 'react';
+import {AppText, Avatar} from '@components/index';
 import {layout, colors} from '@themes/index';
-import {AppStyleSheet, ResponsiveWidth} from '@themes/responsive';
+import {AppStyleSheet} from '@themes/responsive';
 import {SVGName} from '@assets/svg';
+import {User, Post} from '../types/index';
+import TimeFromNow from '@hooks/TimeAgo';
 
-const PostItem = () => {
+interface PostItemProps {
+  userData: User;
+  postData: Post;
+  dualPost?: boolean;
+  lastPostOfDual?: boolean;
+}
+
+interface StatusItemProps {
+  icon: ReactElement;
+  value?: number;
+}
+
+const StatusItem = ({icon, value}: StatusItemProps): ReactElement => {
   return (
-    <View style={[layout.row, styles.container, layout.fill]}>
-      <AppImage
-        source={{
-          uri: 'https://images.pexels.com/photos/22644812/pexels-photo-22644812/free-photo-of-anh-sang-dan-ong-nh-ng-ng-i-ngh-thu-t.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-        }}
-        containerStyle={styles.imageContainer}
-        style={styles.image}
-      />
+    <View style={[layout.row, layout.alignItemsCenter, styles.status]}>
+      <View style={styles.statusIcon}>{icon}</View>
+      {value && (
+        <AppText fontSize={12} color={colors.text_secondary}>
+          {value}
+        </AppText>
+      )}
+    </View>
+  );
+};
+
+const PostItem = ({
+  userData,
+  postData,
+  dualPost,
+  lastPostOfDual,
+}: PostItemProps) => {
+  return (
+    <View
+      style={[
+        layout.row,
+        styles.container,
+        layout.fill,
+        !dualPost && styles.borderBottom,
+        lastPostOfDual && styles.lastPostOfDual,
+      ]}>
+      <View>
+        <Avatar
+          source={{
+            uri: userData.avatar,
+          }}
+        />
+        {dualPost && <View style={styles.line} />}
+      </View>
       <View style={styles.contentContainer}>
         <View
           style={[
@@ -22,30 +62,32 @@ const PostItem = () => {
             layout.justifyContentBetween,
             layout.alignItemsCenter,
           ]}>
-          <AppText style={styles.userName} fontSize={16} fontWeight={600}>
-            Ruchi_shah
-          </AppText>
           <View style={[layout.row, layout.alignItemsCenter]}>
-            <AppText style={styles.time} fontSize={12} fontWeight={400}>
-              49m
+            <AppText style={styles.userName} fontSize={16} fontWeight={600}>
+              {userData.username}
             </AppText>
-            <SVGName title={'three_dot'} />
+            <TimeFromNow date={new Date(postData.time)} />
           </View>
+          <SVGName title={'three_dot'} />
         </View>
         <AppText fontSize={16} fontWeight={400}>
-          Failures are stepping stones to success. Embrace them, learn from
-          them, and keep moving forward
+          {postData.content}
         </AppText>
-        <View
-          style={[layout.row, layout.justifyContentBetween, styles.feature]}>
-          <SVGName title={'red_heart'} />
-          <SVGName title={'message'} />
-          <SVGName title={'report'} />
-          <SVGName title={'send'} />
+        <View style={[layout.row, styles.feature]}>
+          <StatusItem
+            icon={<SVGName title={'red_heart'} />}
+            value={postData.liked}
+          />
+          <StatusItem
+            icon={<SVGName title={'message'} />}
+            value={postData.comment}
+          />
+          <StatusItem
+            icon={<SVGName title={'report'} />}
+            value={postData.reported}
+          />
+          <StatusItem icon={<SVGName title={'send'} />} />
         </View>
-        <AppText fontSize={16} color={colors.text_secondary}>
-          1 like
-        </AppText>
       </View>
     </View>
   );
@@ -54,14 +96,12 @@ const PostItem = () => {
 export default PostItem;
 
 const styles = AppStyleSheet.create({
-  imageContainer: {width: 40, height: 40},
   container: {
     padding: 16,
-    borderBottomColor: colors.border_dark,
-    borderBottomWidth: 1,
   },
-  image: {
-    borderRadius: 40,
+  borderBottom: {
+    borderBottomColor: colors.border,
+    borderBottomWidth: 1,
   },
   contentContainer: {
     flexShrink: 1,
@@ -69,12 +109,30 @@ const styles = AppStyleSheet.create({
   },
   userName: {
     marginVertical: 4,
+    marginRight: 8,
   },
   time: {
     marginRight: 8,
   },
   feature: {
-    maxWidth: ResponsiveWidth(132),
     marginVertical: 8,
+  },
+  status: {
+    marginRight: 8,
+  },
+  line: {
+    width: 2,
+    height: '100%',
+    backgroundColor: colors.border,
+    flex: 1,
+    alignSelf: 'center',
+    marginTop: 8,
+    borderRadius: 2,
+  },
+  statusIcon: {
+    marginRight: 2,
+  },
+  lastPostOfDual: {
+    paddingTop: 0,
   },
 });

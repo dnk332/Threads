@@ -17,6 +17,7 @@ import REPORT from '@svg/common/report.svg';
 import SEND from '@svg/common/send.svg';
 import MESSAGE from '@svg/common/message.svg';
 import RED_HEART from '@svg/common/red_heart.svg';
+import PLUS from '@svg/common/plus.svg';
 
 export type SVG = {
   [key: string]: ReactElement;
@@ -40,4 +41,5 @@ export const SVG_NAME: SVG = {
   SEND: <SEND />,
   MESSAGE: <MESSAGE />,
   RED_HEART: <RED_HEART />,
+  PLUS: <PLUS />,
 };
