@@ -1,6 +1,6 @@
 export type Post = {
   content: string;
-  time: Date;
+  time: string;
   liked: number;
   comment: number;
   reported: number;

@@ -10,7 +10,8 @@
     "test": "jest",
     "type-check": "tsc",
     "test:report": "jest --collectCoverage --coverageDirectory=\"./coverage\" --ci --reporters=default --reporters=jest-junit --coverage",
-    "pod-install": "cd ios && RCT_NEW_ARCH_ENABLED=1 bundle exec pod install && cd .."
+    "pod-install": "cd ios && RCT_NEW_ARCH_ENABLED=1 bundle exec pod install && cd ..",
+    "postinstall": "patch-package --use-yarn"
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^6.5.20",
@@ -19,6 +20,7 @@
     "javascript-time-ago": "^2.5.10",
     "lodash": "^4.17.21",
     "moment": "^2.30.1",
+    "patch-package": "^8.0.0",
     "react": "18.2.0",
     "react-i18next": "^14.1.1",
     "react-lorem-ipsum": "^1.4.10",
@@ -32,6 +34,7 @@
     "react-native-screens": "^3.31.1",
     "react-native-svg": "^15.2.0",
     "react-native-vector-icons": "^10.1.0",
+    "react-time-ago": "^7.3.3",
     "react-timeago": "^7.2.0"
   },
   "devDependencies": {
