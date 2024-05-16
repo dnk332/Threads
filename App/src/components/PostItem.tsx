@@ -1,33 +1,59 @@
 import {View} from 'react-native';
-import React from 'react';
+import React, {ReactElement} from 'react';
 import {AppText, Avatar} from '@components/index';
 import {layout, colors} from '@themes/index';
-import {AppStyleSheet, ResponsiveWidth} from '@themes/responsive';
+import {AppStyleSheet} from '@themes/responsive';
 import {SVGName} from '@assets/svg';
 import {User, Post} from '../types/index';
-import TimeAgo from 'javascript-time-ago'
-import en from 'javascript-time-ago/locale/en'
+import TimeFromNow from '@hooks/TimeAgo';
 
 interface PostItemProps {
   userData: User;
   postData: Post;
+  dualPost?: boolean;
+  lastPostOfDual?: boolean;
 }
 
-const PostItem = ({userData, postData}: PostItemProps) => {
-  TimeAgo.addDefaultLocale(en)
+interface StatusItemProps {
+  icon: ReactElement;
+  value?: number;
+}
 
-  // Create formatter (English).
-  const timeAgo = new TimeAgo('en-US')
-
+const StatusItem = ({icon, value}: StatusItemProps): ReactElement => {
   return (
-    <View style={[layout.row, styles.container, layout.fill]}>
+    <View style={[layout.row, layout.alignItemsCenter, styles.status]}>
+      <View style={styles.statusIcon}>{icon}</View>
+      {value && (
+        <AppText fontSize={12} color={colors.text_secondary}>
+          {value}
+        </AppText>
+      )}
+    </View>
+  );
+};
+
+const PostItem = ({
+  userData,
+  postData,
+  dualPost,
+  lastPostOfDual,
+}: PostItemProps) => {
+  return (
+    <View
+      style={[
+        layout.row,
+        styles.container,
+        layout.fill,
+        !dualPost && styles.borderBottom,
+        lastPostOfDual && styles.lastPostOfDual,
+      ]}>
       <View>
         <Avatar
           source={{
             uri: userData.avatar,
           }}
         />
-        <View style={styles.line} />
+        {dualPost && <View style={styles.line} />}
       </View>
       <View style={styles.contentContainer}>
         <View
@@ -40,28 +66,28 @@ const PostItem = ({userData, postData}: PostItemProps) => {
             <AppText style={styles.userName} fontSize={16} fontWeight={600}>
               {userData.username}
             </AppText>
-            <AppText style={styles.time} fontSize={12} fontWeight={400}>
-              {timeAgo.format(postData.time)}
-            </AppText>
+            <TimeFromNow date={new Date(postData.time)} />
           </View>
           <SVGName title={'three_dot'} />
         </View>
         <AppText fontSize={16} fontWeight={400}>
-          Failures are stepping stones to success. Embrace them, learn from
-          them, and keep moving forward
+          {postData.content}
         </AppText>
-        <View
-          style={[layout.row, layout.justifyContentBetween, styles.feature]}>
-          <View>
-            <SVGName title={'red_heart'} />
-          </View>
-          <SVGName title={'message'} />
-          <SVGName title={'report'} />
-          <SVGName title={'send'} />
+        <View style={[layout.row, styles.feature]}>
+          <StatusItem
+            icon={<SVGName title={'red_heart'} />}
+            value={postData.liked}
+          />
+          <StatusItem
+            icon={<SVGName title={'message'} />}
+            value={postData.comment}
+          />
+          <StatusItem
+            icon={<SVGName title={'report'} />}
+            value={postData.reported}
+          />
+          <StatusItem icon={<SVGName title={'send'} />} />
         </View>
-        <AppText fontSize={16} color={colors.text_secondary}>
-          1 like
-        </AppText>
       </View>
     </View>
   );
@@ -72,7 +98,9 @@ export default PostItem;
 const styles = AppStyleSheet.create({
   container: {
     padding: 16,
-    borderBottomColor: colors.border_dark,
+  },
+  borderBottom: {
+    borderBottomColor: colors.border,
     borderBottomWidth: 1,
   },
   contentContainer: {
@@ -87,8 +115,10 @@ const styles = AppStyleSheet.create({
     marginRight: 8,
   },
   feature: {
-    maxWidth: ResponsiveWidth(132),
     marginVertical: 8,
+  },
+  status: {
+    marginRight: 8,
   },
   line: {
     width: 2,
@@ -98,5 +128,11 @@ const styles = AppStyleSheet.create({
     alignSelf: 'center',
     marginTop: 8,
     borderRadius: 2,
+  },
+  statusIcon: {
+    marginRight: 2,
+  },
+  lastPostOfDual: {
+    paddingTop: 0,
   },
 });
