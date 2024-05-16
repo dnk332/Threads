@@ -1,11 +1,12 @@
-import {Text, View} from 'react-native';
 import React from 'react';
+import AppContainer from '@components/AppContainer';
+import AppText from '@components/AppText';
 
 const UserDetailView = () => {
   return (
-    <View>
-      <Text>UserDetailView</Text>
-    </View>
+    <AppContainer>
+      <AppText>UserDetailView</AppText>
+    </AppContainer>
   );
 };
 

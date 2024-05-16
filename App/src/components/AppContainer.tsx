@@ -1,17 +1,12 @@
-import {
-  StatusBar,
-  StatusBarProps,
-  StyleSheet,
-  View,
-  ViewComponent,
-  ViewStyle,
-} from 'react-native';
+import {StatusBar, StatusBarProps, View, ViewStyle} from 'react-native';
 import React, {useMemo} from 'react';
 import {Edge, SafeAreaView} from 'react-native-safe-area-context';
-import {colors} from '@themes/index';
+import {colors, layout} from '@themes/index';
 import Animated from 'react-native-reanimated';
+import {AppStyleSheet} from '@themes/responsive';
+import useStatusBarHeight from '@hooks/getStatusBarHeight';
 
-interface AppContainerProps extends ViewComponent {
+interface AppContainerProps {
   children: React.ReactNode;
   style?: ViewStyle;
   disableTop?: boolean;
@@ -33,6 +28,8 @@ const AppContainer = ({
   style,
   containerStyle,
 }: AppContainerProps) => {
+  const statusbarHeight = useStatusBarHeight();
+
   const safeEdges = useMemo<ReadonlyArray<Edge>>(() => {
     if (!disableTop && !disableBottom) {
       return ['top', 'bottom', 'left', 'right'];
@@ -48,7 +45,7 @@ const AppContainer = ({
     <SafeAreaView
       edges={safeEdges}
       style={[
-        styles.container,
+        layout.fill,
         safeAreaStyle,
         {
           backgroundColor:
@@ -68,7 +65,7 @@ const AppContainer = ({
         <StatusBar
           translucent
           backgroundColor="transparent"
-          barStyle="dark-content"
+          barStyle="light-content"
           {...statusBarProps}
         />
         <View
@@ -76,6 +73,7 @@ const AppContainer = ({
             styles.container,
             {
               backgroundColor: colors.background,
+              marginTop: statusbarHeight,
             },
             style,
           ]}>
@@ -88,10 +86,9 @@ const AppContainer = ({
 
 export default AppContainer;
 
-const styles = StyleSheet.create({
+const styles = AppStyleSheet.create({
   container: {
-    // ...StyleSheet.absoluteFillObject,
-    // zIndex: 10,
-    flex: 1,
+    ...AppStyleSheet.absoluteFillObject,
+    zIndex: 10,
   },
 });

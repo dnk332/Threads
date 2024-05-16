@@ -35,12 +35,6 @@ const AppImage = ({
         onPress={onPress}
         style={containerStyle}>
         <FastImage
-          onLoadEnd={() => {
-            console.log('load image');
-          }}
-          onLoadStart={() => {
-            console.log('load image');
-          }}
           source={source}
           resizeMode={resizeMode}
           style={[styles.image, style]}

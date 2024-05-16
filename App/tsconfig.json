@@ -13,7 +13,9 @@
       "@navigation/*": ["src/navigation/*"],
       "@types/*": ["src/types/*"],
       "@locales/*": ["src/locales/*"],
-      "@root/*": ["src/screens/Root/*"]
+      "@root/*": ["src/screens/Root/*"],
+      "@svg/*": ["src/assets/svg/*"],
+      "@image/*": ["src/assets/image/*"]
     },
     "target": "es5",
     "allowJs": true,
