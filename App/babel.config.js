@@ -29,6 +29,8 @@ module.exports = api => ({
           '@types': './src/types',
           '@locales': './src/locales',
           '@root': './src/screens/Root',
+          '@svg': './src/assets/svg',
+          '@image': './src/assets/image',
         },
       },
     ],

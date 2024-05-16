@@ -1,11 +1,12 @@
-import {Text, View} from 'react-native';
 import React from 'react';
+import AppContainer from '@components/AppContainer';
+import AppText from '@components/AppText';
 
 const ActivesScreenView = () => {
   return (
-    <View>
-      <Text>ActivesScreenView</Text>
-    </View>
+    <AppContainer>
+      <AppText>ActivesScreenView</AppText>
+    </AppContainer>
   );
 };
 
