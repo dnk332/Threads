@@ -1,20 +1,27 @@
-import {Text, View} from 'react-native';
+import {ScrollView, Text, View} from 'react-native';
 import React from 'react';
-// import SVG_NAME from '../';
-
-// const IconHandle = (iconName: any, focused: boolean) => {
-//   let iconNameVal = SVG_NAME[iconName];
-//   let iconInactiveNameVal = SVG_NAME[`INACTIVE_${iconName}`];
-//   console.log('ICON', {iconNameVal});
-//   return focused ? <>{iconNameVal}</> : <>{iconInactiveNameVal}</>;
-// };
+import PostItem from '../../components/PostItem/';
+import AppContainer from '../../components/AppContainer';
 
 const HomeScreenView = () => {
   return (
-    <View>
-      <Text>HomeScreenView</Text>
-      {/* {IconHandle('HOME', true)} */}
-    </View>
+    <AppContainer useFading={true}>
+      <ScrollView>
+        <PostItem />
+        <PostItem />
+        <PostItem />
+        <PostItem />
+        <PostItem />
+        <PostItem />
+        <PostItem />
+        <PostItem />
+        <PostItem />
+        <PostItem />
+        <PostItem />
+        <PostItem />
+        <PostItem />
+      </ScrollView>
+    </AppContainer>
   );
 };
 

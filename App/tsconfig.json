@@ -1,9 +1,7 @@
 {
-  "extends": "@react-native/typescript-config/tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
       "@services/*": ["src/services/*"],
       "@assets/*": ["src/assets/*"],
       "@components/*": ["src/components/*"],
@@ -16,7 +14,18 @@
       "@types/*": ["src/types/*"],
       "@locales/*": ["src/locales/*"],
       "@root/*": ["src/screens/Root/*"]
-    }
+    },
+    "target": "es5",
+    "allowJs": true,
+    "jsx": "react-native",
+    "noEmit": true,
+    "esModuleInterop": true
   },
-  "include": ["declarations.d.ts", "src"]
+  "include": ["declarations.d.ts", "src", "src/components/PostItem/.tsx"],
+  "exclude": [
+    "node_modules",
+    "babel.config.js",
+    "metro.config.js",
+    "jest.config.js"
+  ]
 }
