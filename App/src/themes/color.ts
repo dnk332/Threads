@@ -11,6 +11,8 @@ const colors = {
   white: '#ffffff',
   black: '#101214',
   shadow: '#757575',
+  dark_gray: '#1F1F1F',
+  bottom_sheet_background: '#171717',
 
   // text colors
   text: '#ffffff',
