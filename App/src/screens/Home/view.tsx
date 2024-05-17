@@ -7,28 +7,37 @@ import {dummyPost} from '@constants/dummyData';
 
 const HomeScreenView = () => {
   const _renderItem = useCallback(({item}) => {
-    let isDualPost = item.postData.length > 1;
+    let isRepliesPost = item.replies.length > 0;
 
-    if (isDualPost) {
+    if (isRepliesPost) {
       return (
         <Fragment>
           <PostItem
-            postData={item.postData[0].post}
-            userData={item.postData[0].userData}
-            dualPost={true}
+            postData={item.rootPost.post}
+            userData={item.rootPost.userData}
+            haveReplies={true}
+            isRootPost={true}
           />
-          <PostItem
-            lastPostOfDual={true}
-            postData={item.postData[0].post}
-            userData={item.postData[0].userData}
-          />
+          {item.replies.map((replies, index) => {
+            let isLastReplies =
+              item.replies[item.replies.length - 1].id === replies.id;
+            return (
+              <PostItem
+                key={index}
+                postData={replies.post}
+                userData={replies.userData}
+                haveReplies={!isLastReplies}
+                isReplies={true}
+              />
+            );
+          })}
         </Fragment>
       );
     } else {
       return (
         <PostItem
-          postData={item.postData[0].post}
-          userData={item.postData[0].userData}
+          postData={item.rootPost.post}
+          userData={item.rootPost.userData}
         />
       );
     }
