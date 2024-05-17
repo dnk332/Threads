@@ -10,8 +10,10 @@ import TimeFromNow from '@hooks/TimeAgo';
 interface PostItemProps {
   userData: User;
   postData: Post;
-  dualPost?: boolean;
-  lastPostOfDual?: boolean;
+  haveReplies?: boolean;
+  lastReplies?: boolean;
+  isReplies?: boolean;
+  isRootPost?: boolean;
 }
 
 interface StatusItemProps {
@@ -35,8 +37,10 @@ const StatusItem = ({icon, value}: StatusItemProps): ReactElement => {
 const PostItem = ({
   userData,
   postData,
-  dualPost,
-  lastPostOfDual,
+  haveReplies,
+  lastReplies,
+  isReplies,
+  isRootPost,
 }: PostItemProps) => {
   return (
     <View
@@ -44,8 +48,9 @@ const PostItem = ({
         layout.row,
         styles.container,
         layout.fill,
-        !dualPost && styles.borderBottom,
-        lastPostOfDual && styles.lastPostOfDual,
+        !haveReplies && styles.borderBottom,
+        isReplies && styles.repliesContainer,
+        isRootPost && styles.rootPost,
       ]}>
       <View>
         <Avatar
@@ -53,7 +58,7 @@ const PostItem = ({
             uri: userData.avatar,
           }}
         />
-        {dualPost && <View style={styles.line} />}
+        {haveReplies && !lastReplies && <View style={styles.line} />}
       </View>
       <View style={styles.contentContainer}>
         <View
@@ -98,6 +103,7 @@ export default PostItem;
 const styles = AppStyleSheet.create({
   container: {
     padding: 16,
+    paddingBottom: 8,
   },
   borderBottom: {
     borderBottomColor: colors.border,
@@ -115,14 +121,14 @@ const styles = AppStyleSheet.create({
     marginRight: 8,
   },
   feature: {
-    marginVertical: 8,
+    marginTop: 16,
+    paddingBottom: 8,
   },
   status: {
     marginRight: 8,
   },
   line: {
     width: 2,
-    height: '100%',
     backgroundColor: colors.border,
     flex: 1,
     alignSelf: 'center',
@@ -132,7 +138,11 @@ const styles = AppStyleSheet.create({
   statusIcon: {
     marginRight: 2,
   },
-  lastPostOfDual: {
+  repliesContainer: {
     paddingTop: 0,
+  },
+  rootPost: {
+    paddingBottom: 8,
+    paddingTop: 16,
   },
 });
