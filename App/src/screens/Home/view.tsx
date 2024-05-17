@@ -1,6 +1,6 @@
 import {FlatList} from 'react-native';
 import React, {Fragment, useCallback} from 'react';
-import PostItem from '@components/PostItem';
+import PostItem from '@screens/Home/Components/PostItem';
 import AppContainer from '@components/AppContainer';
 
 import {dummyPost} from '@constants/dummyData';
@@ -8,7 +8,6 @@ import {dummyPost} from '@constants/dummyData';
 const HomeScreenView = () => {
   const _renderItem = useCallback(({item}) => {
     let isRepliesPost = item.replies.length > 0;
-
     if (isRepliesPost) {
       return (
         <Fragment>
