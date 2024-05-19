@@ -1,7 +1,7 @@
 import {loremIpsum, username} from 'react-lorem-ipsum';
 import {getRandomItem, getRandomNumber} from '@utils/Random';
 
-const listAvatar = [
+const listImage = [
   'https://images.pexels.com/photos/1391498/pexels-photo-1391498.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
   'https://images.pexels.com/photos/22644812/pexels-photo-22644812/free-photo-of-anh-sang-dan-ong-nh-ng-ng-i-ngh-thu-t.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
   'https://images.pexels.com/photos/1858175/pexels-photo-1858175.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
@@ -18,11 +18,11 @@ const dummyPost = [
     rootPost: {
       userData: {
         username: username(),
-        avatar: getRandomItem(listAvatar),
+        avatar: getRandomItem(listImage),
       },
       post: {
         textContent: loremIpsum({avgSentencesPerParagraph: 1}),
-        mediaContent: [{link: '', type: 'image'}],
+        mediaContent: [],
         time: '2024-05-16T14:38:08.169Z',
         liked: getRandomNumber(100),
         comment: getRandomNumber(100),
@@ -36,10 +36,24 @@ const dummyPost = [
     rootPost: {
       userData: {
         username: username(),
-        avatar: getRandomItem(listAvatar),
+        avatar: getRandomItem(listImage),
       },
       post: {
         textContent: loremIpsum({avgSentencesPerParagraph: 1}),
+        mediaContent: [
+          {
+            link: getRandomItem(listImage),
+            type: 'image',
+          },
+          {
+            link: getRandomItem(listImage),
+            type: 'image',
+          },
+          {
+            link: getRandomItem(listImage),
+            type: 'image',
+          },
+        ],
         time: '2024-05-16T14:38:08.169Z',
         liked: getRandomNumber(100),
         comment: getRandomNumber(100),
@@ -51,11 +65,11 @@ const dummyPost = [
         id: 1,
         userData: {
           username: username(),
-          avatar: getRandomItem(listAvatar),
+          avatar: getRandomItem(listImage),
         },
         post: {
           textContent: loremIpsum({avgSentencesPerParagraph: 1}),
-          mediaContent: [{link: '', type: 'image'}],
+          mediaContent: [],
           time: '2024-05-16T14:38:08.169Z',
           liked: getRandomNumber(100),
           comment: getRandomNumber(100),
@@ -66,11 +80,11 @@ const dummyPost = [
         id: 2,
         userData: {
           username: username(),
-          avatar: getRandomItem(listAvatar),
+          avatar: getRandomItem(listImage),
         },
         post: {
           textContent: loremIpsum({avgSentencesPerParagraph: 1}),
-          mediaContent: [{link: '', type: 'image'}],
+          mediaContent: [],
           time: '2024-05-16T14:38:08.169Z',
           liked: getRandomNumber(100),
           comment: getRandomNumber(100),
@@ -81,11 +95,11 @@ const dummyPost = [
         id: 3,
         userData: {
           username: username(),
-          avatar: getRandomItem(listAvatar),
+          avatar: getRandomItem(listImage),
         },
         post: {
           textContent: loremIpsum({avgSentencesPerParagraph: 1}),
-          mediaContent: [{link: '', type: 'image'}],
+          mediaContent: [],
           time: '2024-05-16T14:38:08.169Z',
           liked: getRandomNumber(100),
           comment: getRandomNumber(100),
@@ -99,11 +113,11 @@ const dummyPost = [
     rootPost: {
       userData: {
         username: username(),
-        avatar: getRandomItem(listAvatar),
+        avatar: getRandomItem(listImage),
       },
       post: {
         textContent: loremIpsum({avgSentencesPerParagraph: 1}),
-        mediaContent: [{link: '', type: 'image'}],
+        mediaContent: [],
         time: '2024-05-16T14:38:08.169Z',
         liked: getRandomNumber(100),
         comment: getRandomNumber(100),
@@ -115,11 +129,11 @@ const dummyPost = [
         id: 1,
         userData: {
           username: username(),
-          avatar: getRandomItem(listAvatar),
+          avatar: getRandomItem(listImage),
         },
         post: {
           textContent: loremIpsum({avgSentencesPerParagraph: 1}),
-          mediaContent: [{link: '', type: 'image'}],
+          mediaContent: [],
           time: '2024-05-16T14:38:08.169Z',
           liked: getRandomNumber(100),
           comment: getRandomNumber(100),
@@ -130,11 +144,11 @@ const dummyPost = [
         id: 2,
         userData: {
           username: username(),
-          avatar: getRandomItem(listAvatar),
+          avatar: getRandomItem(listImage),
         },
         post: {
           textContent: loremIpsum({avgSentencesPerParagraph: 1}),
-          mediaContent: [{link: '', type: 'image'}],
+          mediaContent: [],
           time: '2024-05-16T14:38:08.169Z',
           liked: getRandomNumber(100),
           comment: getRandomNumber(100),
