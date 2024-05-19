@@ -4,10 +4,11 @@ import {AppText, Avatar} from '@components/index';
 import {layout, colors} from '@themes/index';
 import {AppStyleSheet} from '@themes/responsive';
 import {SVGName} from '@assets/svg';
-import {User, Post} from '../../../types/index';
+import {User, Post} from '@local_types/index';
 import TimeFromNow from '@hooks/TimeAgo';
 import ActiveBottomSheet from '@screens/Home/Components/ActiveBottomSheet';
 import ContentHandelArea from '@components/PostContent/ContentHandelArea';
+import MediaContent from '@components/PostContent/MediaContent';
 
 interface PostItemProps {
   userData: User;
@@ -48,65 +49,62 @@ const PostItem = ({
 
   return (
     <Fragment>
-      <View
-        style={[
-          layout.row,
-          styles.container,
-          layout.fill,
-          !haveReplies && styles.borderBottom,
-          isReplies && styles.repliesContainer,
-          isRootPost && styles.rootPost,
-        ]}>
-        <View>
-          <Avatar
-            source={{
-              uri: userData.avatar,
-            }}
-          />
-          {haveReplies && !lastReplies && <View style={styles.line} />}
-        </View>
-        <View style={styles.contentContainer}>
-          <View
-            style={[
-              layout.row,
-              layout.justifyContentBetween,
-              layout.alignItemsCenter,
-            ]}>
-            <View style={[layout.row, layout.alignItemsCenter]}>
-              <AppText style={styles.userName} fontSize={16} fontWeight={600}>
-                {userData.username}
-              </AppText>
-              <TimeFromNow date={new Date(postData.time)} />
+      <View style={!haveReplies && styles.borderBottom}>
+        <View
+          style={[
+            layout.row,
+            styles.container,
+            layout.fill,
+            isReplies && styles.repliesContainer,
+            isRootPost && styles.rootPost,
+          ]}>
+          <View>
+            <Avatar
+              source={{
+                uri: userData.avatar,
+              }}
+            />
+            {haveReplies && !lastReplies && <View style={styles.line} />}
+          </View>
+          <View style={styles.contentContainer}>
+            <View
+              style={[
+                layout.row,
+                layout.justifyContentBetween,
+                layout.alignItemsCenter,
+              ]}>
+              <View style={[layout.row, layout.alignItemsCenter]}>
+                <AppText style={styles.userName} fontSize={16} fontWeight={600}>
+                  {userData.username}
+                </AppText>
+                <TimeFromNow date={new Date(postData.time)} />
+              </View>
+              <Pressable onPress={() => sheetRef.current?.snapTo(0)}>
+                <SVGName title={'three_dot'} />
+              </Pressable>
             </View>
-            <Pressable
-              style={styles.actionButton}
-              onPress={() => sheetRef.current?.snapTo(0)}>
-              <SVGName title={'three_dot'} />
-            </Pressable>
+            <ContentHandelArea textContent={postData.textContent} />
           </View>
-          <ContentHandelArea
-            textContent={postData.textContent}
-            // mediaContent={postData.mediaContent}
-            // time={postData.time}
-            // liked={postData.liked}
-            // comment={postData.comment}
-            // reported={postData.reported}
+        </View>
+        <View style={styles.mediaContent}>
+          {postData.mediaContent !== null && (
+            <MediaContent content={postData.mediaContent} />
+          )}
+        </View>
+        <View style={[layout.row, styles.feature]}>
+          <StatusItem
+            icon={<SVGName title={'red_heart'} />}
+            value={postData.liked}
           />
-          <View style={[layout.row, styles.feature]}>
-            <StatusItem
-              icon={<SVGName title={'red_heart'} />}
-              value={postData.liked}
-            />
-            <StatusItem
-              icon={<SVGName title={'message'} />}
-              value={postData.comment}
-            />
-            <StatusItem
-              icon={<SVGName title={'report'} />}
-              value={postData.reported}
-            />
-            <StatusItem icon={<SVGName title={'send'} />} />
-          </View>
+          <StatusItem
+            icon={<SVGName title={'message'} />}
+            value={postData.comment}
+          />
+          <StatusItem
+            icon={<SVGName title={'report'} />}
+            value={postData.reported}
+          />
+          <StatusItem icon={<SVGName title={'send'} />} />
         </View>
       </View>
       <ActiveBottomSheet sheetRef={sheetRef} />
@@ -140,6 +138,7 @@ const styles = AppStyleSheet.create({
   feature: {
     marginTop: 16,
     paddingBottom: 8,
+    marginLeft: 64,
   },
   status: {
     marginRight: 16,
@@ -162,5 +161,5 @@ const styles = AppStyleSheet.create({
     paddingBottom: 8,
     paddingTop: 16,
   },
-  actionButton: {},
+  mediaContent: {},
 });

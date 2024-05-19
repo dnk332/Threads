@@ -26,7 +26,7 @@ module.exports = api => ({
           '@constants': './src/constants',
           '@hooks': './src/hooks',
           '@navigation': './src/navigation',
-          '@types': './src/types',
+          '@local_types': './src/types',
           '@locales': './src/locales',
           '@root': './src/screens/Root',
           '@svg': './src/assets/svg',
