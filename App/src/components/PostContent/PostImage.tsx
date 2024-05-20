@@ -2,7 +2,7 @@ import React, {memo, useCallback, useEffect, useState} from 'react';
 import {getImageSize, ISize} from '@hooks/getImageInfo';
 import {AppImage} from '@components/index';
 import {AppStyleSheet} from '@themes/responsive';
-import {imageHeight} from '@constants/index';
+import {imageHeight, imageWidth} from '@constants/index';
 
 export interface PostImageProps {
   link: string;
@@ -25,6 +25,8 @@ const PostImage = ({link, key}: PostImageProps) => {
 
   const HandleImageSize = useCallback(() => {
     setAspectRatio(dimensions.width / dimensions.height);
+    if (dimensions.width > dimensions.height) {
+    }
   }, [dimensions.height, dimensions.width]);
 
   useEffect(() => {
@@ -39,9 +41,9 @@ const PostImage = ({link, key}: PostImageProps) => {
       style={[
         styles.image,
         {
-          width: undefined,
+          width: dimensions.width > dimensions.height ? imageWidth : undefined,
           height: imageHeight,
-          aspectRatio,
+          aspectRatio: dimensions.width > dimensions.height ? undefined : aspectRatio,
         },
       ]}
       source={{uri: link}}
