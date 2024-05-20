@@ -1,42 +1,46 @@
-import React, {memo, useEffect, useState} from 'react';
+import React, {memo, useCallback, useEffect, useState} from 'react';
 import {getImageSize, ISize} from '@hooks/getImageInfo';
 import {AppImage} from '@components/index';
 import {AppStyleSheet} from '@themes/responsive';
-import {imageHeight, imageWidth} from '@constants/index';
+import {imageHeight} from '@constants/index';
 
-const PostImage = ({link}) => {
+export interface PostImageProps {
+  link: string;
+  key: number;
+}
+
+const PostImage = ({link, key}: PostImageProps) => {
   const [dimensions, setValue] = useState<ISize>({width: 0, height: 0});
   const [aspectRatio, setAspectRatio] = useState<number>(0);
-  const [width, setWidth] = useState<number | undefined>(0);
-  const [height, setHeight] = useState<number | undefined>(0);
 
   useEffect(() => {
+    //get image size
+    if (link === '') {
+      return;
+    }
     getImageSize(link).then(res =>
       setValue({width: res.width, height: res.height}),
     );
   }, [link]);
 
+  const HandleImageSize = useCallback(() => {
+    setAspectRatio(dimensions.width / dimensions.height);
+  }, [dimensions.height, dimensions.width]);
+
   useEffect(() => {
     if (dimensions.width > 0 && dimensions.height > 0) {
-      setAspectRatio(dimensions.width / dimensions.height);
+      HandleImageSize();
     }
-
-    if (dimensions.width < dimensions.height) {
-      setWidth(imageWidth);
-      setHeight(undefined);
-    } else {
-      setWidth(undefined);
-      setHeight(imageHeight);
-    }
-  }, [dimensions]);
+  }, [HandleImageSize, dimensions]);
 
   return (
     <AppImage
+      key={key}
       style={[
         styles.image,
         {
-          width,
-          height,
+          width: undefined,
+          height: imageHeight,
           aspectRatio,
         },
       ]}
@@ -49,8 +53,6 @@ export default memo(PostImage);
 
 const styles = AppStyleSheet.create({
   image: {
-    width: 300,
-    height: undefined,
-    aspectRatio: 1,
+    borderRadius: 10,
   },
 });

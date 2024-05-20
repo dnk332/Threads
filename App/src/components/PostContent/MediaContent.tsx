@@ -1,4 +1,4 @@
-import {ScrollView} from 'react-native';
+import {FlatList, ListRenderItemInfo} from 'react-native';
 import React from 'react';
 import {Media} from '@local_types/post';
 
@@ -10,29 +10,31 @@ interface MediaContentProps {
   content: Media[];
 }
 
+const RenderItem = ({item}) => {
+  return <PostImage key={item.id} link={item.link} />;
+};
+
 const MediaContent = ({content = []}: MediaContentProps) => {
   return (
-    <ScrollView
+    <FlatList
+      data={content}
+      renderItem={({item}: ListRenderItemInfo<Media>) => (
+        <RenderItem item={item} />
+      )}
+      keyExtractor={item => item.id.toString()}
+      contentContainerStyle={styles.container}
       horizontal
       showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={styles.container}
-      scrollEventThrottle={5}>
-      {content?.length > 0 &&
-        content.map(image => <PostImage link={image.link} />)}
-    </ScrollView>
+      scrollEnabled={content.length > 1}
+    />
   );
 };
 
 export default MediaContent;
 
 const styles = AppStyleSheet.create({
-  image: {
-    width: 300,
-    height: undefined,
-    aspectRatio: 1,
-  },
   container: {
     paddingLeft: 64,
+    gap: 8,
   },
 });

@@ -16,6 +16,7 @@ interface AppImageProps {
   disabled?: boolean;
   onPress?: () => void;
   onLongPress?: () => void;
+  [key: string]: any;
 }
 
 const AppImage = ({
@@ -26,6 +27,7 @@ const AppImage = ({
   disabled = true,
   onPress,
   onLongPress,
+  ...props
 }: AppImageProps) => {
   return (
     <Fragment>
@@ -38,6 +40,7 @@ const AppImage = ({
           source={source}
           resizeMode={resizeMode}
           style={[styles.image, style]}
+          {...props}
         />
       </Pressable>
     </Fragment>

@@ -1,4 +1,5 @@
 export interface Media {
+  id: number;
   link: any;
   type: string;
 }

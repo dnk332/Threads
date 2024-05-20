@@ -48,6 +48,7 @@ const HomeScreenView = () => {
         data={dummyPost}
         keyExtractor={item => item.id.toString()}
         renderItem={_renderItem}
+        showsVerticalScrollIndicator={false}
       />
     </AppContainer>
   );

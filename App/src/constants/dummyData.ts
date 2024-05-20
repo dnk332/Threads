@@ -42,14 +42,17 @@ const dummyPost = [
         textContent: loremIpsum({avgSentencesPerParagraph: 1}),
         mediaContent: [
           {
+            id: getRandomNumber(100000),
             link: getRandomItem(listImage),
             type: 'image',
           },
           {
+            id: getRandomNumber(100000),
             link: getRandomItem(listImage),
             type: 'image',
           },
           {
+            id: getRandomNumber(100000),
             link: getRandomItem(listImage),
             type: 'image',
           },
@@ -69,7 +72,18 @@ const dummyPost = [
         },
         post: {
           textContent: loremIpsum({avgSentencesPerParagraph: 1}),
-          mediaContent: [],
+          mediaContent: [
+            {
+              id: getRandomNumber(100000),
+              link: getRandomItem(listImage),
+              type: 'image',
+            },
+            {
+              id: getRandomNumber(100000),
+              link: getRandomItem(listImage),
+              type: 'image',
+            },
+          ],
           time: '2024-05-16T14:38:08.169Z',
           liked: getRandomNumber(100),
           comment: getRandomNumber(100),
@@ -79,12 +93,19 @@ const dummyPost = [
       {
         id: 2,
         userData: {
+          id: getRandomNumber(100000),
           username: username(),
           avatar: getRandomItem(listImage),
         },
         post: {
           textContent: loremIpsum({avgSentencesPerParagraph: 1}),
-          mediaContent: [],
+          mediaContent: [
+            {
+              id: getRandomNumber(100000),
+              link: getRandomItem(listImage),
+              type: 'image',
+            },
+          ],
           time: '2024-05-16T14:38:08.169Z',
           liked: getRandomNumber(100),
           comment: getRandomNumber(100),
