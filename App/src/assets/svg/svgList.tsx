@@ -18,6 +18,12 @@ import SEND from '@svg/common/send.svg';
 import MESSAGE from '@svg/common/message.svg';
 import RED_HEART from '@svg/common/red_heart.svg';
 import PLUS from '@svg/common/plus.svg';
+import SAVE from '@svg/common/save.svg';
+import HASH_TAG from '@svg/common/hashtag.svg';
+import EYE_OFF from '@svg/common/eye_off.svg';
+import NOTIFY_OFF from '@svg/common/notify_off.svg';
+import USER_MINUS from '@svg/common/user_minus.svg';
+import REPORT_CIRCLE from '@svg/common/report_circle.svg';
 
 export type SVG = {
   [key: string]: ReactElement;
@@ -42,4 +48,10 @@ export const SVG_NAME: SVG = {
   MESSAGE: <MESSAGE />,
   RED_HEART: <RED_HEART />,
   PLUS: <PLUS />,
+  SAVE: <SAVE />,
+  HASH_TAG: <HASH_TAG />,
+  EYE_OFF: <EYE_OFF />,
+  NOTIFY_OFF: <NOTIFY_OFF />,
+  USER_MINUS: <USER_MINUS />,
+  REPORT_CIRCLE: <REPORT_CIRCLE />,
 };
