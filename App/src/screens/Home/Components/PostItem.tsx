@@ -1,5 +1,5 @@
 import {Pressable, View} from 'react-native';
-import React, {Fragment, ReactElement, useRef, useState} from 'react';
+import React, {Fragment, memo, ReactElement, useRef, useState} from 'react';
 import {AppText, Avatar} from '@components/index';
 import {layout, colors} from '@themes/index';
 import {AppStyleSheet} from '@themes/responsive';
@@ -52,7 +52,7 @@ const PostItem = ({
 
   return (
     <Fragment>
-      <View style={!haveReplies && styles.borderBottom}>
+      <View>
         <View
           style={[
             layout.row,
@@ -136,16 +136,12 @@ const PostItem = ({
   );
 };
 
-export default PostItem;
+export default memo(PostItem);
 
 const styles = AppStyleSheet.create({
   container: {
     padding: 16,
     paddingBottom: 8,
-  },
-  borderBottom: {
-    borderBottomColor: colors.border,
-    borderBottomWidth: 1,
   },
   contentContainer: {
     flexShrink: 1,

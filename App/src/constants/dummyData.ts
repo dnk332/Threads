@@ -153,7 +153,7 @@ const dummyPost = [
           avatar: getRandomItem(listImage),
         },
         post: {
-          textContent: loremIpsum({avgSentencesPerParagraph: 1}),
+          textContent: loremIpsum({avgSentencesPerParagraph: 2}),
           mediaContent: [],
           time: '2024-05-16T14:38:08.169Z',
           liked: getRandomNumber(100),
