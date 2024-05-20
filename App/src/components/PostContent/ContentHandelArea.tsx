@@ -23,5 +23,7 @@ const ContentHandelArea = ({textContent = ''}: ContentHandelAreaProps) => {
 export default ContentHandelArea;
 
 const styles = AppStyleSheet.create({
-  container: {},
+  container: {
+    // marginBottom: 8,
+  },
 });

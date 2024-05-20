@@ -1,5 +1,5 @@
 import {Pressable, View} from 'react-native';
-import React, {Fragment, ReactElement, useRef} from 'react';
+import React, {Fragment, ReactElement, useRef, useState} from 'react';
 import {AppText, Avatar} from '@components/index';
 import {layout, colors} from '@themes/index';
 import {AppStyleSheet} from '@themes/responsive';
@@ -9,6 +9,7 @@ import TimeFromNow from '@hooks/TimeAgo';
 import ActiveBottomSheet from '@screens/Home/Components/ActiveBottomSheet';
 import ContentHandelArea from '@components/PostContent/ContentHandelArea';
 import MediaContent from '@components/PostContent/MediaContent';
+import {imageHeight} from '@constants/index';
 
 interface PostItemProps {
   userData: User;
@@ -24,11 +25,11 @@ interface StatusItemProps {
   value?: number;
 }
 
-const StatusItem = ({icon, value}: StatusItemProps): ReactElement => {
+const StatusItem = ({icon, value = 0}: StatusItemProps): ReactElement => {
   return (
     <View style={[layout.row, layout.alignItemsCenter, styles.status]}>
       <View style={styles.statusIcon}>{icon}</View>
-      {value && (
+      {value !== 0 && (
         <AppText fontSize={12} color={colors.text_secondary}>
           {value}
         </AppText>
@@ -47,6 +48,8 @@ const PostItem = ({
 }: PostItemProps) => {
   const sheetRef = useRef<any>();
 
+  const [contentViewHeight, setContentViewHeight] = useState<number>(0);
+
   return (
     <Fragment>
       <View style={!haveReplies && styles.borderBottom}>
@@ -64,47 +67,70 @@ const PostItem = ({
                 uri: userData.avatar,
               }}
             />
-            {haveReplies && !lastReplies && <View style={styles.line} />}
           </View>
           <View style={styles.contentContainer}>
             <View
-              style={[
-                layout.row,
-                layout.justifyContentBetween,
-                layout.alignItemsCenter,
-              ]}>
-              <View style={[layout.row, layout.alignItemsCenter]}>
-                <AppText style={styles.userName} fontSize={16} fontWeight={600}>
-                  {userData.username}
-                </AppText>
-                <TimeFromNow date={new Date(postData.time)} />
-              </View>
-              <Pressable onPress={() => sheetRef.current?.snapTo(0)}>
-                <SVGName title={'three_dot'} />
-              </Pressable>
+              style={{
+                position: 'absolute',
+                top: 40,
+                left: -30,
+                zIndex: 2,
+                height:
+                  postData.mediaContent.length !== 0
+                    ? imageHeight + contentViewHeight + 8
+                    : contentViewHeight + 8,
+              }}>
+              {haveReplies && !lastReplies && <View style={[styles.line]} />}
             </View>
-            <ContentHandelArea textContent={postData.textContent} />
+            <View
+              onLayout={({nativeEvent}) => {
+                const {height} = nativeEvent.layout;
+                setContentViewHeight(height);
+              }}>
+              <View
+                style={[
+                  layout.row,
+                  layout.justifyContentBetween,
+                  layout.alignItemsCenter,
+                ]}>
+                <View style={[layout.row, layout.alignItemsCenter]}>
+                  <AppText
+                    style={styles.userName}
+                    fontSize={16}
+                    fontWeight={600}>
+                    {userData.username}
+                  </AppText>
+                  <TimeFromNow date={new Date(postData.time)} />
+                </View>
+                <Pressable onPress={() => sheetRef.current?.snapTo(0)}>
+                  <SVGName title={'three_dot'} />
+                </Pressable>
+              </View>
+              <ContentHandelArea textContent={postData.textContent} />
+            </View>
           </View>
         </View>
         <View style={styles.mediaContent}>
-          {postData.mediaContent !== null && (
-            <MediaContent content={postData.mediaContent} />
-          )}
-        </View>
-        <View style={[layout.row, styles.feature]}>
-          <StatusItem
-            icon={<SVGName title={'red_heart'} />}
-            value={postData.liked}
-          />
-          <StatusItem
-            icon={<SVGName title={'message'} />}
-            value={postData.comment}
-          />
-          <StatusItem
-            icon={<SVGName title={'report'} />}
-            value={postData.reported}
-          />
-          <StatusItem icon={<SVGName title={'send'} />} />
+          <View>
+            {postData.mediaContent !== null && (
+              <MediaContent content={postData.mediaContent} />
+            )}
+          </View>
+          <View style={[layout.row, styles.feature]}>
+            <StatusItem
+              icon={<SVGName title={'red_heart'} />}
+              value={postData.liked}
+            />
+            <StatusItem
+              icon={<SVGName title={'message'} />}
+              value={postData.comment}
+            />
+            <StatusItem
+              icon={<SVGName title={'report'} />}
+              value={postData.reported}
+            />
+            <StatusItem icon={<SVGName title={'send'} />} />
+          </View>
         </View>
       </View>
       <ActiveBottomSheet sheetRef={sheetRef} />
@@ -161,5 +187,7 @@ const styles = AppStyleSheet.create({
     paddingBottom: 8,
     paddingTop: 16,
   },
-  mediaContent: {},
+  mediaContent: {
+    // paddingLeft: 64,
+  },
 });

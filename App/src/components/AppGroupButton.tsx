@@ -9,12 +9,14 @@ interface AppGroupButtonProps {
   data: AppButtonProps[];
   containerColor?: string;
   containerStyle?: StyleProp<ViewStyle>;
+  [key: string]: any;
 }
 
 const AppGroupButton = ({
   data = [{text: ''}],
   containerColor,
   containerStyle,
+  ...props
 }: AppGroupButtonProps) => {
   return (
     <View
@@ -22,7 +24,8 @@ const AppGroupButton = ({
         styles.container,
         {backgroundColor: containerColor},
         containerStyle,
-      ]}>
+      ]}
+      {...props}>
       {data.length > 1 ? (
         data.map((button, index) => (
           <Fragment>
