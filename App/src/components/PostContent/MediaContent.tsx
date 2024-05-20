@@ -25,7 +25,6 @@ const MediaContent = ({content = []}: MediaContentProps) => {
       contentContainerStyle={styles.container}
       horizontal
       showsHorizontalScrollIndicator={false}
-      scrollEnabled={content.length > 1}
     />
   );
 };
