@@ -43,7 +43,8 @@ const PostImage = ({link, key}: PostImageProps) => {
         {
           width: dimensions.width > dimensions.height ? imageWidth : undefined,
           height: imageHeight,
-          aspectRatio: dimensions.width > dimensions.height ? undefined : aspectRatio,
+          aspectRatio:
+            dimensions.width > dimensions.height ? undefined : aspectRatio,
         },
       ]}
       source={{uri: link}}
