@@ -61,25 +61,22 @@ const PostItem = ({
             isReplies && styles.repliesContainer,
             isRootPost && styles.rootPost,
           ]}>
-          <View>
-            <Avatar
-              source={{
-                uri: userData.avatar,
-              }}
-            />
-          </View>
+          <Avatar
+            source={{
+              uri: userData.avatar,
+            }}
+          />
           <View style={styles.contentContainer}>
             <View
-              style={{
-                position: 'absolute',
-                top: 40,
-                left: -30,
-                zIndex: 2,
-                height:
-                  postData.mediaContent.length !== 0
-                    ? imageHeight + contentViewHeight + 8
-                    : contentViewHeight + 8,
-              }}>
+              style={[
+                styles.lineWrapper,
+                {
+                  height:
+                    postData.mediaContent.length !== 0
+                      ? imageHeight + contentViewHeight + 8
+                      : contentViewHeight,
+                },
+              ]}>
               {haveReplies && !lastReplies && <View style={[styles.line]} />}
             </View>
             <View
@@ -110,27 +107,28 @@ const PostItem = ({
             </View>
           </View>
         </View>
-        <View style={styles.mediaContent}>
-          <View>
-            {postData.mediaContent !== null && (
-              <MediaContent content={postData.mediaContent} />
-            )}
-          </View>
-          <View style={[layout.row, styles.feature]}>
-            <StatusItem
-              icon={<SVGName title={'red_heart'} />}
-              value={postData.liked}
-            />
-            <StatusItem
-              icon={<SVGName title={'message'} />}
-              value={postData.comment}
-            />
-            <StatusItem
-              icon={<SVGName title={'report'} />}
-              value={postData.reported}
-            />
-            <StatusItem icon={<SVGName title={'send'} />} />
-          </View>
+        {postData.mediaContent.length > 0 && (
+          <MediaContent content={postData.mediaContent} />
+        )}
+        <View
+          style={[
+            layout.row,
+            styles.feature,
+            postData.mediaContent.length === 0 && styles.space,
+          ]}>
+          <StatusItem
+            icon={<SVGName title={'red_heart'} />}
+            value={postData.liked}
+          />
+          <StatusItem
+            icon={<SVGName title={'message'} />}
+            value={postData.comment}
+          />
+          <StatusItem
+            icon={<SVGName title={'report'} />}
+            value={postData.reported}
+          />
+          <StatusItem icon={<SVGName title={'send'} />} />
         </View>
       </View>
       <ActiveBottomSheet sheetRef={sheetRef} />
@@ -187,7 +185,13 @@ const styles = AppStyleSheet.create({
     paddingBottom: 8,
     paddingTop: 16,
   },
-  mediaContent: {
-    // paddingLeft: 64,
+  lineWrapper: {
+    position: 'absolute',
+    top: 40,
+    left: -30,
+    zIndex: 2,
+  },
+  space: {
+    marginTop: 8,
   },
 });
