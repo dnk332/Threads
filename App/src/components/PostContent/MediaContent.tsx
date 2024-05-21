@@ -13,10 +13,17 @@ interface MediaContentProps {
 const ItemSeparator = () => {
   return <View style={styles.space} />;
 };
+const Spacer = () => {
+  return <View style={styles.paddingLeft} />;
+};
 
 const MediaContent = ({content = []}: MediaContentProps) => {
   const RenderItem = useCallback(({item}) => {
-    return <PostImage key={item.id} link={item.link} />;
+    return (
+      <View key={item.id}>
+        <PostImage link={item.link} />
+      </View>
+    );
   }, []);
 
   return (
@@ -24,12 +31,12 @@ const MediaContent = ({content = []}: MediaContentProps) => {
       data={content}
       renderItem={({item}) => <RenderItem item={item} />}
       keyExtractor={item => item.id.toString()}
-      contentContainerStyle={styles.container}
       horizontal
       showsHorizontalScrollIndicator={false}
       scrollEnabled={content.length > 1}
       estimatedItemSize={3}
       ItemSeparatorComponent={ItemSeparator}
+      ListHeaderComponent={Spacer}
     />
   );
 };
@@ -37,9 +44,8 @@ const MediaContent = ({content = []}: MediaContentProps) => {
 export default MediaContent;
 
 const styles = AppStyleSheet.create({
-  container: {
+  paddingLeft: {
     paddingLeft: 64,
-    gap: 8,
   },
   space: {width: 8},
 });
