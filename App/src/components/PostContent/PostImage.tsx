@@ -3,6 +3,9 @@ import {getImageSize, ISize} from '@hooks/getImageInfo';
 import {AppImage} from '@components/index';
 import {AppStyleSheet} from '@themes/responsive';
 import {imageHeight, imageWidth} from '@constants/index';
+import {Pressable} from 'react-native';
+import {navigateTo} from '@navigation/NavigationService';
+import {SCREEN_NAME} from '@navigation/ScreenName';
 
 export interface PostImageProps {
   link: string;
@@ -35,18 +38,22 @@ const PostImage = ({link}: PostImageProps) => {
   }, [HandleImageSize, dimensions]);
 
   return (
-    <AppImage
-      style={[
-        styles.image,
-        {
-          width: dimensions.width > dimensions.height ? imageWidth : undefined,
-          height: imageHeight,
-          aspectRatio:
-            dimensions.width > dimensions.height ? undefined : aspectRatio,
-        },
-      ]}
-      source={{uri: link}}
-    />
+    <Pressable
+      onPress={() => navigateTo(SCREEN_NAME.IMAGE_VIEWER, {imageLink: link})}>
+      <AppImage
+        style={[
+          styles.image,
+          {
+            width:
+              dimensions.width > dimensions.height ? imageWidth : undefined,
+            height: imageHeight,
+            aspectRatio:
+              dimensions.width > dimensions.height ? undefined : aspectRatio,
+          },
+        ]}
+        source={{uri: link}}
+      />
+    </Pressable>
   );
 };
 

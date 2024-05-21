@@ -6,4 +6,9 @@ const ROOT_SCREEN = {
   SEARCH: 'SEARCH',
 };
 
-export {ROOT_SCREEN};
+const SCREEN_NAME = {
+  IMAGE_VIEWER: 'IMAGE_VIEWER',
+  POST_DETAIL: 'POST_DETAIL',
+};
+
+export {ROOT_SCREEN, SCREEN_NAME};
