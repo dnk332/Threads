@@ -18,7 +18,6 @@ const AppGroupButton = ({
   containerStyle,
   ...props
 }: AppGroupButtonProps) => {
-  /* eslint-disable-next-line react/no-array-index-key */
   return (
     <View
       style={[
@@ -29,9 +28,8 @@ const AppGroupButton = ({
       {...props}>
       {data.length > 1 ? (
         data.map((button, index) => (
-          <Fragment>
+          <Fragment key={index}>
             <AppButton
-              key={index}
               text={button.text}
               leftIcon={button.leftIcon}
               rightIcon={button.rightIcon}

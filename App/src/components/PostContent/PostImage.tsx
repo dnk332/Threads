@@ -6,10 +6,9 @@ import {imageHeight, imageWidth} from '@constants/index';
 
 export interface PostImageProps {
   link: string;
-  key: number;
 }
 
-const PostImage = ({link, key}: PostImageProps) => {
+const PostImage = ({link}: PostImageProps) => {
   const [dimensions, setValue] = useState<ISize>({width: 0, height: 0});
   const [aspectRatio, setAspectRatio] = useState<number>(0);
 
@@ -37,7 +36,6 @@ const PostImage = ({link, key}: PostImageProps) => {
 
   return (
     <AppImage
-      key={key}
       style={[
         styles.image,
         {
