@@ -24,6 +24,7 @@ import EYE_OFF from '@svg/common/eye_off.svg';
 import NOTIFY_OFF from '@svg/common/notify_off.svg';
 import USER_MINUS from '@svg/common/user_minus.svg';
 import REPORT_CIRCLE from '@svg/common/report_circle.svg';
+import ARROW_LEFT from '@svg/common/arrow_left.svg';
 
 export type SVG = {
   [key: string]: ReactElement;
@@ -54,4 +55,5 @@ export const SVG_NAME: SVG = {
   NOTIFY_OFF: <NOTIFY_OFF />,
   USER_MINUS: <USER_MINUS />,
   REPORT_CIRCLE: <REPORT_CIRCLE />,
+  ARROW_LEFT: <ARROW_LEFT />,
 };
