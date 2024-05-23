@@ -6,3 +6,5 @@ export {default as Avatar} from './Avatar';
 export {default as AppButton} from './AppButton';
 export {default as AppGroupButton} from './AppGroupButton';
 export {default as AppBottomSheet} from './AppBottomSheet';
+export {default as AwareScrollView} from './AwareScrollView';
+export {default as AppInput} from './AppInput';

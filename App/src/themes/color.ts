@@ -18,6 +18,7 @@ const colors = {
   text: '#ffffff',
   text_secondary: '#999999',
   tag_text: '#4192EF',
+  placeholder: '#4F555A',
 
   // border colors
   border: '#3F3F3F',

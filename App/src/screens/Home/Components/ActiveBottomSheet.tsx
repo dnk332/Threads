@@ -3,7 +3,8 @@ import React from 'react';
 import {AppBottomSheet, AppButton, AppGroupButton} from '@components/index';
 import {layout, colors} from '@themes/index';
 import {AppStyleSheet} from '@themes/responsive';
-import {SVGName} from '@assets/svg';
+import {SvgComponent} from '@assets/svg';
+// import {SVGName} from '@assets/svg';
 
 const ActiveBottomSheet = ({sheetRef}) => {
   return (
@@ -20,7 +21,7 @@ const ActiveBottomSheet = ({sheetRef}) => {
             styles.bottomSheetButton,
             styles.buttonContainer,
           ]}
-          rightIcon={<SVGName title={'hash_tag'} />}
+          // rightIcon={<SVGName title={'hash_tag'} />}
         />
         <AppGroupButton
           containerStyle={styles.buttonContainer}
@@ -29,13 +30,13 @@ const ActiveBottomSheet = ({sheetRef}) => {
               text: 'Save',
               buttonColor: colors.dark_gray,
               buttonStyle: [layout.row, styles.bottomSheetButton],
-              rightIcon: <SVGName title={'save'} />,
+              rightIcon: <SvgComponent name={'save'} />,
             },
             {
               text: 'Hide',
               buttonColor: colors.dark_gray,
               buttonStyle: [layout.row, styles.bottomSheetButton],
-              rightIcon: <SVGName title={'eye_off'} />,
+              // rightIcon: <SVGName title={'eye_off'} />,
             },
           ]}
         />
@@ -46,19 +47,19 @@ const ActiveBottomSheet = ({sheetRef}) => {
               text: 'Mute',
               buttonColor: colors.dark_gray,
               buttonStyle: [layout.row, styles.bottomSheetButton],
-              rightIcon: <SVGName title={'notify_off'} />,
+              rightIcon:<SvgComponent name={'notify_off'} />,
             },
             {
               text: 'Unfollow',
               buttonColor: colors.dark_gray,
               buttonStyle: [layout.row, styles.bottomSheetButton],
-              rightIcon: <SVGName title={'user_minus'} />,
+              // rightIcon: <SVGName title={'user_minus'} />,
             },
             {
               text: 'Report',
               buttonColor: colors.dark_gray,
               buttonStyle: [layout.row, styles.bottomSheetButton],
-              rightIcon: <SVGName title={'report_circle'} />,
+              // rightIcon: <SVGName title={'report_circle'} />,
             },
           ]}
         />

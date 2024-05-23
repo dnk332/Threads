@@ -3,13 +3,14 @@ import React, {Fragment, memo, ReactElement, useRef, useState} from 'react';
 import {AppText, Avatar} from '@components/index';
 import {layout, colors} from '@themes/index';
 import {AppStyleSheet} from '@themes/responsive';
-import {SVGName} from '@assets/svg';
+// import {SVGName} from '@assets/svg';
 import {User, Post} from '@local_types/index';
 import TimeFromNow from '@hooks/TimeAgo';
 import ActiveBottomSheet from '@screens/Home/Components/ActiveBottomSheet';
 import ContentHandelArea from '@components/PostContent/ContentHandelArea';
 import MediaContent from '@components/PostContent/MediaContent';
 import {imageHeight} from '@constants/index';
+import {SvgComponent} from '@assets/svg';
 
 interface PostItemProps {
   userData: User;
@@ -100,23 +101,25 @@ const PostItem = ({
                   <TimeFromNow date={new Date(postData.time)} />
                 </View>
                 <Pressable onPress={() => sheetRef.current?.snapTo(0)}>
-                  <SVGName title={'three_dot'} />
+                  <SvgComponent name={'three_dot'} />
                 </Pressable>
               </View>
               <ContentHandelArea textContent={postData.textContent} />
             </View>
           </View>
         </View>
-        {postData.mediaContent.length > 0 && (
-          <MediaContent content={postData.mediaContent} />
-        )}
+        <View style={styles.overlay}>
+          {postData.mediaContent.length > 0 && (
+            <MediaContent content={postData.mediaContent} />
+          )}
+        </View>
         <View
           style={[
             layout.row,
             styles.feature,
             postData.mediaContent.length === 0 && styles.space,
           ]}>
-          <StatusItem
+          {/* <StatusItem
             icon={<SVGName title={'red_heart'} />}
             value={postData.liked}
           />
@@ -128,7 +131,11 @@ const PostItem = ({
             icon={<SVGName title={'report'} />}
             value={postData.reported}
           />
-          <StatusItem icon={<SVGName title={'send'} />} />
+          <StatusItem icon={<SVGName title={'send'} />} /> */}
+          <SvgComponent name={'heart'} />
+          <SvgComponent name={'repeat'} />
+          <SvgComponent name={'heart_fill'} color="red" />
+          <SvgComponent name={'arrow_left'} />
         </View>
       </View>
       <ActiveBottomSheet sheetRef={sheetRef} />
@@ -170,6 +177,7 @@ const styles = AppStyleSheet.create({
     alignSelf: 'center',
     marginTop: 8,
     borderRadius: 2,
+    zIndex: -1,
   },
   statusIcon: {
     marginRight: 2,
@@ -190,4 +198,5 @@ const styles = AppStyleSheet.create({
   space: {
     marginTop: 8,
   },
+  overlay: {zIndex: 3},
 });
