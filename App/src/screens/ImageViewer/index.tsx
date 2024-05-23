@@ -18,7 +18,7 @@ type ImageViewerProps = {
 const ImageViewer = ({route}: ImageViewerProps) => {
   const {imageLink} = route.params;
   return (
-    <AppContainer backButton={true}>
+    <AppContainer haveBackButton={true}>
       <View style={[layout.fill, styles.container]}>
         <AppImage
           resizeMode="cover"

@@ -1,19 +1,32 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import {ROOT_SCREEN} from '../../navigation/ScreenName';
-
 import HomeScreen from '@screens/Home';
 import UserDetail from '@screens/UserDetail';
 import Actives from '@screens/Actives';
 
 import {colors} from '@themes/index';
-import {SVGName} from '../../assets/svg/index';
+// import {SVGName} from '../../assets/svg/index';
+import {navigateTo} from '@navigation/NavigationService';
+import {SvgComponent} from '@assets/svg';
 
-const Tab = createBottomTabNavigator();
+export type BottomTabsStackParamList = {
+  HOME: undefined;
+  SEARCH: undefined;
+  NEW_POST: undefined;
+  LIKE: undefined;
+  USER_DETAIL: undefined;
+};
+
+const Tab = createBottomTabNavigator<BottomTabsStackParamList>();
 
 const IconHandle = (iconName: string, focused: boolean = false) => {
-  return <SVGName title={iconName} isInactive={!focused} />;
+  return (
+    <SvgComponent
+      name={iconName}
+      color={focused ? colors.white : colors.shadow}
+    />
+  );
 };
 
 export default function RootScreen() {
@@ -27,51 +40,56 @@ export default function RootScreen() {
         },
         headerShown: false,
         tabBarShowLabel: false,
-      }}
-      initialRouteName={ROOT_SCREEN.HOME}>
+      }}>
       <Tab.Screen
-        name={ROOT_SCREEN.HOME}
+        name={'HOME'}
         component={HomeScreen}
         options={{
           tabBarIcon: ({focused}) => {
-            return IconHandle(ROOT_SCREEN.HOME, focused);
+            return IconHandle('HOME', focused);
           },
         }}
       />
       <Tab.Screen
-        name={ROOT_SCREEN.SEARCH}
+        name={'SEARCH'}
         component={UserDetail}
         options={{
           tabBarIcon: ({focused}) => {
-            return IconHandle(ROOT_SCREEN.SEARCH, focused);
+            return IconHandle('SEARCH', focused);
           },
         }}
       />
       <Tab.Screen
-        name={ROOT_SCREEN.NEWS}
+        name={'NEW_POST'}
         component={UserDetail}
         options={{
           tabBarIcon: ({focused}) => {
-            return IconHandle(ROOT_SCREEN.NEWS, focused);
+            return IconHandle('NEWS', focused);
           },
         }}
+        listeners={() => ({
+          tabPress: e => {
+            e.preventDefault();
+            navigateTo('NEW_POST_MODAL', {focused: true});
+          },
+        })}
       />
       <Tab.Screen
-        name={ROOT_SCREEN.LIKE}
+        name={'LIKE'}
         component={Actives}
         options={{
           tabBarIcon: ({focused}) => {
-            return IconHandle(ROOT_SCREEN.LIKE, focused);
+            return IconHandle('LIKE', focused);
           },
           tabBarBadge: '1',
         }}
       />
       <Tab.Screen
-        name={ROOT_SCREEN.USER_DETAIL}
+        name={'USER_DETAIL'}
         component={UserDetail}
         options={{
           tabBarIcon: ({focused}) => {
-            return IconHandle(ROOT_SCREEN.USER_DETAIL, focused);
+            return IconHandle('USER_DETAIL', focused);
           },
         }}
       />

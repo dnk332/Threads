@@ -5,7 +5,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import React, {useMemo} from 'react';
+import React, {Fragment, useMemo} from 'react';
 import {Edge, SafeAreaView} from 'react-native-safe-area-context';
 import {colors, layout} from '@themes/index';
 import Animated from 'react-native-reanimated';
@@ -25,9 +25,19 @@ interface AppContainerProps {
   containerStyle?: ViewStyle;
   safeAreaStyle?: ViewStyle;
   safeAreaColor?: string;
-  backButton?: boolean;
+  haveBackButton?: boolean;
+  backButton?: React.ReactNode;
   haveTitle?: boolean;
+  title?: string;
 }
+const DefaultBackButton = () => (
+  <Fragment>
+    {/* <SVGName title={'ARROW_LEFT'} /> */}
+    <AppText style={styles.buttonText} fontSize={16}>
+      Back
+    </AppText>
+  </Fragment>
+);
 
 const AppContainer = ({
   children,
@@ -38,8 +48,10 @@ const AppContainer = ({
   safeAreaStyle,
   style,
   containerStyle,
-  backButton = false,
+  haveBackButton = false,
+  backButton,
   haveTitle = false,
+  title = 'Threads',
 }: AppContainerProps) => {
   const statusbarHeight = useStatusBarHeight();
 
@@ -91,19 +103,16 @@ const AppContainer = ({
             style,
           ]}>
           <View style={styles.header}>
-            {backButton && (
+            {haveBackButton && (
               <Pressable
                 style={[layout.row, layout.alignItemsCenter, styles.button]}
                 onPress={() => goBack()}>
-                <SVGName title={'ARROW_LEFT'} />
-                <AppText style={styles.buttonText} fontSize={16}>
-                  Back
-                </AppText>
+                {backButton ?? <DefaultBackButton />}
               </Pressable>
             )}
             {haveTitle && (
               <AppText fontSize={20} fontWeight={700} style={styles.title}>
-                Threads
+                {title}
               </AppText>
             )}
           </View>

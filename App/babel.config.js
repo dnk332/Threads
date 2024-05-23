@@ -31,6 +31,7 @@ module.exports = api => ({
           '@root': './src/screens/Root',
           '@svg': './src/assets/svg',
           '@image': './src/assets/image',
+          '@stores': './src/stores',
         },
       },
     ],
