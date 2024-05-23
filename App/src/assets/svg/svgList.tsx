@@ -24,6 +24,7 @@ import CAMERA from '@svg/common/camera';
 import IMAGE from '@svg/common/image';
 import MIC from '@svg/common/mic';
 import GIF from '@svg/common/gif';
+import DELETE from '@svg/common/delete';
 
 export const SVG_NAME = {
   USER_MINUS,
@@ -50,4 +51,5 @@ export const SVG_NAME = {
   NEWS,
   LIKE,
   USER_DETAIL,
+  DELETE,
 };

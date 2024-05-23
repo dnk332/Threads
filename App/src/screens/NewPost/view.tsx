@@ -2,27 +2,16 @@ import React, {useEffect, useRef, useState} from 'react';
 import {AppContainer, AppInput, AppText, Avatar} from '@components/index';
 import {AppStyleSheet} from '@themes/responsive';
 
-import {Pressable, ScrollView, View} from 'react-native';
+import {InputAccessoryView, Pressable, ScrollView, View} from 'react-native';
 import {colors, layout} from '@themes/index';
-import HandelKeyboard from '@utils/KeyboardInfo';
 import {SvgComponent} from '@assets/svg';
-// import {SVGName} from '@assets/svg';
+import HandelKeyboard from '@utils/KeyboardInfo';
 
 const NewPostView = () => {
+  const inputAccessoryViewID = 'postThreadInput';
   const {heightKB} = HandelKeyboard();
-  const textInputRef = useRef(undefined);
-
   const [contentViewHeight, setContentViewHeight] = useState<number>(0);
-
-  useEffect(() => {
-    if (
-      textInputRef.current !== undefined &&
-      textInputRef.current &&
-      !textInputRef.current.isFocused()
-    ) {
-      textInputRef.current.focus();
-    }
-  }, [textInputRef]);
+  const [thread, setThread] = useState<string>('');
 
   return (
     <AppContainer
@@ -31,7 +20,7 @@ const NewPostView = () => {
       title="New thread"
       haveBackButton={true}
       backButton={<AppText fontSize={16}>Cancel</AppText>}>
-      <ScrollView style={[layout.fill, styles.contentContainer]}>
+      <ScrollView style={[styles.contentContainer]}>
         <View style={[layout.row, layout.fill]}>
           <Avatar
             source={{
@@ -43,7 +32,7 @@ const NewPostView = () => {
               style={[
                 styles.lineWrapper,
                 {
-                  height: contentViewHeight + 20,
+                  height: contentViewHeight + 15,
                 },
               ]}>
               <View style={[styles.line]} />
@@ -63,53 +52,74 @@ const NewPostView = () => {
                 setContentViewHeight(height);
               }}
               style={[layout.alignItemsStart, styles.content]}>
-              <View style={[layout.row]}>
-                <AppText style={styles.userName} fontSize={16} fontWeight={600}>
+              <View
+                style={[
+                  layout.row,
+                  layout.alignItemsCenter,
+                  layout.justifyContentBetween,
+                  styles.header,
+                ]}>
+                <AppText fontSize={16} fontWeight={600}>
                   Brian
                 </AppText>
+                <Pressable
+                  onPress={() => setThread('')}
+                  style={styles.deleteBtn}>
+                  <SvgComponent name="delete" />
+                </Pressable>
               </View>
               <AppInput
                 placeholder="What's news?"
                 autoCorrect={false}
                 spellCheck={false}
                 onBlur={e => e.preventDefault()}
-                ref={textInputRef}
+                // ref={ref => {
+                //   if (ref !== undefined && ref && !ref.isFocused()) {
+                //     ref.focus();
+                //   }
+                // }}
+                value={thread}
+                onChangeText={setThread}
                 multiline={true}
+                inputAccessoryViewID={inputAccessoryViewID}
+                numberOfLines={1}
+                scrollEnabled={false}
+                style={styles.textInput}
               />
               <View
                 style={[
                   layout.row,
                   layout.alignItemsCenter,
                   layout.justifyContentBetween,
+                  styles.functionBtnContainer,
                 ]}>
-                {/* <Pressable>
-                  <SVGName title={'image'} />
+                <Pressable style={styles.functionBtn}>
+                  <SvgComponent name={'image'} />
                 </Pressable>
-                <Pressable>
-                  <SVGName title={'camera'} />
+                <Pressable style={styles.functionBtn}>
+                  <SvgComponent name={'camera'} />
                 </Pressable>
-                <Pressable>
-                  <SVGName title={'document'} />
+                <Pressable style={styles.functionBtn}>
+                  <SvgComponent name={'gif'} />
                 </Pressable>
-                <Pressable>
-                  <SVGName title={'mic'} />
+                <Pressable style={styles.functionBtn}>
+                  <SvgComponent name={'mic'} />
                 </Pressable>
-                <Pressable>
-                  <SVGName title={'hashtag2'} />
-                </Pressable> */}
-                <Pressable>
-                  <SvgComponent name={'user_minus'} color={'red'} />
+                <Pressable style={styles.functionBtn}>
+                  <SvgComponent name={'hashtag'} />
                 </Pressable>
               </View>
             </View>
           </View>
         </View>
+        <View style={{height: heightKB + 100}} />
+      </ScrollView>
+      <InputAccessoryView nativeID={inputAccessoryViewID}>
         <View
           style={[
             layout.row,
             layout.justifyContentBetween,
             layout.alignItemsCenter,
-            {bottom: -heightKB - 40},
             styles.bottomBtn,
           ]}>
           <Pressable>
@@ -121,7 +131,7 @@ const NewPostView = () => {
             </AppText>
           </Pressable>
         </View>
-      </ScrollView>
+      </InputAccessoryView>
     </AppContainer>
   );
 };
@@ -135,11 +145,11 @@ const styles = AppStyleSheet.create({
     borderTopColor: colors.border,
     marginTop: 14,
     padding: 16,
-    paddingBottom: 0,
   },
-  userName: {
-    marginTop: -3,
+  header: {
+    marginTop: -4,
     marginBottom: 4,
+    width: '90%',
   },
   line: {
     width: 2,
@@ -173,9 +183,22 @@ const styles = AppStyleSheet.create({
     left: 40,
     alignSelf: 'flex-start',
   },
+  functionBtnContainer: {
+    marginTop: 4,
+    gap: 5,
+    marginLeft: -4,
+  },
+  functionBtn: {
+    padding: 4,
+  },
   bottomBtn: {
-    position: 'absolute',
-    flex: 1,
-    width: '100%',
+    padding: 16,
+    backgroundColor: colors.background,
+  },
+  deleteBtn: {
+    padding: 4,
+  },
+  textInput: {
+    maxWidth: '90%',
   },
 });

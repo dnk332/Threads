@@ -119,23 +119,19 @@ const PostItem = ({
             styles.feature,
             postData.mediaContent.length === 0 && styles.space,
           ]}>
-          {/* <StatusItem
-            icon={<SVGName title={'red_heart'} />}
+          <StatusItem
+            icon={<SvgComponent name={'heart'} />}
             value={postData.liked}
           />
           <StatusItem
-            icon={<SVGName title={'message'} />}
+            icon={<SvgComponent name={'message'} />}
             value={postData.comment}
           />
           <StatusItem
-            icon={<SVGName title={'report'} />}
+            icon={<SvgComponent name={'repeat'} />}
             value={postData.reported}
           />
-          <StatusItem icon={<SVGName title={'send'} />} /> */}
-          <SvgComponent name={'heart'} />
-          <SvgComponent name={'repeat'} />
-          <SvgComponent name={'heart_fill'} color="red" />
-          <SvgComponent name={'arrow_left'} />
+          <StatusItem icon={<SvgComponent name={'send'} />} />
         </View>
       </View>
       <ActiveBottomSheet sheetRef={sheetRef} />

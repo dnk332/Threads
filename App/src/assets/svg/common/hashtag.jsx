@@ -14,28 +14,28 @@ const SvgComponent = ({size = 25, color = colors.black}) => (
     <Path
       d="M9.33333 4L6 19"
       stroke={color}
-      strokeWidth={1.5}
+      strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
     />
     <Path
       d="M17.3333 4L14 19"
       stroke={color}
-      strokeWidth={1.5}
+      strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
     />
     <Path
       d="M5 8H19"
       stroke={color}
-      strokeWidth={1.5}
+      strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
     />
     <Path
       d="M4 15H18"
       stroke={color}
-      strokeWidth={1.5}
+      strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
     />

@@ -21,7 +21,7 @@ const ActiveBottomSheet = ({sheetRef}) => {
             styles.bottomSheetButton,
             styles.buttonContainer,
           ]}
-          // rightIcon={<SVGName title={'hash_tag'} />}
+          rightIcon={<SvgComponent name={'hashtag'} />}
         />
         <AppGroupButton
           containerStyle={styles.buttonContainer}
@@ -36,7 +36,7 @@ const ActiveBottomSheet = ({sheetRef}) => {
               text: 'Hide',
               buttonColor: colors.dark_gray,
               buttonStyle: [layout.row, styles.bottomSheetButton],
-              // rightIcon: <SVGName title={'eye_off'} />,
+              rightIcon: <SvgComponent name={'eye_off'} />,
             },
           ]}
         />
@@ -47,19 +47,19 @@ const ActiveBottomSheet = ({sheetRef}) => {
               text: 'Mute',
               buttonColor: colors.dark_gray,
               buttonStyle: [layout.row, styles.bottomSheetButton],
-              rightIcon:<SvgComponent name={'notify_off'} />,
+              rightIcon: <SvgComponent name={'notify_off'} />,
             },
             {
               text: 'Unfollow',
               buttonColor: colors.dark_gray,
               buttonStyle: [layout.row, styles.bottomSheetButton],
-              // rightIcon: <SVGName title={'user_minus'} />,
+              rightIcon: <SvgComponent name={'user_minus'} />,
             },
             {
               text: 'Report',
               buttonColor: colors.dark_gray,
               buttonStyle: [layout.row, styles.bottomSheetButton],
-              // rightIcon: <SVGName title={'report_circle'} />,
+              rightIcon: <SvgComponent name={'alert'} />,
             },
           ]}
         />
