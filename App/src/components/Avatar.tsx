@@ -21,7 +21,7 @@ interface AvatarProps {
 
 const Avatar = ({source, canFollow, container, imgStyle}: AvatarProps) => {
   return (
-    <View style={container}>
+    <View style={[styles.container, container]}>
       <AppImage
         source={source}
         containerStyle={[styles.imageContainer, imgStyle]}
@@ -57,5 +57,9 @@ const styles = AppStyleSheet.create({
     bottom: -2,
     right: -2,
     zIndex: 2,
+  },
+  container: {
+    alignSelf: 'flex-start',
+    borderRadius: 40,
   },
 });
