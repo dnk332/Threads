@@ -58,7 +58,6 @@ export default AppButton;
 
 const styles = AppStyleSheet.create({
   buttonContainer: {
-    width: '100%',
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',

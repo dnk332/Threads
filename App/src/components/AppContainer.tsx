@@ -11,7 +11,7 @@ import {colors, layout} from '@themes/index';
 import Animated from 'react-native-reanimated';
 import {AppStyleSheet} from '@themes/responsive';
 import useStatusBarHeight from '@hooks/getStatusBarHeight';
-import {SVGName} from '@assets/svg';
+import {SvgComponent} from '@assets/svg';
 import {goBack} from '@navigation/NavigationService';
 import AppText from './AppText';
 
@@ -32,7 +32,7 @@ interface AppContainerProps {
 }
 const DefaultBackButton = () => (
   <Fragment>
-    {/* <SVGName title={'ARROW_LEFT'} /> */}
+    <SvgComponent name={'ARROW_LEFT'} />
     <AppText style={styles.buttonText} fontSize={16}>
       Back
     </AppText>

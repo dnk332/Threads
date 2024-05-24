@@ -6,9 +6,10 @@ import UserDetail from '@screens/UserDetail';
 import Actives from '@screens/Actives';
 
 import {colors} from '@themes/index';
-// import {SVGName} from '../../assets/svg/index';
+
 import {navigateTo} from '@navigation/NavigationService';
 import {SvgComponent} from '@assets/svg';
+import SearchScreen from '@screens/Search';
 
 export type BottomTabsStackParamList = {
   HOME: undefined;
@@ -21,10 +22,14 @@ export type BottomTabsStackParamList = {
 const Tab = createBottomTabNavigator<BottomTabsStackParamList>();
 
 const IconHandle = (iconName: string, focused: boolean = false) => {
+  if (!focused) {
+    iconName = `${iconName}_inactive`;
+  }
   return (
     <SvgComponent
       name={iconName}
       color={focused ? colors.white : colors.shadow}
+      size={32}
     />
   );
 };
@@ -52,7 +57,7 @@ export default function RootScreen() {
       />
       <Tab.Screen
         name={'SEARCH'}
-        component={UserDetail}
+        component={SearchScreen}
         options={{
           tabBarIcon: ({focused}) => {
             return IconHandle('SEARCH', focused);
@@ -79,7 +84,7 @@ export default function RootScreen() {
         component={Actives}
         options={{
           tabBarIcon: ({focused}) => {
-            return IconHandle('LIKE', focused);
+            return IconHandle('ACTIVITY', focused);
           },
           tabBarBadge: '1',
         }}

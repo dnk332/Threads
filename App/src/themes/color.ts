@@ -16,7 +16,7 @@ const colors = {
 
   // text colors
   text: '#ffffff',
-  text_secondary: '#999999',
+  text_secondary: '#616161',
   tag_text: '#4192EF',
   placeholder: '#4F555A',
 

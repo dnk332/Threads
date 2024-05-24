@@ -67,6 +67,5 @@ export default memo(AppInput);
 const styles = AppStyleSheet.create({
   base: {
     color: colors.text,
-    skipResponsive: true,
   },
 });

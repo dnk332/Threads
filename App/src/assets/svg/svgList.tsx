@@ -2,8 +2,13 @@
 import HOME from '@svg/root/home';
 import SEARCH from '@svg/root/search';
 import NEWS from '@svg/root/news';
-import LIKE from '@svg/root/like';
+import ACTIVITY from '@svg/root/activity';
 import USER_DETAIL from '@svg/root/user_detail';
+import HOME_INACTIVE from '@svg/root/home_inactive';
+import SEARCH_INACTIVE from '@svg/root/search_inactive';
+import NEWS_INACTIVE from '@svg/root/news_inactive';
+import ACTIVITY_INACTIVE from '@svg/root/activity_inactive';
+import USER_DETAIL_INACTIVE from '@svg/root/user_detail_inactive';
 // // Common
 import THREE_DOT from '@svg/common/threeDot';
 import HEART from '@svg/common/heart';
@@ -27,6 +32,19 @@ import GIF from '@svg/common/gif';
 import DELETE from '@svg/common/delete';
 
 export const SVG_NAME = {
+  // Root
+  HOME,
+  SEARCH,
+  NEWS,
+  ACTIVITY,
+  USER_DETAIL,
+  HOME_INACTIVE,
+  SEARCH_INACTIVE,
+  NEWS_INACTIVE,
+  ACTIVITY_INACTIVE,
+  USER_DETAIL_INACTIVE,
+
+  // Common
   USER_MINUS,
   THREE_DOT,
   SEND,
@@ -46,10 +64,5 @@ export const SVG_NAME = {
   CAMERA,
   HEART_FILL,
   PLUS,
-  HOME,
-  SEARCH,
-  NEWS,
-  LIKE,
-  USER_DETAIL,
   DELETE,
 };

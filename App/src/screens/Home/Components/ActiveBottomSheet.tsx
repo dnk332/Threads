@@ -20,6 +20,7 @@ const ActiveBottomSheet = ({sheetRef}) => {
             layout.row,
             styles.bottomSheetButton,
             styles.buttonContainer,
+            styles.button,
           ]}
           rightIcon={<SvgComponent name={'hashtag'} />}
         />
@@ -29,13 +30,21 @@ const ActiveBottomSheet = ({sheetRef}) => {
             {
               text: 'Save',
               buttonColor: colors.dark_gray,
-              buttonStyle: [layout.row, styles.bottomSheetButton],
+              buttonStyle: [
+                layout.row,
+                styles.bottomSheetButton,
+                styles.button,
+              ],
               rightIcon: <SvgComponent name={'save'} />,
             },
             {
               text: 'Hide',
               buttonColor: colors.dark_gray,
-              buttonStyle: [layout.row, styles.bottomSheetButton],
+              buttonStyle: [
+                layout.row,
+                styles.bottomSheetButton,
+                styles.button,
+              ],
               rightIcon: <SvgComponent name={'eye_off'} />,
             },
           ]}
@@ -46,19 +55,31 @@ const ActiveBottomSheet = ({sheetRef}) => {
             {
               text: 'Mute',
               buttonColor: colors.dark_gray,
-              buttonStyle: [layout.row, styles.bottomSheetButton],
+              buttonStyle: [
+                layout.row,
+                styles.bottomSheetButton,
+                styles.button,
+              ],
               rightIcon: <SvgComponent name={'notify_off'} />,
             },
             {
               text: 'Unfollow',
               buttonColor: colors.dark_gray,
-              buttonStyle: [layout.row, styles.bottomSheetButton],
+              buttonStyle: [
+                layout.row,
+                styles.bottomSheetButton,
+                styles.button,
+              ],
               rightIcon: <SvgComponent name={'user_minus'} />,
             },
             {
               text: 'Report',
               buttonColor: colors.dark_gray,
-              buttonStyle: [layout.row, styles.bottomSheetButton],
+              buttonStyle: [
+                layout.row,
+                styles.bottomSheetButton,
+                styles.button,
+              ],
               rightIcon: <SvgComponent name={'alert'} />,
             },
           ]}
@@ -80,5 +101,8 @@ const styles = AppStyleSheet.create({
   },
   buttonContainer: {
     marginBottom: 16,
+  },
+  button: {
+    width: '100%',
   },
 });
