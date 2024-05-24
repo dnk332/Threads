@@ -1,8 +1,15 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {AppContainer, AppInput, AppText, Avatar} from '@components/index';
 import {AppStyleSheet} from '@themes/responsive';
 
-import {InputAccessoryView, Pressable, ScrollView, View} from 'react-native';
+import {
+  InputAccessoryView,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  View,
+} from 'react-native';
 import {colors, layout} from '@themes/index';
 import {SvgComponent} from '@assets/svg';
 import HandelKeyboard from '@utils/KeyboardInfo';
@@ -20,8 +27,12 @@ const NewPostView = () => {
       title="New thread"
       haveBackButton={true}
       backButton={<AppText fontSize={16}>Cancel</AppText>}>
-      <ScrollView style={[styles.contentContainer]}>
-        <View style={[layout.row, layout.fill]}>
+      <ScrollView
+        keyboardShouldPersistTaps={'always'}
+        style={[styles.contentContainer]}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={[layout.row, layout.fill]}>
           <Avatar
             source={{
               uri: 'https://images.pexels.com/photos/61100/pexels-photo-61100.jpeg',
@@ -62,22 +73,20 @@ const NewPostView = () => {
                 <AppText fontSize={16} fontWeight={600}>
                   Brian
                 </AppText>
-                <Pressable
-                  onPress={() => setThread('')}
-                  style={styles.deleteBtn}>
-                  <SvgComponent name="delete" />
-                </Pressable>
+                <View style={styles.btnContainer}>
+                  {thread !== '' && (
+                    <Pressable
+                      onPress={() => setThread('')}
+                      style={styles.deleteBtn}>
+                      <SvgComponent name="delete" />
+                    </Pressable>
+                  )}
+                </View>
               </View>
               <AppInput
+                autoFocus
                 placeholder="What's news?"
-                autoCorrect={false}
-                spellCheck={false}
                 onBlur={e => e.preventDefault()}
-                // ref={ref => {
-                //   if (ref !== undefined && ref && !ref.isFocused()) {
-                //     ref.focus();
-                //   }
-                // }}
                 value={thread}
                 onChangeText={setThread}
                 multiline={true}
@@ -111,7 +120,7 @@ const NewPostView = () => {
               </View>
             </View>
           </View>
-        </View>
+        </KeyboardAvoidingView>
         <View style={{height: heightKB + 100}} />
       </ScrollView>
       <InputAccessoryView nativeID={inputAccessoryViewID}>
@@ -200,5 +209,11 @@ const styles = AppStyleSheet.create({
   },
   textInput: {
     maxWidth: '90%',
+  },
+  btnContainer: {
+    width: 30,
+    height: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
