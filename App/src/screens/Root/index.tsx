@@ -3,19 +3,19 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import HomeScreen from '@screens/Home';
 import UserDetail from '@screens/UserDetail';
-import Actives from '@screens/Actives';
+import Activities from '@screens/Activities';
+import SearchScreen from '@screens/Search';
 
 import {colors} from '@themes/index';
 
 import {navigateTo} from '@navigation/NavigationService';
 import {SvgComponent} from '@assets/svg';
-import SearchScreen from '@screens/Search';
 
 export type BottomTabsStackParamList = {
   HOME: undefined;
   SEARCH: undefined;
   NEW_POST: undefined;
-  LIKE: undefined;
+  ACTIVITIES: undefined;
   USER_DETAIL: undefined;
 };
 
@@ -80,8 +80,8 @@ export default function RootScreen() {
         })}
       />
       <Tab.Screen
-        name={'LIKE'}
-        component={Actives}
+        name={'ACTIVITIES'}
+        component={Activities}
         options={{
           tabBarIcon: ({focused}) => {
             return IconHandle('ACTIVITY', focused);
