@@ -108,7 +108,7 @@ const SearchScreenView = () => {
               animatedSearchInputStyle,
             ]}>
             <SvgComponent
-              name="search"
+              name="SEARCH"
               size={18}
               color={colors.text_secondary}
             />

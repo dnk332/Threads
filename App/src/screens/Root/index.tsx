@@ -10,6 +10,7 @@ import {colors} from '@themes/index';
 
 import {navigateTo} from '@navigation/NavigationService';
 import {SvgComponent} from '@assets/svg';
+import {SVG_NAME} from '@assets/svg/svgList';
 
 export type BottomTabsStackParamList = {
   HOME: undefined;
@@ -19,15 +20,22 @@ export type BottomTabsStackParamList = {
   USER_DETAIL: undefined;
 };
 
+interface IconHandleProps {
+  iconName: keyof typeof SVG_NAME;
+  iconNameInactive: keyof typeof SVG_NAME;
+  focused?: boolean;
+}
+
 const Tab = createBottomTabNavigator<BottomTabsStackParamList>();
 
-const IconHandle = (iconName: string, focused: boolean = false) => {
-  if (!focused) {
-    iconName = `${iconName}_inactive`;
-  }
+const IconHandle = ({
+  iconName,
+  iconNameInactive,
+  focused = false,
+}: IconHandleProps) => {
   return (
     <SvgComponent
-      name={iconName}
+      name={focused ? iconName : iconNameInactive}
       color={focused ? colors.white : colors.shadow}
       size={32}
     />
@@ -51,7 +59,11 @@ export default function RootScreen() {
         component={HomeScreen}
         options={{
           tabBarIcon: ({focused}) => {
-            return IconHandle('HOME', focused);
+            return IconHandle({
+              iconName: 'HOME',
+              iconNameInactive: 'HOME_INACTIVE',
+              focused,
+            });
           },
         }}
       />
@@ -60,7 +72,11 @@ export default function RootScreen() {
         component={SearchScreen}
         options={{
           tabBarIcon: ({focused}) => {
-            return IconHandle('SEARCH', focused);
+            return IconHandle({
+              iconName: 'SEARCH',
+              iconNameInactive: 'SEARCH_INACTIVE',
+              focused,
+            });
           },
         }}
       />
@@ -69,7 +85,11 @@ export default function RootScreen() {
         component={UserDetail}
         options={{
           tabBarIcon: ({focused}) => {
-            return IconHandle('NEWS', focused);
+            return IconHandle({
+              iconName: 'NEWS',
+              iconNameInactive: 'NEWS_INACTIVE',
+              focused,
+            });
           },
         }}
         listeners={() => ({
@@ -84,7 +104,11 @@ export default function RootScreen() {
         component={Activities}
         options={{
           tabBarIcon: ({focused}) => {
-            return IconHandle('ACTIVITY', focused);
+            return IconHandle({
+              iconName: 'ACTIVITY',
+              iconNameInactive: 'ACTIVITY_INACTIVE',
+              focused,
+            });
           },
           tabBarBadge: '1',
         }}
@@ -94,7 +118,11 @@ export default function RootScreen() {
         component={UserDetail}
         options={{
           tabBarIcon: ({focused}) => {
-            return IconHandle('USER_DETAIL', focused);
+            return IconHandle({
+              iconName: 'USER_DETAIL',
+              iconNameInactive: 'USER_DETAIL_INACTIVE',
+              focused,
+            });
           },
         }}
       />
