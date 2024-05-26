@@ -3,7 +3,7 @@ import {SVG_NAME} from '@svg/svgList';
 import colors from '@themes/color';
 
 interface SvgComponentProps {
-  name: string;
+  name: keyof typeof SVG_NAME;
   size?: number;
   color?: string;
 }

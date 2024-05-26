@@ -78,7 +78,7 @@ const NewPostView = () => {
                     <Pressable
                       onPress={() => setThread('')}
                       style={styles.deleteBtn}>
-                      <SvgComponent name="delete" />
+                      <SvgComponent name="DELETE" />
                     </Pressable>
                   )}
                 </View>
@@ -103,19 +103,19 @@ const NewPostView = () => {
                   styles.functionBtnContainer,
                 ]}>
                 <Pressable style={styles.functionBtn}>
-                  <SvgComponent name={'image'} />
+                  <SvgComponent name={'IMAGE'} />
                 </Pressable>
                 <Pressable style={styles.functionBtn}>
-                  <SvgComponent name={'camera'} />
+                  <SvgComponent name={'CAMERA'} />
                 </Pressable>
                 <Pressable style={styles.functionBtn}>
-                  <SvgComponent name={'gif'} />
+                  <SvgComponent name={'GIF'} />
                 </Pressable>
                 <Pressable style={styles.functionBtn}>
-                  <SvgComponent name={'mic'} />
+                  <SvgComponent name={'MIC'} />
                 </Pressable>
                 <Pressable style={styles.functionBtn}>
-                  <SvgComponent name={'hashtag'} />
+                  <SvgComponent name={'HASHTAG'} />
                 </Pressable>
               </View>
             </View>

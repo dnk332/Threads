@@ -30,6 +30,9 @@ import IMAGE from '@svg/common/image';
 import MIC from '@svg/common/mic';
 import GIF from '@svg/common/gif';
 import DELETE from '@svg/common/delete';
+import GLOBE from '@svg/common/globe';
+import INSTAGRAM from '@svg/common/instagram';
+import LINE_2 from '@svg/common/line_2';
 
 export const SVG_NAME = {
   // Root
@@ -65,4 +68,7 @@ export const SVG_NAME = {
   HEART_FILL,
   PLUS,
   DELETE,
+  GLOBE,
+  LINE_2,
+  INSTAGRAM,
 };
