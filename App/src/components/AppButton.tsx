@@ -20,6 +20,7 @@ export interface AppButtonProps extends PressableProps {
   buttonStyle?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   borderRadius?: number;
+  onPress?: () => void;
 }
 
 const AppButton = ({
@@ -31,9 +32,11 @@ const AppButton = ({
   buttonStyle,
   textStyle,
   borderRadius = 16,
+  onPress,
 }: AppButtonProps): React.ReactNode => {
   return (
     <Pressable
+      onPress={onPress}
       style={[
         styles.buttonContainer,
         {backgroundColor: buttonColor, borderRadius},

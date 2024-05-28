@@ -1,18 +1,13 @@
-import React, {Fragment, useCallback} from 'react';
-import {PostItem} from '@components/index';
-import AppContainer from '@components/AppContainer';
-
-import {dummyPost} from '@constants/dummyData';
-import {FlashList} from '@shopify/flash-list';
 import {View} from 'react-native';
-import colors from '@themes/color';
-import {AppStyleSheet} from '@themes/responsive';
+import React, {Fragment, memo, useCallback} from 'react';
+import {PostItem} from '@components/index';
+// import {AppStyleSheet} from '@themes/responsive';
+// import colors from '@themes/color';
+import {dummyPost} from '@constants/dummyData';
+import {layout} from '@themes/index';
+import {Tabs} from 'react-native-collapsible-tab-view';
 
-const ItemSeparator = () => {
-  return <View style={styles.separator} />;
-};
-
-const HomeScreenView = () => {
+const ThreadsTab = () => {
   const _renderItem = useCallback(({item}) => {
     let isRepliesPost = item.replies.length > 0;
     if (isRepliesPost) {
@@ -28,7 +23,6 @@ const HomeScreenView = () => {
             let isLastReplies =
               item.replies[item.replies.length - 1].id === replies.id;
             return (
-              /* eslint-disable-next-line react/no-array-index-key */
               <PostItem
                 key={index}
                 postData={replies.post}
@@ -51,22 +45,19 @@ const HomeScreenView = () => {
   }, []);
 
   return (
-    <AppContainer>
-      <FlashList
+    <View style={[layout.fill]}>
+      <Tabs.FlatList
         data={dummyPost}
-        keyExtractor={item => item.id.toString()}
         renderItem={_renderItem}
+        keyExtractor={item => item.id.toString()}
         showsVerticalScrollIndicator={false}
-        estimatedItemSize={10}
-        ItemSeparatorComponent={ItemSeparator}
-        onEndReachedThreshold={0.5}
       />
-    </AppContainer>
+    </View>
   );
 };
 
-export default HomeScreenView;
+export default memo(ThreadsTab);
 
-const styles = AppStyleSheet.create({
-  separator: {borderBottomColor: colors.border, borderBottomWidth: 1},
-});
+// const styles = AppStyleSheet.create({
+//   separator: {borderBottomColor: colors.border, borderBottomWidth: 1},
+// });
