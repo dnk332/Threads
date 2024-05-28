@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React, {Fragment, useEffect} from 'react';
 import StackScreens from './navigation/Stack';
 import 'react-native-svg';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
@@ -11,7 +11,9 @@ import {PersistGate} from 'redux-persist/integration/react';
 import {persistor, store} from '@stores/index';
 
 const Index = () => {
-  SetUpTime();
+  useEffect(() => {
+    SetUpTime();
+  }, []);
 
   return (
     <SafeAreaProvider>

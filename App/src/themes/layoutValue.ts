@@ -5,6 +5,12 @@ const layoutValue = (value: number) => {
     gap: {
       gap: value,
     },
+    marginTop: {
+      marginTop: value,
+    },
+    marginVertical: {
+      marginVertical: value,
+    },
   });
 };
 
