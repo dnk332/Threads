@@ -104,7 +104,7 @@ const UserDetailView = () => {
           scrollY.value,
           [headerHeight.current / 5, headerHeight.current / 4],
           [1, 0],
-          Extrapolation.CLAMP,
+          Extrapolation.EXTEND,
         ),
       };
     });
@@ -115,7 +115,7 @@ const UserDetailView = () => {
           scrollY.value,
           [headerHeight.current / 4, headerHeight.current / 2],
           [1, 0],
-          Extrapolation.CLAMP,
+          Extrapolation.EXTEND,
         ),
       };
     });
@@ -126,98 +126,91 @@ const UserDetailView = () => {
           scrollY.value,
           [headerHeight.current / 2, headerHeight.current / 1.2],
           [1, 0],
-          Extrapolation.CLAMP,
+          Extrapolation.EXTEND,
         ),
       };
     });
 
     return (
-      <View style={[layout.fill, {backgroundColor: colors.primary}]}>
-        <View
-          onLayout={({nativeEvent}) => {
-            const {height} = nativeEvent.layout;
-            headerHeight.current = height;
-          }}
-          style={[styles.headerContainer]}>
-          <Animated.View
-            style={[
-              layout.row,
-              layout.alignItemsCenter,
-              layout.justifyContentBetween,
-              headerStyleAnimated,
-            ]}>
-            <Pressable>
-              <SvgComponent name="GLOBE" />
-            </Pressable>
-            <View
-              style={[
-                layout.row,
-                layout.alignItemsCenter,
-                styles.leftHeaderBtn,
-              ]}>
-              <Pressable>
-                <SvgComponent name="INSTAGRAM" />
-              </Pressable>
-              <Pressable>
-                <SvgComponent name="LINE_2" />
-              </Pressable>
-            </View>
-          </Animated.View>
+      <View
+        onLayout={({nativeEvent}) => {
+          const {height} = nativeEvent.layout;
+          headerHeight.current = height;
+        }}
+        style={[styles.headerContainer]}>
+        <Animated.View
+          style={[
+            layout.row,
+            layout.alignItemsCenter,
+            layout.justifyContentBetween,
+            headerStyleAnimated,
+          ]}>
+          <Pressable>
+            <SvgComponent name="GLOBE" />
+          </Pressable>
           <View
-            style={[
-              layout.row,
-              layout.justifyContentCenter,
-              layout.justifyContentBetween,
-              styles.headerContent,
-              ,
-            ]}>
-            <View style={styles.headerContentContainer}>
-              <Animated.View style={contentStyleAnimated}>
-                <AppText fontSize={24} fontWeight={700}>
-                  Brian
-                </AppText>
-                <View style={layoutValue(8).marginVertical}>
-                  <AppText>brian_dn</AppText>
-                </View>
-              </Animated.View>
-              <Animated.View style={infoStyleAnimated}>
-                <AppText>
-                  Passionate about art, photography, and all things creative
-                  🎨✨
-                </AppText>
-                <AppText style={layoutValue(8).marginTop}>12 followers</AppText>
-              </Animated.View>
-            </View>
+            style={[layout.row, layout.alignItemsCenter, styles.leftHeaderBtn]}>
+            <Pressable>
+              <SvgComponent name="INSTAGRAM" />
+            </Pressable>
+            <Pressable>
+              <SvgComponent name="LINE_2" />
+            </Pressable>
+          </View>
+        </Animated.View>
+        <View
+          style={[
+            layout.row,
+            layout.justifyContentCenter,
+            layout.justifyContentBetween,
+            styles.headerContent,
+            ,
+          ]}>
+          <View style={styles.headerContentContainer}>
             <Animated.View style={contentStyleAnimated}>
-              <Avatar
-                source={{
-                  uri: 'https://images.pexels.com/photos/61100/pexels-photo-61100.jpeg',
-                }}
-                imgStyle={styles.avatar}
-              />
+              <AppText fontSize={24} fontWeight={700}>
+                Brian
+              </AppText>
+              <View style={layoutValue(8).marginVertical}>
+                <AppText>brian_dn</AppText>
+              </View>
+            </Animated.View>
+            <Animated.View style={infoStyleAnimated}>
+              <AppText>
+                Passionate about art, photography, and all things creative 🎨✨
+              </AppText>
+              <AppText style={layoutValue(8).marginTop}>12 followers</AppText>
             </Animated.View>
           </View>
-          <Animated.View
-            style={[
-              layout.row,
-              layout.justifyContentBetween,
-              layout.alignItemsCenter,
-              layoutValue(16).gap,
-              layoutValue(16).marginTop,
-              buttonStyleAnimated,
-            ]}>
-            <AppButton
-              textStyle={styles.profileTextBtn}
-              buttonStyle={[layout.fill, styles.profileBtn]}
-              text="Edit profile"
-            />
-            <AppButton
-              textStyle={styles.profileTextBtn}
-              buttonStyle={[layout.fill, styles.profileBtn]}
-              text="Share profile"
+          <Animated.View style={contentStyleAnimated}>
+            <Avatar
+              source={{
+                uri: 'https://images.pexels.com/photos/61100/pexels-photo-61100.jpeg',
+              }}
+              imgStyle={styles.avatar}
             />
           </Animated.View>
         </View>
+        <Animated.View
+          style={[
+            layout.row,
+            layout.justifyContentBetween,
+            layout.alignItemsCenter,
+            layoutValue(16).gap,
+            layoutValue(16).marginTop,
+            buttonStyleAnimated,
+          ]}>
+          <AppButton
+            textStyle={styles.profileTextBtn}
+            buttonStyle={[layout.fill, styles.profileBtn]}
+            text="Edit profile"
+          />
+          <AppButton
+            textStyle={styles.profileTextBtn}
+            buttonStyle={[layout.fill, styles.profileBtn]}
+            text="Share profile"
+          />
+        </Animated.View>
       </View>
     );
   };
@@ -233,6 +226,7 @@ const UserDetailView = () => {
         ref={refMap}
         renderHeader={() => <Header />}
         headerHeight={headerHeight.current}
+        tabBarHeight={40}
         renderTabBar={TabBar}>
         <Tabs.Tab label={'Threads'} name="Threads">
           <ThreadsTab />
@@ -284,7 +278,6 @@ const styles = AppStyleSheet.create({
   tabBarBtn: {
     width: '50%',
     paddingVertical: 16,
-    marginTop: 8,
   },
   indicator: {
     position: 'absolute',
