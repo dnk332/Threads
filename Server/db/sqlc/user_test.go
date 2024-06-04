@@ -2,11 +2,11 @@ package db
 
 import (
 	"context"
+	"database/sql"
 	"testing"
 	"time"
 
 	"github.com/briandnk/Threads/utils"
-	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/stretchr/testify/require"
 )
 
@@ -48,15 +48,15 @@ func TestUpdateUser(t *testing.T) {
 
 	arg := UpdateUserParams{
 		ID: user1.ID,
-		Username: pgtype.Text{
+		Username: sql.NullString{
 			String: newUserName,
 			Valid:  true,
 		},
-		HashedPassword: pgtype.Text{
+		HashedPassword: sql.NullString{
 			String: newHashedPassword,
 			Valid:  true,
 		},
-		IsFrozen: pgtype.Bool{
+		IsFrozen: sql.NullBool{
 			Bool:  user1.IsFrozen,
 			Valid: true,
 		},
