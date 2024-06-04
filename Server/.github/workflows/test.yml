@@ -32,7 +32,7 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: ${{ matrix.go-version }}
-      - name: Install dependencies
+      - name: Install dependenciesasdadasdasdasdas
         run: |
           sudo apt-get update
           sudo apt-get install -y make
@@ -40,7 +40,7 @@ jobs:
           curl -L https://github.com/golang-migrate/migrate/releases/download/v4.17.1/migrate.linux-amd64.tar.gz | tar xvz
           sudo mv migrate /usr/bin/
           which migrate
-      - name: Wait for PostgreSQL to be ready
+      - name: Wait for PostgreSQL to be ready asdasdsadsa
         run: |
           until pg_isready -h localhost -p 5432; do
             echo "Waiting for PostgreSQL..."
