@@ -2,11 +2,11 @@ package db
 
 import (
 	"context"
-	"database/sql"
 	"testing"
 	"time"
 
 	"github.com/briandnk/Threads/utils"
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/stretchr/testify/require"
 )
 
@@ -19,7 +19,7 @@ func createRandomUserProfile(t *testing.T) UserProfile {
 		Bio:    utils.RandomString(10),
 	}
 
-	userProfile, err := testQueries.CreateUserProfile(context.Background(), arg)
+	userProfile, err := testStore.CreateUserProfile(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotEmpty(t, userProfile)
 
@@ -45,17 +45,17 @@ func TestUpdateUserProfile(t *testing.T) {
 
 	arg := UpdateUserProfileParams{
 		ID: userProfile1.ID,
-		Name: sql.NullString{
+		Name: pgtype.Text{
 			String: newUserProfileName,
 			Valid:  true,
 		},
-		Bio: sql.NullString{
+		Bio: pgtype.Text{
 			String: newUserProfileBio,
 			Valid:  true,
 		},
 	}
 
-	userProfile2, err := testQueries.UpdateUserProfile(context.Background(), arg)
+	userProfile2, err := testStore.UpdateUserProfile(context.Background(), arg)
 
 	require.NoError(t, err)
 	require.NotEmpty(t, userProfile2)
@@ -72,10 +72,10 @@ func TestUpdateUserProfile(t *testing.T) {
 
 func TestDeleteUserProfile(t *testing.T) {
 	userProfile1 := createRandomUser(t)
-	err := testQueries.DeleteUserProfile(context.Background(), userProfile1.ID)
+	err := testStore.DeleteUserProfile(context.Background(), userProfile1.ID)
 	require.NoError(t, err)
 
-	userProfile2, err := testQueries.GetUserProfileById(context.Background(), userProfile1.ID)
+	userProfile2, err := testStore.GetUserProfileById(context.Background(), userProfile1.ID)
 	require.Error(t, err)
 	require.EqualError(t, err, ErrRecordNotFound.Error())
 	require.Empty(t, userProfile2)

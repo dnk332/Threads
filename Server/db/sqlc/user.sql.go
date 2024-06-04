@@ -7,7 +7,8 @@ package db
 
 import (
 	"context"
-	"database/sql"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createUser = `-- name: CreateUser :one
@@ -23,7 +24,7 @@ type CreateUserParams struct {
 
 // Create a new user
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
-	row := q.db.QueryRowContext(ctx, createUser, arg.Username, arg.HashedPassword)
+	row := q.db.QueryRow(ctx, createUser, arg.Username, arg.HashedPassword)
 	var i User
 	err := row.Scan(
 		&i.ID,
@@ -43,7 +44,7 @@ WHERE id = $1
 
 // Delete a user by ID
 func (q *Queries) DeleteUser(ctx context.Context, id int64) error {
-	_, err := q.db.ExecContext(ctx, deleteUser, id)
+	_, err := q.db.Exec(ctx, deleteUser, id)
 	return err
 }
 
@@ -61,7 +62,7 @@ type GetListUserParams struct {
 
 // Get a list of all users
 func (q *Queries) GetListUser(ctx context.Context, arg GetListUserParams) ([]User, error) {
-	rows, err := q.db.QueryContext(ctx, getListUser, arg.Limit, arg.Offset)
+	rows, err := q.db.Query(ctx, getListUser, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
@@ -81,9 +82,6 @@ func (q *Queries) GetListUser(ctx context.Context, arg GetListUserParams) ([]Use
 		}
 		items = append(items, i)
 	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
 	if err := rows.Err(); err != nil {
 		return nil, err
 	}
@@ -98,7 +96,7 @@ WHERE id = $1
 
 // Get a user by ID
 func (q *Queries) GetUserById(ctx context.Context, id int64) (User, error) {
-	row := q.db.QueryRowContext(ctx, getUserById, id)
+	row := q.db.QueryRow(ctx, getUserById, id)
 	var i User
 	err := row.Scan(
 		&i.ID,
@@ -120,7 +118,7 @@ UPDATE
 `
 
 func (q *Queries) GetUserForUpdate(ctx context.Context, id int64) (User, error) {
-	row := q.db.QueryRowContext(ctx, getUserForUpdate, id)
+	row := q.db.QueryRow(ctx, getUserForUpdate, id)
 	var i User
 	err := row.Scan(
 		&i.ID,
@@ -143,15 +141,15 @@ RETURNING id, username, hashed_password, created_at, password_changed_at, is_fro
 `
 
 type UpdateUserParams struct {
-	ID             int64          `json:"id"`
-	Username       sql.NullString `json:"username"`
-	HashedPassword sql.NullString `json:"hashed_password"`
-	IsFrozen       sql.NullBool   `json:"is_frozen"`
+	ID             int64       `json:"id"`
+	Username       pgtype.Text `json:"username"`
+	HashedPassword pgtype.Text `json:"hashed_password"`
+	IsFrozen       pgtype.Bool `json:"is_frozen"`
 }
 
 // Update a user's information
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
-	row := q.db.QueryRowContext(ctx, updateUser,
+	row := q.db.QueryRow(ctx, updateUser,
 		arg.ID,
 		arg.Username,
 		arg.HashedPassword,
