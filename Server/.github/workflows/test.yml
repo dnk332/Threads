@@ -1,14 +1,10 @@
 name: Run unit tests
 
 on:
-  push:
-    branches: ["main"]
-    paths:
-      - "Server/**"
-  pull_request:
-    branches: ["main"]
-    paths:
-      - "Server/**"
+  workflow_run:
+    workflows: ["Bootstrap Workflows"]
+    types:
+      - completed
 
 jobs:
   test:
