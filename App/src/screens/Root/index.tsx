@@ -1,19 +1,45 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import {ROOT_SCREEN} from '../../navigation/ScreenName';
-
 import HomeScreen from '@screens/Home';
 import UserDetail from '@screens/UserDetail';
-import Actives from '@screens/Actives';
+import Activities from '@screens/Activities';
+import SearchScreen from '@screens/Search';
 
 import {colors} from '@themes/index';
-import {SVGName} from '../../assets/svg/index';
 
-const Tab = createBottomTabNavigator();
+import {navigateTo} from '@navigation/NavigationService';
+import {SvgComponent} from '@assets/svg';
+import {SVG_NAME} from '@assets/svg/svgList';
 
-const IconHandle = (iconName: string, focused: boolean = false) => {
-  return <SVGName title={iconName} isInactive={!focused} />;
+export type BottomTabsStackParamList = {
+  HOME: undefined;
+  SEARCH: undefined;
+  NEW_POST: undefined;
+  ACTIVITIES: undefined;
+  USER_DETAIL: undefined;
+};
+
+interface IconHandleProps {
+  iconName: keyof typeof SVG_NAME;
+  iconNameInactive: keyof typeof SVG_NAME;
+  focused?: boolean;
+}
+
+const Tab = createBottomTabNavigator<BottomTabsStackParamList>();
+
+const IconHandle = ({
+  iconName,
+  iconNameInactive,
+  focused = false,
+}: IconHandleProps) => {
+  return (
+    <SvgComponent
+      name={focused ? iconName : iconNameInactive}
+      color={focused ? colors.white : colors.shadow}
+      size={32}
+    />
+  );
 };
 
 export default function RootScreen() {
@@ -27,51 +53,76 @@ export default function RootScreen() {
         },
         headerShown: false,
         tabBarShowLabel: false,
-      }}
-      initialRouteName={ROOT_SCREEN.HOME}>
+      }}>
       <Tab.Screen
-        name={ROOT_SCREEN.HOME}
+        name={'HOME'}
         component={HomeScreen}
         options={{
           tabBarIcon: ({focused}) => {
-            return IconHandle(ROOT_SCREEN.HOME, focused);
+            return IconHandle({
+              iconName: 'HOME',
+              iconNameInactive: 'HOME_INACTIVE',
+              focused,
+            });
           },
         }}
       />
       <Tab.Screen
-        name={ROOT_SCREEN.SEARCH}
+        name={'SEARCH'}
+        component={SearchScreen}
+        options={{
+          tabBarIcon: ({focused}) => {
+            return IconHandle({
+              iconName: 'SEARCH',
+              iconNameInactive: 'SEARCH_INACTIVE',
+              focused,
+            });
+          },
+        }}
+      />
+      <Tab.Screen
+        name={'NEW_POST'}
         component={UserDetail}
         options={{
           tabBarIcon: ({focused}) => {
-            return IconHandle(ROOT_SCREEN.SEARCH, focused);
+            return IconHandle({
+              iconName: 'NEWS',
+              iconNameInactive: 'NEWS_INACTIVE',
+              focused,
+            });
           },
         }}
-      />
-      <Tab.Screen
-        name={ROOT_SCREEN.NEWS}
-        component={UserDetail}
-        options={{
-          tabBarIcon: ({focused}) => {
-            return IconHandle(ROOT_SCREEN.NEWS, focused);
+        listeners={() => ({
+          tabPress: e => {
+            e.preventDefault();
+            navigateTo('NEW_POST_MODAL', {focused: true});
           },
-        }}
+        })}
       />
       <Tab.Screen
-        name={ROOT_SCREEN.LIKE}
-        component={Actives}
+        name={'ACTIVITIES'}
+        component={Activities}
         options={{
           tabBarIcon: ({focused}) => {
-            return IconHandle(ROOT_SCREEN.LIKE, focused);
+            return IconHandle({
+              iconName: 'ACTIVITY',
+              iconNameInactive: 'ACTIVITY_INACTIVE',
+              focused,
+            });
           },
           tabBarBadge: '1',
         }}
       />
       <Tab.Screen
-        name={ROOT_SCREEN.USER_DETAIL}
+        name={'USER_DETAIL'}
         component={UserDetail}
         options={{
           tabBarIcon: ({focused}) => {
-            return IconHandle(ROOT_SCREEN.USER_DETAIL, focused);
+            return IconHandle({
+              iconName: 'USER_DETAIL',
+              iconNameInactive: 'USER_DETAIL_INACTIVE',
+              focused,
+            });
           },
         }}
       />

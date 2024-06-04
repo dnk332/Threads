@@ -1,9 +1,16 @@
-import {FlatList} from 'react-native';
 import React, {Fragment, useCallback} from 'react';
-import PostItem from '@screens/Home/Components/PostItem';
+import {PostItem} from '@components/index';
 import AppContainer from '@components/AppContainer';
 
 import {dummyPost} from '@constants/dummyData';
+import {FlashList} from '@shopify/flash-list';
+import {View} from 'react-native';
+import colors from '@themes/color';
+import {AppStyleSheet} from '@themes/responsive';
+
+const ItemSeparator = () => {
+  return <View style={styles.separator} />;
+};
 
 const HomeScreenView = () => {
   const _renderItem = useCallback(({item}) => {
@@ -21,6 +28,7 @@ const HomeScreenView = () => {
             let isLastReplies =
               item.replies[item.replies.length - 1].id === replies.id;
             return (
+              /* eslint-disable-next-line react/no-array-index-key */
               <PostItem
                 key={index}
                 postData={replies.post}
@@ -43,15 +51,22 @@ const HomeScreenView = () => {
   }, []);
 
   return (
-    <AppContainer statusBarProps={{barStyle: 'light-content'}}>
-      <FlatList
+    <AppContainer>
+      <FlashList
         data={dummyPost}
         keyExtractor={item => item.id.toString()}
         renderItem={_renderItem}
         showsVerticalScrollIndicator={false}
+        estimatedItemSize={10}
+        ItemSeparatorComponent={ItemSeparator}
+        onEndReachedThreshold={0.5}
       />
     </AppContainer>
   );
 };
 
 export default HomeScreenView;
+
+const styles = AppStyleSheet.create({
+  separator: {borderBottomColor: colors.border, borderBottomWidth: 1},
+});

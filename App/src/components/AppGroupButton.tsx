@@ -28,9 +28,8 @@ const AppGroupButton = ({
       {...props}>
       {data.length > 1 ? (
         data.map((button, index) => (
-          <Fragment>
+          <Fragment key={index}>
             <AppButton
-              key={index}
               text={button.text}
               leftIcon={button.leftIcon}
               rightIcon={button.rightIcon}
