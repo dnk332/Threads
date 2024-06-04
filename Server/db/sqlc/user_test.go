@@ -43,19 +43,17 @@ func TestCreateUser(t *testing.T) {
 
 func TestUpdateUser(t *testing.T) {
 	user1 := createRandomUser(t)
-	hashedPassword := createRandomHashPassword(t)
+	newHashedPassword := createRandomHashPassword(t)
+	newUserName := utils.RandomString(6)
 
 	arg := UpdateUserParams{
-		ID: pgtype.Int8{
-			Int64: user1.ID,
-			Valid: true,
-		},
+		ID: user1.ID,
 		Username: pgtype.Text{
-			String: utils.RandomString(6),
+			String: newUserName,
 			Valid:  true,
 		},
 		HashedPassword: pgtype.Text{
-			String: hashedPassword,
+			String: newHashedPassword,
 			Valid:  true,
 		},
 		IsFrozen: pgtype.Bool{
@@ -70,10 +68,37 @@ func TestUpdateUser(t *testing.T) {
 	require.NotEmpty(t, user2)
 
 	require.Equal(t, user1.ID, user2.ID)
-	require.Equal(t, user1.Username, user2.Username)
-	require.Equal(t, user1.HashedPassword, user2.HashedPassword)
+	require.Equal(t, newUserName, user2.Username)
+	require.Equal(t, newHashedPassword, user2.HashedPassword)
 	require.Equal(t, user1.IsFrozen, user2.IsFrozen)
 
 	require.WithinDuration(t, user1.CreatedAt, user2.CreatedAt, time.Second)
 	require.WithinDuration(t, user1.PasswordChangedAt, user2.PasswordChangedAt, time.Second)
+}
+
+func TestDeleteUser(t *testing.T) {
+	user1 := createRandomUser(t)
+	err := testQueries.DeleteUser(context.Background(), user1.ID)
+	require.NoError(t, err)
+
+	user2, err := testQueries.GetUserById(context.Background(), user1.ID)
+	require.Error(t, err)
+	require.EqualError(t, err, ErrRecordNotFound.Error())
+	require.Empty(t, user2)
+}
+
+func TestListUsers(t *testing.T) {
+	const (
+		limit  = 5
+		offset = 0
+	)
+	arg := GetListUserParams{
+		Limit:  limit,
+		Offset: offset,
+	}
+
+	users, err := testQueries.GetListUser(context.Background(), arg)
+	require.NoError(t, err)
+	require.NotEmpty(t, users)
+	require.Len(t, users, limit)
 }

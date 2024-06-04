@@ -15,7 +15,7 @@ UPDATE Users
 SET username = COALESCE(sqlc.narg(username), username),
     hashed_password = COALESCE(sqlc.narg(hashed_password), hashed_password),
     is_frozen = COALESCE(sqlc.narg(is_frozen), is_frozen)
-WHERE id = COALESCE(sqlc.narg(id), id)
+WHERE id =  $1
 RETURNING *;
 -- Get a user by ID
 -- name: GetUserById :one
