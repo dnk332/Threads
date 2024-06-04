@@ -7,7 +7,8 @@ package db
 
 import (
 	"context"
-	"database/sql"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createUserProfile = `-- name: CreateUserProfile :one
@@ -25,7 +26,7 @@ type CreateUserProfileParams struct {
 
 // Create a new user profile
 func (q *Queries) CreateUserProfile(ctx context.Context, arg CreateUserProfileParams) (UserProfile, error) {
-	row := q.db.QueryRowContext(ctx, createUserProfile,
+	row := q.db.QueryRow(ctx, createUserProfile,
 		arg.UserID,
 		arg.Name,
 		arg.Email,
@@ -51,7 +52,7 @@ WHERE id = $1
 
 // Delete a user profile by ID
 func (q *Queries) DeleteUserProfile(ctx context.Context, id int64) error {
-	_, err := q.db.ExecContext(ctx, deleteUserProfile, id)
+	_, err := q.db.Exec(ctx, deleteUserProfile, id)
 	return err
 }
 
@@ -63,7 +64,7 @@ WHERE id = $1
 
 // Get a user profile by ID
 func (q *Queries) GetUserProfileById(ctx context.Context, id int64) (UserProfile, error) {
-	row := q.db.QueryRowContext(ctx, getUserProfileById, id)
+	row := q.db.QueryRow(ctx, getUserProfileById, id)
 	var i UserProfile
 	err := row.Scan(
 		&i.ID,
@@ -86,14 +87,14 @@ RETURNING id, user_id, name, email, bio, created_at, updated_at
 `
 
 type UpdateUserProfileParams struct {
-	ID   int64          `json:"id"`
-	Name sql.NullString `json:"name"`
-	Bio  sql.NullString `json:"bio"`
+	ID   int64       `json:"id"`
+	Name pgtype.Text `json:"name"`
+	Bio  pgtype.Text `json:"bio"`
 }
 
 // Update a user's profile
 func (q *Queries) UpdateUserProfile(ctx context.Context, arg UpdateUserProfileParams) (UserProfile, error) {
-	row := q.db.QueryRowContext(ctx, updateUserProfile, arg.ID, arg.Name, arg.Bio)
+	row := q.db.QueryRow(ctx, updateUserProfile, arg.ID, arg.Name, arg.Bio)
 	var i UserProfile
 	err := row.Scan(
 		&i.ID,

@@ -1,27 +1,28 @@
 package db
 
 import (
-	"database/sql"
+	"context"
 	"log"
 	"os"
 	"testing"
 
-	_ "github.com/lib/pq"
+	"github.com/briandnk/Threads/utils"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-const (
-	dbDrive  = "postgres"
-	dbSource = "postgresql://root:secret@localhost:5432/threadsapp?sslmode=disable"
-)
-
-var testQueries *Queries
-var testDB *sql.DB
+var testStore Store
 
 func TestMain(m *testing.M) {
-	testDB, err := sql.Open(dbDrive, dbSource)
+	config, err := utils.LoadConfig("../..")
+	if err != nil {
+		log.Fatal("cannot load config:", err)
+	}
+
+	connPool, err := pgxpool.New(context.Background(), config.DBSource)
 	if err != nil {
 		log.Fatal("cannot connect to db:", err)
 	}
-	testQueries = New(testDB)
+
+	testStore = NewStore(connPool)
 	os.Exit(m.Run())
 }

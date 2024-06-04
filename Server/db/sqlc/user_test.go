@@ -2,11 +2,11 @@ package db
 
 import (
 	"context"
-	"database/sql"
 	"testing"
 	"time"
 
 	"github.com/briandnk/Threads/utils"
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/stretchr/testify/require"
 )
 
@@ -23,7 +23,7 @@ func createRandomUser(t *testing.T) User {
 		HashedPassword: hashedPassword,
 	}
 
-	user, err := testQueries.CreateUser(context.Background(), arg)
+	user, err := testStore.CreateUser(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotEmpty(t, user)
 
@@ -48,21 +48,21 @@ func TestUpdateUser(t *testing.T) {
 
 	arg := UpdateUserParams{
 		ID: user1.ID,
-		Username: sql.NullString{
+		Username: pgtype.Text{
 			String: newUserName,
 			Valid:  true,
 		},
-		HashedPassword: sql.NullString{
+		HashedPassword: pgtype.Text{
 			String: newHashedPassword,
 			Valid:  true,
 		},
-		IsFrozen: sql.NullBool{
+		IsFrozen: pgtype.Bool{
 			Bool:  user1.IsFrozen,
 			Valid: true,
 		},
 	}
 
-	user2, err := testQueries.UpdateUser(context.Background(), arg)
+	user2, err := testStore.UpdateUser(context.Background(), arg)
 
 	require.NoError(t, err)
 	require.NotEmpty(t, user2)
@@ -78,10 +78,10 @@ func TestUpdateUser(t *testing.T) {
 
 func TestDeleteUser(t *testing.T) {
 	user1 := createRandomUser(t)
-	err := testQueries.DeleteUser(context.Background(), user1.ID)
+	err := testStore.DeleteUser(context.Background(), user1.ID)
 	require.NoError(t, err)
 
-	user2, err := testQueries.GetUserById(context.Background(), user1.ID)
+	user2, err := testStore.GetUserById(context.Background(), user1.ID)
 	require.Error(t, err)
 	require.EqualError(t, err, ErrRecordNotFound.Error())
 	require.Empty(t, user2)
@@ -97,7 +97,7 @@ func TestListUsers(t *testing.T) {
 		Offset: offset,
 	}
 
-	users, err := testQueries.GetListUser(context.Background(), arg)
+	users, err := testStore.GetListUser(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotEmpty(t, users)
 	require.Len(t, users, limit)
