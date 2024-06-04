@@ -6,8 +6,12 @@ name: Run unit tests
 on:
   push:
     branches: ["main"]
+    paths:
+      - "Server/**"
   pull_request:
     branches: ["main"]
+    paths:
+      - "Server/**"
 jobs:
   test:
     runs-on: ubuntu-latest
