@@ -1,0 +1,19 @@
+name: Bootstrap Workflows
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "Server/**"
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "Server/**"
+
+jobs:
+  copy-workflows:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Copy workflows
+        run: ./copy-workflows.sh
