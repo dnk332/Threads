@@ -10,8 +10,10 @@ cp -r Server/.github/workflows/* .github/workflows/
 echo "Copied workflows:"
 ls -l .github/workflows
 
-# Trigger the workflow run (assumes the workflow is named run-unit-tests.yml)
-# Using GitHub CLI for simplicity; ensure GitHub CLI is installed and authenticated
+# Authenticate with GitHub CLI using the GITHUB_TOKEN
+echo "$GITHUB_TOKEN" | gh auth login --with-token
+
+# Trigger the workflow run (adjust the workflow name as needed)
 gh workflow run run-unit-tests.yml
 
 # Optional: Add a delay to ensure the trigger happens correctly
