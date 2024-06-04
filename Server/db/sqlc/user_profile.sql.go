@@ -7,6 +7,8 @@ package db
 
 import (
 	"context"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createUserProfile = `-- name: CreateUserProfile :one
@@ -78,16 +80,16 @@ func (q *Queries) GetUserProfileById(ctx context.Context, id int64) (UserProfile
 
 const updateUserProfile = `-- name: UpdateUserProfile :one
 UPDATE User_Profiles
-SET name = $2,
-    bio = $3
+SET name = COALESCE($2, name),
+    bio = COALESCE($3, bio)
 WHERE id = $1
 RETURNING id, user_id, name, email, bio, created_at, updated_at
 `
 
 type UpdateUserProfileParams struct {
-	ID   int64  `json:"id"`
-	Name string `json:"name"`
-	Bio  string `json:"bio"`
+	ID   int64       `json:"id"`
+	Name pgtype.Text `json:"name"`
+	Bio  pgtype.Text `json:"bio"`
 }
 
 // Update a user's profile

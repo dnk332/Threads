@@ -133,27 +133,27 @@ func (q *Queries) GetUserForUpdate(ctx context.Context, id int64) (User, error) 
 
 const updateUser = `-- name: UpdateUser :one
 UPDATE Users
-SET username = COALESCE($1, username),
-    hashed_password = COALESCE($2, hashed_password),
-    is_frozen = COALESCE($3, is_frozen)
-WHERE id = COALESCE($4, id)
+SET username = COALESCE($2, username),
+    hashed_password = COALESCE($3, hashed_password),
+    is_frozen = COALESCE($4, is_frozen)
+WHERE id =  $1
 RETURNING id, username, hashed_password, created_at, password_changed_at, is_frozen
 `
 
 type UpdateUserParams struct {
+	ID             int64       `json:"id"`
 	Username       pgtype.Text `json:"username"`
 	HashedPassword pgtype.Text `json:"hashed_password"`
 	IsFrozen       pgtype.Bool `json:"is_frozen"`
-	ID             pgtype.Int8 `json:"id"`
 }
 
 // Update a user's information
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
 	row := q.db.QueryRow(ctx, updateUser,
+		arg.ID,
 		arg.Username,
 		arg.HashedPassword,
 		arg.IsFrozen,
-		arg.ID,
 	)
 	var i User
 	err := row.Scan(

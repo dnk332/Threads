@@ -6,8 +6,8 @@ RETURNING *;
 -- Update a user's profile
 -- name: UpdateUserProfile :one
 UPDATE User_Profiles
-SET name = $2,
-    bio = $3
+SET name = COALESCE(sqlc.narg(name), name),
+    bio = COALESCE(sqlc.narg(bio), bio)
 WHERE id = $1
 RETURNING *;
 -- Get a user profile by ID
