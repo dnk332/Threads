@@ -1,25 +1,28 @@
 import React from 'react';
 import {SVG_NAME} from '@svg/svgList';
+import colors from '@themes/color';
 
-interface SVGNameProps {
-  title: any;
-  isInactive?: boolean;
+interface SvgComponentProps {
+  name: keyof typeof SVG_NAME;
+  size?: number;
+  color?: string;
 }
 
-function SVGName({title, isInactive = false}: SVGNameProps) {
-  let svgName = title.toUpperCase();
+function SvgComponent({
+  name,
+  size = 24,
+  color = colors.white,
+}: SvgComponentProps) {
+  let svgName = name.toUpperCase();
 
-  if (isInactive) {
-    svgName = `INACTIVE_${svgName}`;
+  let SvgIcon = SVG_NAME[svgName];
+
+  if (!SvgIcon) {
+    console.error(`SVG component with name ${name} not found.`);
+    return null;
   }
 
-  let SVGIcon = SVG_NAME[svgName];
-
-  if (SVGIcon) {
-    return SVGIcon;
-  } else {
-    return <></>;
-  }
+  return <SvgIcon size={size} color={color} />;
 }
 
-export {SVGName};
+export {SvgComponent};

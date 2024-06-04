@@ -10,27 +10,27 @@ import {AppStyleSheet} from '@themes/responsive';
 import colors from '@themes/color';
 import AppImage from '@components/AppImage';
 import {FastImageProps, Source} from 'react-native-fast-image';
-import {SVGName} from '@assets/svg';
+// import {SVGName} from '@assets/svg';
 
 interface AvatarProps {
   source: Source | ImageRequireSource;
   canFollow?: boolean;
   container?: StyleProp<ViewStyle>;
-  style?: FastImageProps['style'];
+  imgStyle?: FastImageProps['style'];
 }
 
-const Avatar = ({source, canFollow, container, style}: AvatarProps) => {
+const Avatar = ({source, canFollow, container, imgStyle}: AvatarProps) => {
   return (
-    <View style={container}>
+    <View style={[styles.container, container]}>
       <AppImage
         source={source}
-        containerStyle={styles.imageContainer}
+        containerStyle={[styles.imageContainer, imgStyle]}
         style={styles.image}
       />
       {canFollow && (
         <Pressable>
-          <View style={[styles.flowButton, style]}>
-            <SVGName title={'plus'} />
+          <View style={[styles.flowButton]}>
+            {/* <SVGName title={'plus'} /> */}
           </View>
         </Pressable>
       )}
@@ -57,5 +57,9 @@ const styles = AppStyleSheet.create({
     bottom: -2,
     right: -2,
     zIndex: 2,
+  },
+  container: {
+    alignSelf: 'flex-start',
+    borderRadius: 40,
   },
 });

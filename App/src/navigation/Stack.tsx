@@ -4,20 +4,39 @@ import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import RootScreen from '../screens/Root';
-import SearchScreen from '../screens/Search';
+import {navigationRef} from './NavigationService';
+import ImageViewer from '@screens/ImageViewer';
+import NewPost from '@screens/NewPost';
 
-const Stack = createNativeStackNavigator();
+export type NavigationStackParamList = {
+  ROOT: undefined;
+  IMAGE_VIEWER: {imageLink: string};
+  NEW_POST_MODAL: {focused: boolean};
+};
+
+const Stack = createNativeStackNavigator<NavigationStackParamList>();
 
 function StackScreens() {
   return (
-    <NavigationContainer>
+    <NavigationContainer
+      ref={ref => {
+        navigationRef.current = ref;
+      }}>
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
         }}
-        initialRouteName="Root">
-        <Stack.Screen name="Root" component={RootScreen} />
-        <Stack.Screen name="Search" component={SearchScreen} />
+        initialRouteName="ROOT">
+        <Stack.Screen name="ROOT" component={RootScreen} />
+        <Stack.Screen name="IMAGE_VIEWER" component={ImageViewer} />
+        <Stack.Screen
+          options={{
+            headerShown: false,
+            presentation: 'modal',
+          }}
+          name="NEW_POST_MODAL"
+          component={NewPost}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

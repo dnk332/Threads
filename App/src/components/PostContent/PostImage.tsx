@@ -2,14 +2,16 @@ import React, {memo, useCallback, useEffect, useState} from 'react';
 import {getImageSize, ISize} from '@hooks/getImageInfo';
 import {AppImage} from '@components/index';
 import {AppStyleSheet} from '@themes/responsive';
-import {imageHeight} from '@constants/index';
+import {imageHeight, imageWidth} from '@constants/index';
+import {Pressable} from 'react-native';
+import {navigateTo} from '@navigation/NavigationService';
+import {SCREEN_NAME} from '@navigation/ScreenName';
 
 export interface PostImageProps {
   link: string;
-  key: number;
 }
 
-const PostImage = ({link, key}: PostImageProps) => {
+const PostImage = ({link}: PostImageProps) => {
   const [dimensions, setValue] = useState<ISize>({width: 0, height: 0});
   const [aspectRatio, setAspectRatio] = useState<number>(0);
 
@@ -25,6 +27,8 @@ const PostImage = ({link, key}: PostImageProps) => {
 
   const HandleImageSize = useCallback(() => {
     setAspectRatio(dimensions.width / dimensions.height);
+    if (dimensions.width > dimensions.height) {
+    }
   }, [dimensions.height, dimensions.width]);
 
   useEffect(() => {
@@ -34,18 +38,22 @@ const PostImage = ({link, key}: PostImageProps) => {
   }, [HandleImageSize, dimensions]);
 
   return (
-    <AppImage
-      key={key}
-      style={[
-        styles.image,
-        {
-          width: undefined,
-          height: imageHeight,
-          aspectRatio,
-        },
-      ]}
-      source={{uri: link}}
-    />
+    <Pressable
+      onPress={() => navigateTo(SCREEN_NAME.IMAGE_VIEWER, {imageLink: link})}>
+      <AppImage
+        style={[
+          styles.image,
+          {
+            width:
+              dimensions.width > dimensions.height ? imageWidth : undefined,
+            height: imageHeight,
+            aspectRatio:
+              dimensions.width > dimensions.height ? undefined : aspectRatio,
+          },
+        ]}
+        source={{uri: link}}
+      />
+    </Pressable>
   );
 };
 

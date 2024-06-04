@@ -15,7 +15,8 @@
       "@locales/*": ["src/locales/*"],
       "@root/*": ["src/screens/Root/*"],
       "@svg/*": ["src/assets/svg/*"],
-      "@image/*": ["src/assets/image/*"]
+      "@image/*": ["src/assets/image/*"],
+      "@stores/*": ["src/stores/*"]
     },
     "target": "es5",
     "allowJs": true,
