@@ -9,7 +9,7 @@ CREATE TABLE "users" (
 );
 CREATE TABLE "user_profiles" (
     "id" bigserial PRIMARY KEY,
-    "user_id" bigserial NOT NULL,
+    "user_id" bigserial UNIQUE NOT NULL,
     "name" varchar NOT NULL,
     "email" varchar UNIQUE NOT NULL,
     "bio" varchar NOT NULL DEFAULT '',

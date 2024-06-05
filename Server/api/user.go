@@ -1,6 +1,7 @@
 package api
 
 import (
+	"errors"
 	"net/http"
 	"time"
 
@@ -64,4 +65,24 @@ func (server *Server) createUser(ctx *gin.Context) {
 
 	rsp := createUserRes(user, req.Password)
 	ctx.JSON(http.StatusOK, rsp)
+}
+func (server *Server) validUser(ctx *gin.Context, userId int64) (db.User, bool) {
+	user, err := server.store.GetUserById(ctx, userId)
+	if err != nil {
+		if errors.Is(err, db.ErrRecordNotFound) {
+			ctx.JSON(http.StatusNotFound, errorResponse(err))
+			return user, false
+		}
+
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return user, false
+	}
+
+	if user.IsFrozen {
+		err := errors.New("user is frozen")
+		ctx.JSON(http.StatusUnauthorized, errorResponse(err))
+		return user, false
+	}
+
+	return user, true
 }
