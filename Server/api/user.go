@@ -10,19 +10,25 @@ import (
 )
 
 type createUserRequest struct {
-	Username string `json:"username" binding:"required,alphanum"`
+	Username string `json:"username" binding:"required,min=6"`
 	Password string `json:"password" binding:"required,min=6"`
 }
 
-type userResponse struct {
+type createUserResponse struct {
+	UserID            int64     `json:"user_id"`
 	Username          string    `json:"username"`
+	Password          string    `json:"password"`
+	IsFrozen          bool      `json:"is_frozen"`
 	PasswordChangedAt time.Time `json:"password_changed_at"`
 	CreatedAt         time.Time `json:"created_at"`
 }
 
-func newUserResponse(user db.User) userResponse {
-	return userResponse{
+func createUserRes(user db.User, password string) createUserResponse {
+	return createUserResponse{
+		UserID:            user.ID,
 		Username:          user.Username,
+		Password:          password,
+		IsFrozen:          user.IsFrozen,
 		PasswordChangedAt: user.PasswordChangedAt,
 		CreatedAt:         user.CreatedAt,
 	}
@@ -56,6 +62,6 @@ func (server *Server) createUser(ctx *gin.Context) {
 		return
 	}
 
-	rsp := newUserResponse(user)
+	rsp := createUserRes(user, req.Password)
 	ctx.JSON(http.StatusOK, rsp)
 }
