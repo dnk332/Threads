@@ -21,6 +21,7 @@ type Querier interface {
 	GetListUser(ctx context.Context, arg GetListUserParams) ([]User, error)
 	// Get a user by ID
 	GetUserById(ctx context.Context, id int64) (User, error)
+	// Get a user by ID for update
 	GetUserForUpdate(ctx context.Context, id int64) (User, error)
 	// Get a user profile by ID
 	GetUserProfileById(ctx context.Context, id int64) (UserProfile, error)

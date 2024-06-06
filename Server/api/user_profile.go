@@ -1,6 +1,7 @@
 package api
 
 import (
+	"errors"
 	"net/http"
 	"time"
 
@@ -9,7 +10,7 @@ import (
 )
 
 type createUserProfileRequest struct {
-	UserId int64  `json:"user_id" binding:"required"`
+	UserId int64  `json:"user_id"`
 	Name   string `json:"name" binding:"required,alpha,min=6"`
 	Email  string `json:"email" binding:"required,email"`
 	Bio    string `json:"bio"`
@@ -43,8 +44,19 @@ func (server *Server) createUserProfile(ctx *gin.Context) {
 	}
 
 	// Check is user id is valid or not
-	user, valid := server.validUser(ctx, req.UserId)
-	if !valid {
+	//user, valid := server.validUser(ctx, req.UserId)
+	//if !valid {
+	//	return
+	//}
+
+	user, err := server.store.GetUserById(ctx, req.UserId)
+	if err != nil {
+		if errors.Is(err, db.ErrRecordNotFound) {
+			ctx.JSON(http.StatusNotFound, errorResponse(err))
+			return
+		}
+
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
 
