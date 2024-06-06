@@ -114,3 +114,14 @@ func TestListUsers(t *testing.T) {
 	require.NotEmpty(t, users)
 	require.Len(t, users, limit)
 }
+
+func TestGetUserByUsername(t *testing.T) {
+	user1 := createRandomUser(t)
+	user2, err := testStore.GetUserByName(context.Background(), user1.Username)
+	require.NoError(t, err)
+	require.NotEmpty(t, user2)
+	require.Equal(t, user1.Username, user2.Username)
+	require.Equal(t, user1.HashedPassword, user2.HashedPassword)
+	require.Equal(t, user1.IsFrozen, user2.IsFrozen)
+	require.WithinDuration(t, user1.CreatedAt, user2.CreatedAt, time.Second)
+}

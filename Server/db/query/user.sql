@@ -31,3 +31,8 @@ OFFSET $2;
 DELETE
 FROM Users
 WHERE id = $1;
+-- Get a user by name
+-- name: GetUserByName :one
+SELECT *
+FROM Users
+WHERE username = $1;
