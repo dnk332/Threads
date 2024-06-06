@@ -2,6 +2,7 @@ package api
 
 import (
 	"errors"
+	"github.com/briandnk/Threads/token"
 	"net/http"
 	"time"
 
@@ -43,20 +44,15 @@ func (server *Server) createUserProfile(ctx *gin.Context) {
 		return
 	}
 
-	// Check is user id is valid or not
-	//user, valid := server.validUser(ctx, req.UserId)
-	//if !valid {
-	//	return
-	//}
-
-	user, err := server.store.GetUserById(ctx, req.UserId)
-	if err != nil {
-		if errors.Is(err, db.ErrRecordNotFound) {
-			ctx.JSON(http.StatusNotFound, errorResponse(err))
-			return
-		}
-
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+	//Check is user id is valid or not
+	user, valid := server.validUser(ctx, req.UserId)
+	if !valid {
+		return
+	}
+	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
+	if user.ID != authPayload.UserId {
+		err := errors.New("need authenticated user")
+		ctx.JSON(http.StatusUnauthorized, errorResponse(err))
 		return
 	}
 
@@ -68,7 +64,6 @@ func (server *Server) createUserProfile(ctx *gin.Context) {
 	}
 
 	userProfile, err := server.store.CreateUserProfile(ctx, arg)
-
 	if err != nil {
 		if db.ErrorCode(err) == db.UniqueViolation {
 			ctx.JSON(http.StatusForbidden, errorResponse(err))
@@ -79,5 +74,6 @@ func (server *Server) createUserProfile(ctx *gin.Context) {
 	}
 
 	rsp := createUserProfileRes(userProfile)
+
 	ctx.JSON(http.StatusOK, rsp)
 }
