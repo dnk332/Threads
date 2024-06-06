@@ -49,6 +49,7 @@ CREATE TABLE "reposts" (
     "root_post_id" bigserial NOT NULL,
     "reposts_id" bigserial NOT NULL
 );
+-- noinspection SqlNoDataSourceInspection
 CREATE TABLE "followings" (
     "id" bigserial PRIMARY KEY,
     "following_id" bigserial NOT NULL,

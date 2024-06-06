@@ -67,6 +67,11 @@ func TestCreateUserProfileAPI(t *testing.T) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
 			},
 			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					GetUserById(gomock.Any(), userProfile.UserID).
+					Times(1).
+					Return(user, nil)
+
 				arg := db.CreateUserProfileParams{
 					UserID: userProfile.UserID,
 					Name:   userProfile.Name,
@@ -168,6 +173,7 @@ func TestCreateUserProfileAPI(t *testing.T) {
 			request, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(data))
 			require.NoError(t, err)
 
+			tc.setupAuth(t, request, server.tokenMaker)
 			server.router.ServeHTTP(recorder, request)
 			tc.checkResponse(recorder)
 		})

@@ -25,6 +25,7 @@ func randomUser(t *testing.T) (user db.User, password string) {
 	require.NoError(t, err)
 
 	user = db.User{
+		ID:             utils.RandomInt(1, 100),
 		Username:       utils.RandomString(6),
 		HashedPassword: hashedPassword,
 	}
@@ -41,7 +42,7 @@ func requireBodyMatchUser(t *testing.T, body *bytes.Buffer, user db.User) {
 	require.NoError(t, err)
 	require.Equal(t, user.Username, gotUser.Username)
 	require.Equal(t, user.CreatedAt, gotUser.CreatedAt)
-	require.Empty(t, gotUser.HashedPassword)
+	require.Equal(t, user.HashedPassword, gotUser.HashedPassword)
 }
 
 type eqCreateUserParamsMatcher struct {
@@ -185,6 +186,54 @@ func TestCreateUserAPI(t *testing.T) {
 
 			url := "/user"
 			request, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(data))
+			require.NoError(t, err)
+
+			server.router.ServeHTTP(recorder, request)
+			tc.checkResponse(recorder)
+		})
+	}
+}
+
+func TestGetUser(t *testing.T) {
+	user, _ := randomUser(t)
+
+	testCases := []struct {
+		name          string
+		userID        int64
+		buildStubs    func(store *mockdb.MockStore)
+		checkResponse func(recoder *httptest.ResponseRecorder)
+	}{
+		{
+			name:   "OK",
+			userID: user.ID,
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					GetUserById(gomock.Any(), user.ID).
+					Times(1).
+					Return(user, nil)
+			},
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusOK, recorder.Code)
+				requireBodyMatchUser(t, recorder.Body, user)
+			},
+		},
+	}
+
+	for i := range testCases {
+		tc := testCases[i]
+
+		t.Run(tc.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			store := mockdb.NewMockStore(ctrl)
+			tc.buildStubs(store)
+
+			server := newTestServer(t, store)
+			recorder := httptest.NewRecorder()
+
+			url := fmt.Sprintf("/user/%d", tc.userID)
+			request, err := http.NewRequest(http.MethodGet, url, nil)
 			require.NoError(t, err)
 
 			server.router.ServeHTTP(recorder, request)

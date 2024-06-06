@@ -2,6 +2,7 @@ package api
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -66,6 +67,34 @@ func (server *Server) createUser(ctx *gin.Context) {
 	rsp := createUserRes(user, req.Password)
 	ctx.JSON(http.StatusOK, rsp)
 }
+
+type getAccountRequest struct {
+	ID int64 `uri:"id" binding:"required,min=1"`
+}
+
+func (server *Server) getUser(ctx *gin.Context) {
+	var req getAccountRequest
+	if err := ctx.ShouldBindUri(&req); err != nil {
+		fmt.Print("ERROR:", err)
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	// Check is user id is valid or not
+	user, valid := server.validUser(ctx, req.ID)
+	if !valid {
+		return
+	}
+
+	//authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
+	//if user.ID != authPayload.UserId {
+	//	err := errors.New("user doesn't belong to the authenticated user")
+	//	ctx.JSON(http.StatusUnauthorized, errorResponse(err))
+	//	return
+	//}
+
+	ctx.JSON(http.StatusOK, user)
+}
 func (server *Server) validUser(ctx *gin.Context, userId int64) (db.User, bool) {
 	user, err := server.store.GetUserById(ctx, userId)
 	if err != nil {
@@ -73,7 +102,6 @@ func (server *Server) validUser(ctx *gin.Context, userId int64) (db.User, bool) 
 			ctx.JSON(http.StatusNotFound, errorResponse(err))
 			return user, false
 		}
-
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return user, false
 	}
