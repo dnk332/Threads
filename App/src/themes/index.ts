@@ -1,4 +1,6 @@
-export {default as colors} from './color';
-export {default as layout} from './layout';
-export {default as fonts} from './fonts';
-export {default as layoutValue} from './layoutValue';
+import * as colors from './color';
+import * as layout from './layout';
+import * as fonts from './fonts';
+import * as layoutValue from './layoutValue';
+
+export {colors, layout, fonts, layoutValue};
