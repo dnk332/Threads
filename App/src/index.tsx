@@ -8,7 +8,7 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {PortalProvider} from '@gorhom/portal';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
-import {persistor, store} from '@stores/index';
+import {persistor, store} from './redux/store';
 
 const Index = () => {
   useEffect(() => {

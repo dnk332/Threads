@@ -1,14 +1,12 @@
 import {Pressable, View} from 'react-native';
 import React from 'react';
-import AppText from '@components/AppText';
-import Avatar from '@components/Avatar';
-import AppButton from '@components/AppButton';
-import {colors, layout} from '@themes/index';
-import {AppStyleSheet} from '@themes/responsive';
+import {AppText, Avatar, AppButton} from '@components';
+import {colors, layout} from '@themes';
+import {AppStyleSheet} from 'src/themes/responsive';
 
 const SearchItem = () => {
   return (
-    <Pressable style={[layout.row, styles.container]}>
+    <Pressable style={[layout.default.row, styles.container]}>
       <Avatar
         source={{
           uri: 'https://images.pexels.com/photos/61100/pexels-photo-61100.jpeg',
