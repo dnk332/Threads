@@ -4,21 +4,21 @@ import {
   StackActions,
 } from '@react-navigation/native';
 
-export const navigationRef = createNavigationContainerRef();
+const navigationRef = createNavigationContainerRef();
 
-export function navigateTo(routeName: string, params?: object) {
+function navigateTo(routeName: string, params?: object) {
   if (navigationRef.isReady()) {
     navigationRef.dispatch(CommonActions.navigate(routeName, params));
   }
 }
 
-export const navigatePush = (name, params) => {
+const navigatePush = (name, params) => {
   if (navigationRef.isReady()) {
     navigationRef.dispatch(StackActions.push(name, params));
   }
 };
 
-export const navigateAndReset = (routes = [], index = 0) => {
+const navigateAndReset = (routes = [], index = 0) => {
   if (navigationRef.isReady()) {
     navigationRef.dispatch(
       CommonActions.reset({
@@ -29,7 +29,7 @@ export const navigateAndReset = (routes = [], index = 0) => {
   }
 };
 
-export const navigateAndSimpleReset = (name, index = 0) => {
+const navigateAndSimpleReset = (name, index = 0) => {
   if (navigationRef.isReady()) {
     navigationRef.dispatch(
       CommonActions.reset({
@@ -52,4 +52,21 @@ export function navigateReplace(name, param) {
 
 export const goBack = () => {
   navigationRef.goBack();
+};
+
+function popToTop() {
+  if (navigationRef.isReady()) {
+    navigationRef.dispatch(StackActions.popToTop());
+  }
+}
+
+export default {
+  navigationRef,
+  navigateTo,
+  navigatePush,
+  goBack,
+  navigateReplace,
+  navigateAndSimpleReset,
+  navigateAndReset,
+  popToTop,
 };

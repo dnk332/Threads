@@ -1,4 +1,4 @@
-import {actionTypes} from '@action';
+import {actionTypes} from '@actions';
 
 const {USER} = actionTypes;
 export const onLogin = (params: any, callback = () => {}) => {
@@ -61,3 +61,14 @@ export const onChangePassword = (params: any, callback = () => {}) => {
     callback,
   };
 };
+
+export const signOutSubmit = (params?: any, callback = () => {}) => ({
+  type: USER.LOGOUT.HANDLER,
+  params,
+  callback,
+});
+
+export const signOutSuccess = payload => ({
+  type: USER.LOGOUT.SUCCESS,
+  payload,
+});

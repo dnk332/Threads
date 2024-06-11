@@ -1,4 +1,4 @@
-export function handleErrorMessage(err) {
+export function handleErrorMessage(err: {message?: string; response?: any}) {
   console.log('====error====', err);
 
   const {response} = err;

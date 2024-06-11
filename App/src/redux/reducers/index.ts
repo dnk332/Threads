@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {persistReducer} from 'redux-persist';
 
 import authReducer from './auth';
-import {actionTypes} from '@action';
+import {actionTypes} from '@actions';
 
 const {APP} = actionTypes;
 
