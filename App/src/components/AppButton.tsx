@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Pressable,
   PressableProps,
@@ -6,10 +7,10 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import React from 'react';
+
 import {AppStyleSheet} from '@themes/responsive';
 import AppText from './AppText';
-import colors from '@themes/color';
+import {colors} from '@themes/color';
 
 export interface AppButtonProps extends PressableProps {
   text: string;

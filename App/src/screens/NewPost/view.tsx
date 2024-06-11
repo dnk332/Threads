@@ -1,7 +1,4 @@
 import React, {useState} from 'react';
-import {AppContainer, AppInput, AppText, Avatar} from '@components/index';
-import {AppStyleSheet} from '@themes/responsive';
-
 import {
   InputAccessoryView,
   KeyboardAvoidingView,
@@ -10,9 +7,16 @@ import {
   ScrollView,
   View,
 } from 'react-native';
-import {colors, layout} from '@themes/index';
-import {SvgComponent} from '@assets/svg';
+
+import {AppComponent, GlobalComponent} from '@components';
+import {AppStyleSheet} from '@themes/responsive';
+import layout from '@themes/layout';
+import {colors} from '@themes/color';
+import SvgComponent from '@svg/index';
 import HandelKeyboard from '@utils/KeyboardInfo';
+
+const {AppContainer, AppText} = GlobalComponent;
+const {AppInput, Avatar} = AppComponent;
 
 const NewPostView = () => {
   const inputAccessoryViewID = 'postThreadInput';

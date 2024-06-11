@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
 
-const Layout = StyleSheet.create({
+const layout = StyleSheet.create({
   /* Column Layouts */
   column: {
     flexDirection: 'column',
@@ -101,4 +101,4 @@ const Layout = StyleSheet.create({
   },
 });
 
-export default Layout;
+export default layout;

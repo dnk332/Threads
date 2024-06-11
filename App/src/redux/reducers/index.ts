@@ -2,8 +2,10 @@ import {combineReducers} from 'redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {persistReducer} from 'redux-persist';
 
-import authReducer from './auth';
 import {actionTypes} from '@actions';
+
+import authReducer from './auth';
+import application from './application';
 
 const {APP} = actionTypes;
 
@@ -16,13 +18,14 @@ const rootPersistConfig = {
 
 const appReducer = combineReducers({
   auth: authReducer,
+  application: application,
 });
 
 const rootReducer = (
   state: {auth: {user: any}} | Partial<{auth: {user: any}}>,
   action: {type: any},
 ) => {
-  if (action.type === APP.CLEAR_REDUCER) {
+  if (action.type === APP.CLEAR_REDUCER.HANDLER) {
     return appReducer(undefined, action);
   }
   return appReducer(state, action);

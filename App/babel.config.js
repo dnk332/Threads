@@ -17,6 +17,7 @@ module.exports = api => ({
           '.tsx',
         ],
         alias: {
+          '@src': `${__dirname}/src`,
           '@services': `${__dirname}/src/services`,
           '@assets': `${__dirname}/src/assets`,
           '@components': `${__dirname}/src/components`,

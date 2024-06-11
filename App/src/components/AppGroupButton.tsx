@@ -1,9 +1,13 @@
-import {StyleProp, View, ViewStyle} from 'react-native';
 import React, {Fragment} from 'react';
+import {StyleProp, View, ViewStyle} from 'react-native';
+
 import {AppStyleSheet} from '@themes/responsive';
-import AppButton, {AppButtonProps} from '@components/AppButton';
-import colors from '@themes/color';
+import {AppComponent} from '@components';
+import {colors} from '@themes/color';
 import {width as DeviceWidth} from '@utils/DeviceInfo';
+import {AppButtonProps} from '@src/components/AppButton';
+
+const {AppButton} = AppComponent;
 
 interface AppGroupButtonProps {
   data: AppButtonProps[];

@@ -1,14 +1,16 @@
 import React, {useCallback, useRef, useState} from 'react';
-import AppContainer from '@components/AppContainer';
-import AppText from '@components/AppText';
-import {SvgComponent} from '@assets/svg';
+
+import SvgComponent from '@svg/index';
 import {Pressable, View} from 'react-native';
 import {colors, layout, layoutValue} from '@themes/index';
 import {AppStyleSheet} from '@themes/responsive';
-import Avatar from '@components/Avatar';
-import AppButton from '@components/AppButton';
+
 import ThreadsTab from './Components/ThreadsTab';
 import RepliesTab from './Components/RepliesTab';
+import {AppComponent, GlobalComponent} from '@components';
+
+const {Avatar, AppButton} = AppComponent;
+const {AppText, AppContainer} = GlobalComponent;
 
 import {
   CollapsibleRef,
