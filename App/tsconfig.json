@@ -17,12 +17,13 @@
       "@svg": ["src/assets/svg/*"],
       "@image": ["src/assets/image/*"],
       "@store": ["src/redux/store/index.ts"],
-      "@selector": ["src/redux/selectors/index.ts"],
-      "@reducer": ["src/redux/reducers/index.ts"],
-      "@action": ["src/redux/actions/index.ts"],
-      "@saga": ["src/redux/sagas/index.ts"],
+      "@selectors": ["src/redux/selectors/index.ts"],
+      "@reducers": ["src/redux/reducers/index.ts"],
+      "@actions": ["src/redux/actions/index.ts"],
+      "@sagas": ["src/redux/sagas/index.ts"],
       "@sagaHelper": ["src/redux/sagaHelper/index.ts"],
-      // "@api": ["src/api/index.ts"]
+      "@apis": ["src/api/index.ts"],
+      "@navigators": ["src/navigation/NavigationService.ts"]
     },
     "target": "es5",
     "allowJs": true,

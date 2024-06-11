@@ -1,4 +1,4 @@
-import {actionTypes} from '@action';
+import {actionTypes} from '@actions';
 
 const initialState = {
   user: null,
