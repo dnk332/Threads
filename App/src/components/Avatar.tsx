@@ -7,10 +7,13 @@ import {
 } from 'react-native';
 import React from 'react';
 import {AppStyleSheet} from '@themes/responsive';
-import colors from '@themes/color';
-import AppImage from '@components/AppImage';
+import {colors} from '@themes/color';
+
 import {FastImageProps, Source} from 'react-native-fast-image';
 // import {SVGName} from '@assets/svg';
+import {GlobalComponent} from '@components';
+
+const {AppImage} = GlobalComponent;
 
 interface AvatarProps {
   source: Source | ImageRequireSource;

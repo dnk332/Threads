@@ -1,8 +1,8 @@
-import {StyleProp, TextInput, TextInputProps, TextStyle} from 'react-native';
 import React, {forwardRef, memo} from 'react';
+import {StyleProp, TextInput, TextInputProps, TextStyle} from 'react-native';
 
 import {AppFonts, FontSizes} from '@themes/fonts';
-import colors from '@themes/color';
+import {colors} from '@themes/color';
 import {
   ResponsiveFont,
   ResponsiveHeight,

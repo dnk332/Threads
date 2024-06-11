@@ -13,6 +13,15 @@ export const asyncTypes = action => ({
 // Actions
 export const APP = {
   CLEAR_REDUCER: asyncTypes('APP/CLEAR_REDUCER'),
+  CHANGE_THEME: asyncTypes('APP/CHANGE_THEME'),
+  CHANGE_FONT: asyncTypes('APP/CHANGE_FONT'),
+  FORCE_APPEARANCE: asyncTypes('APP/FORCE_APPEARANCE'),
+  CHANGE_LANGUAGE: asyncTypes('APP/CHANGE_LANGUAGE'),
+  SAVE_DOMAIN: asyncTypes('APP/SAVE_DOMAIN'),
+  SAVE_DEVICE_INFO: asyncTypes('APP/SAVE_DEVICE_INFO'),
+  SAVE_SETTING: asyncTypes('APP/SAVE_SETTING'),
+  SAVE_ONBOARD: asyncTypes('APP/SAVE_ONBOARD'),
+  CHANGE_LISTING_STYLE: asyncTypes('APP/CHANGE_LISTING_STYLE'),
 };
 export const USER = {
   LOGIN: asyncTypes('USER/LOGIN'),

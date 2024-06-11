@@ -3,10 +3,11 @@ import {Media} from '@local_types/post';
 
 import {AppStyleSheet} from '@themes/responsive';
 
-import PostImage from '@components/PostContent/PostImage';
+import {AppComponent} from '@components';
 import {FlashList} from '@shopify/flash-list';
 import {View} from 'react-native';
 
+const {PostImage} = AppComponent.PostContent;
 interface MediaContentProps {
   content: Media[];
 }

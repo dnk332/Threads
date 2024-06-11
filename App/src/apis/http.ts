@@ -4,14 +4,17 @@ import axios, {
   AxiosError,
   InternalAxiosRequestConfig,
 } from 'axios';
+
 import {store} from '@store';
 import Navigator from '@navigators';
-import {deviceSelect, domainSelect, tokenSelect} from '@selectors';
+import {otherSelector} from '@selectors';
+import {HelperUtil} from '@utils';
 
 const getToken = (): string | undefined =>
-  tokenSelect(store.getState())?.access_token;
-const getDevice = (): any => deviceSelect(store.getState());
-const getDomain = (): string | undefined => domainSelect(store.getState());
+  otherSelector.tokenSelect(store.getState())?.access_token;
+const getDevice = (): any => otherSelector.deviceSelect(store.getState());
+const getDomain = (): string | undefined =>
+  otherSelector.domainSelect(store.getState());
 
 export const CodeResponse = {
   SUCCESS: 200,
@@ -20,9 +23,6 @@ export const CodeResponse = {
 interface RequestProps {
   params?: Record<string, any>;
   headers?: Record<string, any>;
-  responseType?: string;
-  loading?: boolean;
-  onProgress?: (percent: number) => void;
 }
 
 class HTTP {
@@ -59,7 +59,7 @@ class HTTP {
         return config;
       },
       (error: AxiosError) => {
-        console.log('Error Request >>>', error);
+        console.log('xxxx ERROR REQUEST xxxx: ', error);
         return Promise.reject(error);
       },
     );
@@ -72,7 +72,7 @@ class HTTP {
         };
       },
       (error: AxiosError) => {
-        console.log('Error Response >>>', error);
+        console.log('xxxx ERROR RESPONSE xxxx: ', error);
         const code = error.response?.data['code'];
         const message = error.response?.data['message'];
         if (code && this.exceptionCode.includes(code)) {
@@ -89,10 +89,14 @@ class HTTP {
   }
 
   async get(endPoint: string, props?: RequestProps): Promise<any> {
+    const {params, headers} = props;
+    console.log('==== GET ==== : ', endPoint, ' + params: ', params);
     try {
+      if (params) {
+        endPoint = `${endPoint}${HelperUtil.getParamsString(params)}`;
+      }
       const response = await this.http.get(endPoint, {
-        params: props?.params ?? {},
-        headers: props?.headers ?? {},
+        headers: headers ?? {},
       });
 
       return Promise.resolve(response.data);
@@ -102,9 +106,11 @@ class HTTP {
   }
 
   async post(endPoint: string, props?: RequestProps): Promise<any> {
+    const {params, headers} = props;
+    console.log('==== POST ==== : ', endPoint, ' + params: ', params);
     try {
-      const response = await this.http.post(endPoint, props?.params ?? {}, {
-        headers: props?.headers ?? {},
+      const response = await this.http.post(endPoint, params ?? {}, {
+        headers: headers ?? {},
       });
 
       if (typeof response.data === 'string') {
@@ -118,6 +124,7 @@ class HTTP {
 
   async put(endPoint: string, props: RequestProps): Promise<any> {
     const {params, headers} = props;
+    console.log('==== PUT ==== : ', endPoint, ' + params: ', params);
     try {
       const response = await this.http.put(endPoint, params, {
         headers: headers ?? {},
@@ -131,6 +138,7 @@ class HTTP {
 
   async delete(endPoint: string, props: RequestProps): Promise<any> {
     const {headers} = props;
+    console.log('==== DELETE ==== : ', endPoint);
     try {
       const response = await this.http.delete(endPoint, {
         headers: headers ?? {},
@@ -141,37 +149,6 @@ class HTTP {
       return Promise.reject(error);
     }
   }
-
-  //   async download(endPoint: string, props: RequestProps): Promise<any> {
-  //     const {headers, loading = false, onProgress} = props;
-  //     if (loading) {
-  //       Navigator.showLoading({loading: true});
-  //     }
-  //     const fileName = getFileName(endPoint) ?? Date.now().toString();
-  //     const storePath = `${FileSystem.documentDirectory}/${fileName}`;
-
-  //     const instance = FileSystem.createDownloadResumable(
-  //       endPoint,
-  //       storePath,
-  //       {headers},
-  //       e => {
-  //         const value = (e.totalBytesWritten / e.totalBytesExpectedToWrite) * 100;
-  //         onProgress?.(value);
-  //       },
-  //     );
-  //     try {
-  //       const {uri} = await instance.downloadAsync();
-  //       if (loading) {
-  //         Navigator.showLoading({loading: false});
-  //       }
-  //       return Promise.resolve(uri);
-  //     } catch (error) {
-  //       if (loading) {
-  //         Navigator.showLoading({loading: false});
-  //       }
-  //       return Promise.reject(error);
-  //     }
-  //   }
 }
 
 export default new HTTP();

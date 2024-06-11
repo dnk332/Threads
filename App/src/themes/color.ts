@@ -25,7 +25,7 @@ const colors = {
   border_dark: '#1A1A1A',
 };
 
-export default colors;
+export {colors};
 // export const LightTheme: ExtendedTheme = {
 //   dark: false,
 //   colors: {
