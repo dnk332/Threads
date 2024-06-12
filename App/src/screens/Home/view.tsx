@@ -1,12 +1,14 @@
 import React, {Fragment, useCallback} from 'react';
-import {PostItem} from '@components/index';
-import AppContainer from '@components/AppContainer';
+import {View} from 'react-native';
+import {FlashList} from '@shopify/flash-list';
 
 import {dummyPost} from '@constants/dummyData';
-import {FlashList} from '@shopify/flash-list';
-import {View} from 'react-native';
-import colors from '@themes/color';
+import {colors} from '@themes/color';
 import {AppStyleSheet} from '@themes/responsive';
+import {AppComponent, GlobalComponent} from '@components';
+
+const {AppContainer} = GlobalComponent;
+const {PostItem} = AppComponent;
 
 const ItemSeparator = () => {
   return <View style={styles.separator} />;

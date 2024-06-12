@@ -1,21 +1,22 @@
 import React, {useCallback, useRef, useState} from 'react';
-import AppContainer from '@components/AppContainer';
-
-import {FlashList} from '@shopify/flash-list';
 import {Pressable, TextInput, View} from 'react-native';
-import colors from '@themes/color';
-import {AppStyleSheet} from '@themes/responsive';
-import SearchItem from './Component/SearchItem';
-import AppText from '@components/AppText';
-import {SvgComponent} from '@assets/svg';
-import {layout} from '@themes/index';
-import AppInput from '@components/AppInput';
+import {FlashList} from '@shopify/flash-list';
 import Animated, {
   Easing,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+
+import {colors} from '@themes/color';
+import {AppStyleSheet} from '@themes/responsive';
+import SearchItem from './Component/SearchItem';
+import SvgComponent from '@svg/index';
+import layout from '@themes/layout';
+import {AppComponent, GlobalComponent} from '@src/components';
+
+const {AppContainer, AppText} = GlobalComponent;
+const {AppInput} = AppComponent;
 
 const SearchScreenView = () => {
   const SearchInputPosition = useSharedValue(0);

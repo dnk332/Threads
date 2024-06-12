@@ -1,11 +1,13 @@
 import React from 'react';
 import ReactTimeAgo from 'react-time-ago';
-import AppText from '@components/AppText';
 import TimeAgo from 'javascript-time-ago';
-
+import vi from 'javascript-time-ago/locale/vi';
 import en from 'javascript-time-ago/locale/en';
-import ru from 'javascript-time-ago/locale/ru';
+
+import {GlobalComponent} from '@components';
 import {AppStyleSheet} from '@themes/responsive';
+
+const {AppText} = GlobalComponent;
 
 interface TimeProps {
   children: string;
@@ -33,7 +35,7 @@ function Time({children}: TimeProps) {
 
 export function SetUpTime() {
   TimeAgo.addDefaultLocale(en);
-  TimeAgo.addLocale(ru);
+  TimeAgo.addLocale(vi);
 }
 
 const styles = AppStyleSheet.create({

@@ -1,16 +1,21 @@
-import {Pressable, View} from 'react-native';
 import React, {Fragment, memo, ReactElement, useRef, useState} from 'react';
-import {AppText, Avatar} from '@components/index';
-import {layout, colors} from '@themes/index';
+import {Pressable, View} from 'react-native';
+
+import {GlobalComponent, AppComponent} from '@components';
+import layout from '@themes/layout';
+import {colors} from '@themes/color';
 import {AppStyleSheet} from '@themes/responsive';
-// import {SVGName} from '@assets/svg';
-import {User, Post} from '@local_types/index';
+import {User} from '@local_types/user';
+import {Post} from '@local_types/post';
 import TimeFromNow from '@hooks/TimeAgo';
-import ActiveBottomSheet from '@screens/Home/Components/ActiveBottomSheet';
-import ContentHandelArea from '@components/PostContent/ContentHandelArea';
-import MediaContent from '@components/PostContent/MediaContent';
-import {imageHeight} from '@constants/index';
-import {SvgComponent} from '@assets/svg';
+import ActiveBottomSheet from '@src/screens/Home/Components/ActiveBottomSheet';
+import ContentHandelArea from '@src/components/PostContent/ContentHandelArea';
+import MediaContent from '@src/components/PostContent/MediaContent';
+import {imageHeight} from '@constants/deviceSize';
+import SvgComponent from '@svg/index';
+
+const {Avatar} = AppComponent;
+const {AppText} = GlobalComponent;
 
 interface PostItemProps {
   userData: User;
@@ -101,7 +106,7 @@ const PostItem = ({
                   <TimeFromNow date={new Date(postData.time)} />
                 </View>
                 <Pressable onPress={() => sheetRef.current?.snapTo(0)}>
-                  <SvgComponent name={'three_dot'} />
+                  <SvgComponent name={'THREE_DOT'} />
                 </Pressable>
               </View>
               <ContentHandelArea textContent={postData.textContent} />
@@ -120,18 +125,18 @@ const PostItem = ({
             postData.mediaContent.length === 0 && styles.space,
           ]}>
           <StatusItem
-            icon={<SvgComponent name={'heart'} />}
+            icon={<SvgComponent name={'HEART'} />}
             value={postData.liked}
           />
           <StatusItem
-            icon={<SvgComponent name={'message'} />}
+            icon={<SvgComponent name={'MESSAGE'} />}
             value={postData.comment}
           />
           <StatusItem
-            icon={<SvgComponent name={'repeat'} />}
+            icon={<SvgComponent name={'REPEAT'} />}
             value={postData.reported}
           />
-          <StatusItem icon={<SvgComponent name={'send'} />} />
+          <StatusItem icon={<SvgComponent name={'SEND'} />} />
         </View>
       </View>
       <ActiveBottomSheet sheetRef={sheetRef} />

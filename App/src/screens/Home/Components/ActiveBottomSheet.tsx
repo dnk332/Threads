@@ -1,10 +1,14 @@
-import {View} from 'react-native';
 import React from 'react';
-import {AppBottomSheet, AppButton, AppGroupButton} from '@components/index';
-import {layout, colors} from '@themes/index';
+import {View} from 'react-native';
+
+import {colors} from '@themes/color';
+import layout from '@themes/layout';
 import {AppStyleSheet} from '@themes/responsive';
-import {SvgComponent} from '@assets/svg';
-// import {SVGName} from '@assets/svg';
+import SvgComponent from '@svg/index';
+import {AppComponent, GlobalComponent} from '@src/components';
+
+const {AppButton, AppGroupButton} = AppComponent;
+const {AppBottomSheet} = GlobalComponent;
 
 const ActiveBottomSheet = ({sheetRef}) => {
   return (
@@ -22,7 +26,7 @@ const ActiveBottomSheet = ({sheetRef}) => {
             styles.buttonContainer,
             styles.button,
           ]}
-          rightIcon={<SvgComponent name={'hashtag'} />}
+          rightIcon={<SvgComponent name={'HASHTAG'} />}
         />
         <AppGroupButton
           containerStyle={styles.buttonContainer}
@@ -35,7 +39,7 @@ const ActiveBottomSheet = ({sheetRef}) => {
                 styles.bottomSheetButton,
                 styles.button,
               ],
-              rightIcon: <SvgComponent name={'save'} />,
+              rightIcon: <SvgComponent name={'SAVE'} />,
             },
             {
               text: 'Hide',
@@ -45,7 +49,7 @@ const ActiveBottomSheet = ({sheetRef}) => {
                 styles.bottomSheetButton,
                 styles.button,
               ],
-              rightIcon: <SvgComponent name={'eye_off'} />,
+              rightIcon: <SvgComponent name={'EYE_OFF'} />,
             },
           ]}
         />
@@ -60,7 +64,7 @@ const ActiveBottomSheet = ({sheetRef}) => {
                 styles.bottomSheetButton,
                 styles.button,
               ],
-              rightIcon: <SvgComponent name={'notify_off'} />,
+              rightIcon: <SvgComponent name={'NOTIFY_OFF'} />,
             },
             {
               text: 'Unfollow',
@@ -70,7 +74,7 @@ const ActiveBottomSheet = ({sheetRef}) => {
                 styles.bottomSheetButton,
                 styles.button,
               ],
-              rightIcon: <SvgComponent name={'user_minus'} />,
+              rightIcon: <SvgComponent name={'USER_MINUS'} />,
             },
             {
               text: 'Report',
@@ -80,7 +84,7 @@ const ActiveBottomSheet = ({sheetRef}) => {
                 styles.bottomSheetButton,
                 styles.button,
               ],
-              rightIcon: <SvgComponent name={'alert'} />,
+              rightIcon: <SvgComponent name={'ALERT'} />,
             },
           ]}
         />

@@ -3,10 +3,10 @@
 import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
 import RootScreen from '../screens/Root';
-import {navigationRef} from './NavigationService';
-import ImageViewer from '@screens/ImageViewer';
-import NewPost from '@screens/NewPost';
+import {navigationRef} from '@navigators';
+import {ImageViewerScreen, NewPostScreen} from '@screens';
 
 export type NavigationStackParamList = {
   ROOT: undefined;
@@ -27,15 +27,15 @@ function StackScreens() {
           headerShown: false,
         }}
         initialRouteName="ROOT">
-        <Stack.Screen name="ROOT" component={RootScreen} />
-        <Stack.Screen name="IMAGE_VIEWER" component={ImageViewer} />
+        <Stack.Screen name={'ROOT'} component={RootScreen} />
+        <Stack.Screen name="IMAGE_VIEWER" component={ImageViewerScreen} />
         <Stack.Screen
           options={{
             headerShown: false,
             presentation: 'modal',
           }}
           name="NEW_POST_MODAL"
-          component={NewPost}
+          component={NewPostScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

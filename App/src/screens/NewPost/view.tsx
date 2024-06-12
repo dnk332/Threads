@@ -18,7 +18,7 @@ import HandelKeyboard from '@utils/KeyboardInfo';
 const {AppContainer, AppText} = GlobalComponent;
 const {AppInput, Avatar} = AppComponent;
 
-const NewPostView = () => {
+const NewPostScreenView = () => {
   const inputAccessoryViewID = 'postThreadInput';
   const {heightKB} = HandelKeyboard();
   const [contentViewHeight, setContentViewHeight] = useState<number>(0);
@@ -149,7 +149,7 @@ const NewPostView = () => {
   );
 };
 
-export default NewPostView;
+export default NewPostScreenView;
 
 const styles = AppStyleSheet.create({
   container: {marginTop: 0, paddingTop: 16},

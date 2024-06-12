@@ -1,8 +1,8 @@
 import React from 'react';
-import UserDetailView from './view';
+import UserDetailScreenView from './view';
 
-const UserDetail = () => {
-  return <UserDetailView />;
+const UserDetailScreen = () => {
+  return <UserDetailScreenView />;
 };
 
-export default UserDetail;
+export default UserDetailScreen;

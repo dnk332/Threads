@@ -1,14 +1,15 @@
 import React, {useCallback} from 'react';
-import AppContainer from '@components/AppContainer';
-
-import {FlashList} from '@shopify/flash-list';
 import {View} from 'react-native';
-import colors from '@themes/color';
+import {FlashList} from '@shopify/flash-list';
+
+import {colors} from '@themes/color';
 import {AppStyleSheet} from '@themes/responsive';
-import AppText from '@components/AppText';
-import {layout} from '@themes/index';
+import layout from '@themes/layout';
 import ActivityItem from './Components/ActivityItem';
 import ActivityFilterList from './Components/ActivityFilterList';
+import {GlobalComponent} from '@src/components';
+
+const {AppText, AppContainer} = GlobalComponent;
 
 const ActivitiesScreenView = () => {
   const _renderItem = useCallback(({}) => {
