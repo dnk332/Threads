@@ -1,74 +1,31 @@
 import {actionTypes} from '@actions';
 
-const {USER} = actionTypes;
-export const onLogin = (params: any, callback = () => {}) => {
+const {AUTH} = actionTypes;
+
+export const onLoginSubmit = payload => {
   return {
-    type: USER.LOGIN,
-    params,
-    callback,
+    type: AUTH.LOGIN.HANDLER,
+    payload,
   };
 };
 
-export const onRegister = (params: any, callback = () => {}) => {
+export const onLoginSuccess = payload => {
   return {
-    type: USER.REGISTER.HANDLER,
-    params,
-    callback,
+    type: AUTH.LOGIN.SUCCESS,
+    payload,
   };
 };
 
-export const onForgot = (params: any, callback = () => {}) => {
+export const onRegisterSubmit = payload => {
   return {
-    type: USER.FORGOT,
-    params,
-    callback,
+    type: AUTH.REGISTER.HANDLER,
+    payload,
   };
 };
 
-export const onLogout = (callback = () => {}) => {
+export const onRegisterSuccess = payload => {
   return {
-    type: USER.LOGOUT,
-    callback,
+    type: AUTH.REGISTER.SUCCESS,
+    payload,
   };
 };
-
-export const onDeactivate = (callback = () => {}) => {
-  return {
-    type: USER.DEACTIVATE,
-    callback,
-  };
-};
-
-export const onExpire = (callback = () => {}) => {
-  return {
-    type: USER.EXPIRE_TOKEN,
-    callback,
-  };
-};
-
-export const onEditProfile = (params: any, callback = () => {}) => {
-  return {
-    type: USER.EDIT_PROFILE,
-    params,
-    callback,
-  };
-};
-
-export const onChangePassword = (params: any, callback = () => {}) => {
-  return {
-    type: USER.CHANGE_PASSWORD,
-    params,
-    callback,
-  };
-};
-
-export const signOutSubmit = (params?: any, callback = () => {}) => ({
-  type: USER.LOGOUT.HANDLER,
-  params,
-  callback,
-});
-
-export const signOutSuccess = payload => ({
-  type: USER.LOGOUT.SUCCESS,
-  payload,
-});

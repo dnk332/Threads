@@ -23,18 +23,15 @@ export const APP = {
   SAVE_ONBOARD: asyncTypes('APP/SAVE_ONBOARD'),
   CHANGE_LISTING_STYLE: asyncTypes('APP/CHANGE_LISTING_STYLE'),
 };
+
+export const AUTH = {
+  LOGIN: asyncTypes('AUTH/LOGIN'),
+  REGISTER: asyncTypes('AUTH/REGISTER'),
+  LOGOUT: asyncTypes('AUTH/LOGOUT'),
+};
+
 export const USER = {
-  LOGIN: asyncTypes('USER/LOGIN'),
-  REGISTER: asyncTypes('USER/REGISTER'),
-  FORGOT: asyncTypes('USER/FORGOT'),
-  DEACTIVATE: asyncTypes('USER/DEACTIVATE'),
-  EXPIRE_TOKEN: asyncTypes('USER/EXPIRE_TOKEN'),
-  EDIT_PROFILE: asyncTypes('USER/EDIT_PROFILE'),
-  CHANGE_PASSWORD: asyncTypes('USER/CHANGE_PASSWORD'),
-  LOGIN_BY_OTHER_ACCOUNT: asyncTypes('USER/LOGIN_BY_OTHER_ACCOUNT'),
-  SIGN_UP: asyncTypes('USER/SIGN_UP'),
   GET_USER_INFO: asyncTypes('USER/GET_USER_INFO'),
-  LOGOUT: asyncTypes('USER/LOGOUT'),
   UPDATE_INFO: asyncTypes('USER/UPDATE_INFO'),
 };
 
@@ -54,4 +51,12 @@ export const ERROR = {
     SHOW: 'ERROR/DIALOG_SHOW',
     HIDE: 'ERROR/DIALOG_HIDE',
   },
+};
+
+/*
+  CONNECTIVITY
+  - receive, sound notification
+*/
+export const CONNECTIVITY = {
+  APP_CONNECTIVITY_CHANGE: 'CONNECTIVITY/APP_CONNECTIVITY_CHANGE',
 };

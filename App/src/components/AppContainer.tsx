@@ -85,7 +85,7 @@ const AppContainer = ({
         style={[
           styles.container,
           {
-            backgroundColor: colors.background,
+            backgroundColor: colors.primary,
           },
           containerStyle,
         ]}>
@@ -99,7 +99,7 @@ const AppContainer = ({
           style={[
             styles.container,
             {
-              backgroundColor: colors.background,
+              backgroundColor: colors.primary,
               marginTop: statusbarHeight,
             },
             style,
@@ -141,7 +141,7 @@ const styles = AppStyleSheet.create({
     marginLeft: 4,
   },
   header: {
-    backgroundColor: colors.background,
+    backgroundColor: colors.primary,
     paddingHorizontal: 16,
   },
   button: {

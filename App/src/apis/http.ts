@@ -5,14 +5,14 @@ import axios, {
   InternalAxiosRequestConfig,
 } from 'axios';
 
-import {store} from '@store';
+// import {store} from '@store';
 import * as Navigator from '@navigators';
-import {otherSelector} from '@selectors';
+// import {otherSelector} from '@selectors';
 import {getParamsString} from '@utils/HelperUtil';
 
-const getToken = (): string | undefined =>
-  otherSelector.tokenSelect(store.getState())?.access_token;
-const getDevice = (): any => otherSelector.deviceSelect(store.getState());
+// const getToken = (): string | undefined =>
+//   otherSelector.tokenSelect(store.getState())?.access_token;
+// const getDevice = (): any => otherSelector.deviceSelect(store.getState());
 // const getDomain = (): string | undefined =>
 //   otherSelector.domainSelect(store.getState());
 
@@ -113,7 +113,6 @@ class HTTP {
       const response = await this.http.post(endPoint, params ?? {}, {
         headers: headers ?? {},
       });
-      console.log('response', response);
       if (typeof response.data === 'string') {
         return Promise.resolve({message: response.data, success: true});
       }

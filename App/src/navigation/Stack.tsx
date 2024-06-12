@@ -6,12 +6,19 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import RootScreen from '../screens/Root';
 import {navigationRef} from '@navigators';
-import {ImageViewerScreen, NewPostScreen} from '@screens';
+import {
+  ImageViewerScreen,
+  LoginScreen,
+  NewPostScreen,
+  SwitchAccountScreen,
+} from '@screens';
 
 export type NavigationStackParamList = {
   ROOT: undefined;
   IMAGE_VIEWER: {imageLink: string};
   NEW_POST_MODAL: {focused: boolean};
+  LOGIN: undefined;
+  SWITCH_ACCOUNT: undefined;
 };
 
 const Stack = createNativeStackNavigator<NavigationStackParamList>();
@@ -26,8 +33,10 @@ function StackScreens() {
         screenOptions={{
           headerShown: false,
         }}
-        initialRouteName="ROOT">
+        initialRouteName="LOGIN">
         <Stack.Screen name={'ROOT'} component={RootScreen} />
+        <Stack.Screen name={'LOGIN'} component={LoginScreen} />
+        <Stack.Screen name={'SWITCH_ACCOUNT'} component={SwitchAccountScreen} />
         <Stack.Screen name="IMAGE_VIEWER" component={ImageViewerScreen} />
         <Stack.Screen
           options={{

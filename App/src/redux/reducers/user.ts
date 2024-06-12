@@ -1,22 +1,22 @@
 import {actionTypes} from '@actions';
 
 const initialState = {
-  token: null,
+  user: null,
 };
 
-const {AUTH} = actionTypes;
+const {USER, AUTH} = actionTypes;
 
 export default (state = initialState, action) => {
   switch (action?.type) {
-    case AUTH.LOGIN.SUCCESS:
+    case USER.UPDATE_INFO.SUCCESS:
       return {
         ...state,
-        token: action.payload,
+        user: {...state.user, ...action.payload},
       };
     case AUTH.LOGOUT.SUCCESS:
       return {
         ...state,
-        token: null,
+        user: null,
       };
     default:
       return state;
