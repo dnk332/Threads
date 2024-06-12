@@ -1,16 +1,16 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import HomeScreen from '@screens/Home';
-import UserDetail from '@screens/UserDetail';
-import Activities from '@screens/Activities';
-import SearchScreen from '@screens/Search';
-
-import {colors} from '@themes/index';
-
+import {
+  UserDetailScreen,
+  ActivitiesScreen,
+  SearchScreen,
+  HomeScreen,
+} from '@screens';
+import {colors} from '@themes/color';
 import {navigateTo} from '@navigation/NavigationService';
-import {SvgComponent} from '@assets/svg';
-import {SVG_NAME} from '@assets/svg/svgList';
+import SvgComponent from '@svg/index';
+import {SVG_NAME} from '@svg/svgList';
 
 export type BottomTabsStackParamList = {
   HOME: undefined;
@@ -82,7 +82,7 @@ export default function RootScreen() {
       />
       <Tab.Screen
         name={'NEW_POST'}
-        component={UserDetail}
+        component={UserDetailScreen}
         options={{
           tabBarIcon: ({focused}) => {
             return IconHandle({
@@ -101,7 +101,7 @@ export default function RootScreen() {
       />
       <Tab.Screen
         name={'ACTIVITIES'}
-        component={Activities}
+        component={ActivitiesScreen}
         options={{
           tabBarIcon: ({focused}) => {
             return IconHandle({
@@ -115,7 +115,7 @@ export default function RootScreen() {
       />
       <Tab.Screen
         name={'USER_DETAIL'}
-        component={UserDetail}
+        component={UserDetailScreen}
         options={{
           tabBarIcon: ({focused}) => {
             return IconHandle({

@@ -1,11 +1,10 @@
 import React, {useCallback} from 'react';
-import {Media} from '@local_types/post';
-
-import {AppStyleSheet} from '@themes/responsive';
-
-import {AppComponent} from '@components';
 import {FlashList} from '@shopify/flash-list';
 import {View} from 'react-native';
+
+import {Media} from '@local_types/post';
+import {AppStyleSheet} from '@themes/responsive';
+import {AppComponent} from '@components';
 
 const {PostImage} = AppComponent.PostContent;
 interface MediaContentProps {

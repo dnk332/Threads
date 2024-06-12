@@ -1,12 +1,17 @@
-import {Pressable, View} from 'react-native';
 import React from 'react';
-import {AppText, Avatar, AppButton} from '@components';
-import {colors, layout} from '@themes';
+import {Pressable, View} from 'react-native';
+
+import {AppComponent, GlobalComponent} from '@components';
+import {colors} from '@themes/color';
+import layout from '@themes/layout';
 import {AppStyleSheet} from 'src/themes/responsive';
+
+const {Avatar, AppButton} = AppComponent;
+const {AppText} = GlobalComponent;
 
 const SearchItem = () => {
   return (
-    <Pressable style={[layout.default.row, styles.container]}>
+    <Pressable style={[layout.row, styles.container]}>
       <Avatar
         source={{
           uri: 'https://images.pexels.com/photos/61100/pexels-photo-61100.jpeg',

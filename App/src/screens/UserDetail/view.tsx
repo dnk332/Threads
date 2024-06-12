@@ -1,10 +1,11 @@
 import React, {useCallback, useRef, useState} from 'react';
+import {Pressable, View} from 'react-native';
 
 import SvgComponent from '@svg/index';
-import {Pressable, View} from 'react-native';
-import {colors, layout, layoutValue} from '@themes/index';
+import layout from '@themes/layout';
+import layoutValue from '@themes/layoutValue';
+import {colors} from '@themes/color';
 import {AppStyleSheet} from '@themes/responsive';
-
 import ThreadsTab from './Components/ThreadsTab';
 import RepliesTab from './Components/RepliesTab';
 import {AppComponent, GlobalComponent} from '@components';
@@ -27,7 +28,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import {width as DeviceWidth} from '@utils/DeviceInfo';
 
-const UserDetailView = () => {
+const UserDetailScreenView = () => {
   const refMap = useRef<CollapsibleRef>();
   const headerHeight = useRef<number>(234);
   const focusedTabValue = useSharedValue<string>('Threads');
@@ -241,7 +242,7 @@ const UserDetailView = () => {
   );
 };
 
-export default UserDetailView;
+export default UserDetailScreenView;
 
 const styles = AppStyleSheet.create({
   headerContainer: {

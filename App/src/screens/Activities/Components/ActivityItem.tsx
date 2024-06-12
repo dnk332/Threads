@@ -1,11 +1,14 @@
-import {Pressable, View} from 'react-native';
 import React from 'react';
-import AppText from '@components/AppText';
-import Avatar from '@components/Avatar';
-import AppButton from '@components/AppButton';
-import {colors, layout} from '@themes/index';
+import {Pressable, View} from 'react-native';
+
+import layout from '@themes/layout';
+import {colors} from '@themes/color';
 import {AppStyleSheet} from '@themes/responsive';
 import TimeFromNow from '@hooks/TimeAgo';
+import {AppComponent, GlobalComponent} from '@src/components';
+
+const {AppText} = GlobalComponent;
+const {Avatar, AppButton} = AppComponent;
 
 const ActivityItem = () => {
   return (
