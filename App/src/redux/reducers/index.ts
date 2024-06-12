@@ -5,7 +5,8 @@ import {persistReducer} from 'redux-persist';
 import {actionTypes} from '@actions';
 
 import authReducer from './auth';
-import application from './application';
+import applicationReducer from './application';
+import userReducer from './user';
 
 const {APP} = actionTypes;
 
@@ -18,13 +19,10 @@ const rootPersistConfig = {
 
 const appReducer = combineReducers({
   auth: authReducer,
-  application: application,
+  application: applicationReducer,
+  user: userReducer,
 });
-
-const rootReducer = (
-  state: {auth: {user: any}} | Partial<{auth: {user: any}}>,
-  action: {type: any},
-) => {
+const rootReducer = (state, action) => {
   if (action.type === APP.CLEAR_REDUCER.HANDLER) {
     return appReducer(undefined, action);
   }

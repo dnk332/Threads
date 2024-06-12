@@ -1,4 +1,4 @@
-// // Root
+// Root
 import HOME from '@svg/root/home';
 import SEARCH from '@svg/root/search';
 import NEWS from '@svg/root/news';
@@ -9,7 +9,7 @@ import SEARCH_INACTIVE from '@svg/root/search_inactive';
 import NEWS_INACTIVE from '@svg/root/news_inactive';
 import ACTIVITY_INACTIVE from '@svg/root/activity_inactive';
 import USER_DETAIL_INACTIVE from '@svg/root/user_detail_inactive';
-// // Common
+// Common
 import THREE_DOT from '@svg/common/threeDot';
 import HEART from '@svg/common/heart';
 import REPEAT from '@svg/common/repeat';
@@ -33,6 +33,7 @@ import DELETE from '@svg/common/delete';
 import GLOBE from '@svg/common/globe';
 import INSTAGRAM from '@svg/common/instagram';
 import LINE_2 from '@svg/common/line_2';
+import ARROW_RIGHT from '@svg/common/arrow_right';
 
 export const SVG_NAME = {
   // Root
@@ -71,4 +72,5 @@ export const SVG_NAME = {
   GLOBE,
   LINE_2,
   INSTAGRAM,
+  ARROW_RIGHT,
 };

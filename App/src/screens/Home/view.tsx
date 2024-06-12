@@ -1,20 +1,27 @@
-import React, {Fragment, useCallback} from 'react';
+import React, {Fragment, useCallback, useEffect} from 'react';
 import {View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
 
 import {dummyPost} from '@constants/dummyData';
 import {colors} from '@themes/color';
 import {AppStyleSheet} from '@themes/responsive';
-import {AppContainer, PostItem, AppButton} from '@components';
-import {useDispatch} from 'react-redux';
-import {authActions} from '@actions';
+import {AppContainer, PostItem} from '@components';
+
+import {tokenSelector, userInfoSelector} from '@selectors';
+import useSelectorShallow from '@hooks/useSelectorShallowEqual';
 
 const ItemSeparator = () => {
   return <View style={styles.separator} />;
 };
 
 const HomeScreenView = () => {
-  const dispatch = useDispatch();
+  const token = useSelectorShallow(tokenSelector);
+  const userInfo = useSelectorShallow(userInfoSelector);
+
+  useEffect(() => {
+    console.log('token', token);
+    console.log('userInfo', userInfo);
+  }, [token, userInfo]);
 
   const _renderItem = useCallback(({item}) => {
     let isRepliesPost = item.replies.length > 0;
@@ -53,18 +60,8 @@ const HomeScreenView = () => {
     }
   }, []);
 
-  const onSignUp = () => {
-    dispatch(
-      authActions.onRegister(
-        {username: 'Fang0100', password: '123123'},
-        () => {},
-      ),
-    );
-  };
-
   return (
     <AppContainer>
-      <AppButton text="SIGN_UP" onPress={onSignUp} />
       <FlashList
         data={dummyPost}
         keyExtractor={item => item.id.toString()}

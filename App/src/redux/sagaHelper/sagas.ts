@@ -4,7 +4,7 @@ import {loadingActions, authActions} from '@actions';
 
 import {handleErrorMessage} from './handleError';
 // import i18n from 'i18next';
-import {authSelector, connectSelector} from '@selectors';
+import {authSelector} from '@selectors';
 // import {signOutSubmit} from '@actions/authActions';
 // import {Toast} from 'react-native-toast-message/lib/src/Toast';
 
@@ -19,17 +19,6 @@ export function* invoke(
   errorCallback: (error: string) => any,
 ) {
   try {
-    //   const isConnected = yield select(connectSelector.getIsConnectedSelector);
-
-    //   if (!isConnected) {
-    //     if (showDialog) {
-    //       // Toast.show({
-    //       //   type: 'error',
-    //       //   props: 'Khong co ket noi mang',
-    //       // });
-    //       // return;
-    //     }
-    //   }
     if (showDialog) {
       yield put(showLoading(actionType));
     }

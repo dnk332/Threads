@@ -2,7 +2,7 @@ import React, {useCallback} from 'react';
 import {FlashList} from '@shopify/flash-list';
 import {View} from 'react-native';
 
-import {Media} from '@local_types/post';
+import {Media} from '@localTypes/post';
 import {AppStyleSheet} from '@themes/responsive';
 // import {PostImage} from '@components';
 import {PostImage} from '@src/components/PostContent';

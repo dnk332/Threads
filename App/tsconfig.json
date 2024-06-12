@@ -12,7 +12,7 @@
       "@constants/*": ["src/constants/*"],
       "@hooks/*": ["src/hooks/*"],
       "@navigation/*": ["src/navigation/*"],
-      "@local_types/*": ["src/types/*"],
+      "@localTypes/*": ["src/types/*"],
       "@locales": ["src/locales/*"],
       "@root": ["src/screens/Root/*"],
       "@svg/*": ["src/assets/svg/*"],
@@ -24,7 +24,8 @@
       "@sagas": ["src/redux/sagas/index.ts"],
       "@sagaHelper": ["src/redux/sagaHelper/index.ts"],
       "@apis": ["src/apis/index.ts"],
-      "@navigators": ["src/navigation/NavigationService.ts"]
+      "@navigators": ["src/navigation/NavigationService.ts"],
+      "@appRedux/*": ["src/redux/*"],
     },
     "target": "es5",
     "allowJs": true,
