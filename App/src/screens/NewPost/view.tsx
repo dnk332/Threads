@@ -8,15 +8,12 @@ import {
   View,
 } from 'react-native';
 
-import {AppComponent, GlobalComponent} from '@components';
+import {AppContainer, AppText, AppInput, Avatar} from '@components';
 import {AppStyleSheet} from '@themes/responsive';
 import layout from '@themes/layout';
 import {colors} from '@themes/color';
 import SvgComponent from '@svg/index';
 import HandelKeyboard from '@utils/KeyboardInfo';
-
-const {AppContainer, AppText} = GlobalComponent;
-const {AppInput, Avatar} = AppComponent;
 
 const NewPostScreenView = () => {
   const inputAccessoryViewID = 'postThreadInput';

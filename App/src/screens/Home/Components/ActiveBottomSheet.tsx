@@ -5,10 +5,7 @@ import {colors} from '@themes/color';
 import layout from '@themes/layout';
 import {AppStyleSheet} from '@themes/responsive';
 import SvgComponent from '@svg/index';
-import {AppComponent, GlobalComponent} from '@src/components';
-
-const {AppButton, AppGroupButton} = AppComponent;
-const {AppBottomSheet} = GlobalComponent;
+import {AppButton, AppGroupButton, AppBottomSheet} from '@components';
 
 const ActiveBottomSheet = ({sheetRef}) => {
   return (

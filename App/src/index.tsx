@@ -6,14 +6,14 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {Provider} from 'react-redux';
 import {PortalProvider} from '@gorhom/portal';
 
-import {SetUpTime} from '@hooks/TimeAgo';
+import * as TimeAgo from '@hooks/TimeAgo';
 import layout from '@themes/layout';
 // import {PersistGate} from 'redux-persist/integration/react';
 import {store} from './redux/store';
 
 const Index = () => {
   useEffect(() => {
-    SetUpTime();
+    TimeAgo.SetUpTime();
   }, []);
 
   return (

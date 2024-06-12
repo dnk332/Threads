@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 
 import {AppStyleSheet} from '@themes/responsive';
-import AppText from './AppText';
+import {AppText} from '@components';
 import {colors} from '@themes/color';
 
 export interface AppButtonProps extends PressableProps {

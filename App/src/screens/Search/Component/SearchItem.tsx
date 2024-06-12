@@ -1,13 +1,10 @@
 import React from 'react';
 import {Pressable, View} from 'react-native';
 
-import {AppComponent, GlobalComponent} from '@components';
+import {Avatar, AppButton, AppText} from '@components';
 import {colors} from '@themes/color';
 import layout from '@themes/layout';
-import {AppStyleSheet} from 'src/themes/responsive';
-
-const {Avatar, AppButton} = AppComponent;
-const {AppText} = GlobalComponent;
+import {AppStyleSheet} from '@src/themes/responsive';
 
 const SearchItem = () => {
   return (

@@ -11,7 +11,7 @@ export const onLogin = (params: any, callback = () => {}) => {
 
 export const onRegister = (params: any, callback = () => {}) => {
   return {
-    type: USER.REGISTER,
+    type: USER.REGISTER.HANDLER,
     params,
     callback,
   };

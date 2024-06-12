@@ -2,9 +2,7 @@ import React from 'react';
 import {View} from 'react-native';
 import {Tabs} from 'react-native-collapsible-tab-view';
 
-import {GlobalComponent} from '@src/components';
-
-const {AppText} = GlobalComponent;
+import {AppText} from '@components';
 
 const RepliesTab = () => {
   return (

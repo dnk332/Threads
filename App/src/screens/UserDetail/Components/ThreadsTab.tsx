@@ -2,11 +2,9 @@ import React, {Fragment, memo, useCallback} from 'react';
 import {View} from 'react-native';
 import {Tabs} from 'react-native-collapsible-tab-view';
 
-import {AppComponent} from '@components';
+import {PostItem} from '@components';
 import {dummyPost} from '@constants/dummyData';
 import layout from '@themes/layout';
-
-const {PostItem} = AppComponent;
 
 const ThreadsTab = () => {
   const _renderItem = useCallback(({item}) => {

@@ -8,10 +8,7 @@ import {colors} from '@themes/color';
 import {AppStyleSheet} from '@themes/responsive';
 import ThreadsTab from './Components/ThreadsTab';
 import RepliesTab from './Components/RepliesTab';
-import {AppComponent, GlobalComponent} from '@components';
-
-const {Avatar, AppButton} = AppComponent;
-const {AppText, AppContainer} = GlobalComponent;
+import {Avatar, AppButton, AppText, AppContainer} from '@components';
 
 import {
   CollapsibleRef,

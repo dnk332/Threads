@@ -6,22 +6,22 @@ import axios, {
 } from 'axios';
 
 import {store} from '@store';
-import Navigator from '@navigators';
+import * as Navigator from '@navigators';
 import {otherSelector} from '@selectors';
-import {HelperUtil} from '@utils';
+import {getParamsString} from '@utils/HelperUtil';
 
 const getToken = (): string | undefined =>
   otherSelector.tokenSelect(store.getState())?.access_token;
 const getDevice = (): any => otherSelector.deviceSelect(store.getState());
-const getDomain = (): string | undefined =>
-  otherSelector.domainSelect(store.getState());
+// const getDomain = (): string | undefined =>
+//   otherSelector.domainSelect(store.getState());
 
 export const CodeResponse = {
   SUCCESS: 200,
 };
 
 interface RequestProps {
-  params?: Record<string, any>;
+  params?: any;
   headers?: Record<string, any>;
 }
 
@@ -41,21 +41,22 @@ class HTTP {
 
     api.interceptors.request.use(
       (config: InternalAxiosRequestConfig) => {
-        const token = getToken();
-        const device = getDevice();
+        // const token = getToken();
+        // const device = getDevice();
         if (!config.baseURL) {
-          config.baseURL = `${getDomain()}`;
+          // config.baseURL = `${getDomain()}`;
+          config.baseURL = 'http://localhost:8082';
         }
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-        }
-        if (device) {
-          config.headers.set('Device-Id', device.deviceId);
-          config.headers.set('Device-Model', device.model);
-          config.headers.set('Device-Version', device.systemVersion);
-          config.headers.set('Device-Token', device.token);
-          config.headers.set('Type', device.systemName);
-        }
+        // if (token) {
+        //   config.headers.Authorization = `Bearer ${token}`;
+        // }
+        // if (device) {
+        //   config.headers.set('Device-Id', device.deviceId);
+        //   config.headers.set('Device-Model', device.model);
+        //   config.headers.set('Device-Version', device.systemVersion);
+        //   config.headers.set('Device-Token', device.token);
+        //   config.headers.set('Type', device.systemName);
+        // }
         return config;
       },
       (error: AxiosError) => {
@@ -93,12 +94,12 @@ class HTTP {
     console.log('==== GET ==== : ', endPoint, ' + params: ', params);
     try {
       if (params) {
-        endPoint = `${endPoint}${HelperUtil.getParamsString(params)}`;
+        endPoint = `${endPoint}${getParamsString(params)}`;
       }
       const response = await this.http.get(endPoint, {
         headers: headers ?? {},
       });
-
+      console.log('response', response);
       return Promise.resolve(response.data);
     } catch (error) {
       return Promise.reject(error);
@@ -112,7 +113,7 @@ class HTTP {
       const response = await this.http.post(endPoint, params ?? {}, {
         headers: headers ?? {},
       });
-
+      console.log('response', response);
       if (typeof response.data === 'string') {
         return Promise.resolve({message: response.data, success: true});
       }

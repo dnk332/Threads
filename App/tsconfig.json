@@ -23,7 +23,7 @@
       "@actions": ["src/redux/actions/index.ts"],
       "@sagas": ["src/redux/sagas/index.ts"],
       "@sagaHelper": ["src/redux/sagaHelper/index.ts"],
-      "@apis": ["src/api/index.ts"],
+      "@apis": ["src/apis/index.ts"],
       "@navigators": ["src/navigation/NavigationService.ts"]
     },
     "target": "es5",

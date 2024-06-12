@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   ImageRequireSource,
   Pressable,
@@ -5,15 +6,13 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import React from 'react';
+import {FastImageProps, Source} from 'react-native-fast-image';
+
 import {AppStyleSheet} from '@themes/responsive';
 import {colors} from '@themes/color';
-
-import {FastImageProps, Source} from 'react-native-fast-image';
-// import {SVGName} from '@assets/svg';
-import {GlobalComponent} from '@components';
-
-const {AppImage} = GlobalComponent;
+// import {GlobalComponent} from '@components';
+import AppImage from '@src/components/AppImage';
+// const {AppImage} = GlobalComponent;
 
 interface AvatarProps {
   source: Source | ImageRequireSource;
