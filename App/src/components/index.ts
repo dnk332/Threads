@@ -10,6 +10,20 @@ import AppGroupButton from '@src/components/AppGroupButton';
 import AppButton from '@src/components/AppButton';
 import AppContainer from '@src/components/AppContainer';
 
+export {
+  Avatar,
+  AppInput,
+  AwareScrollView,
+  AppBottomSheet,
+  AppText,
+  PostItem,
+  PostContent,
+  AppImage,
+  AppGroupButton,
+  AppButton,
+  AppContainer,
+};
+
 // App component only use for current project
 export const AppComponent = {
   Avatar,

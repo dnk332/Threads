@@ -5,10 +5,7 @@ import layout from '@themes/layout';
 import {colors} from '@themes/color';
 import {AppStyleSheet} from '@themes/responsive';
 import TimeFromNow from '@hooks/TimeAgo';
-import {AppComponent, GlobalComponent} from '@src/components';
-
-const {AppText} = GlobalComponent;
-const {Avatar, AppButton} = AppComponent;
+import {AppText, Avatar, AppButton} from '@src/components';
 
 const ActivityItem = () => {
   return (

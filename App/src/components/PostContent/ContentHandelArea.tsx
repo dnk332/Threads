@@ -1,11 +1,9 @@
 import React from 'react';
 import {View} from 'react-native';
 
-import {AppComponent} from '@components';
+import TextContent from '@src/components/PostContent/TextContent';
 import layout from '@themes/layout';
 import {AppStyleSheet} from '@themes/responsive';
-
-const {TextContent} = AppComponent.PostContent;
 
 interface ContentHandelAreaProps {
   textContent: string;

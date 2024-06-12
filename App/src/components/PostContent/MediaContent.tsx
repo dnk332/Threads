@@ -4,9 +4,9 @@ import {View} from 'react-native';
 
 import {Media} from '@local_types/post';
 import {AppStyleSheet} from '@themes/responsive';
-import {AppComponent} from '@components';
+// import {PostImage} from '@components';
+import {PostImage} from '@src/components/PostContent';
 
-const {PostImage} = AppComponent.PostContent;
 interface MediaContentProps {
   content: Media[];
 }

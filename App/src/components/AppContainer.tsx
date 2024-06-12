@@ -15,9 +15,7 @@ import {AppStyleSheet} from '@themes/responsive';
 import useStatusBarHeight from '@hooks/getStatusBarHeight';
 import SvgComponent from '@svg/index';
 import {goBack} from '@navigators';
-import {GlobalComponent} from '@components';
-
-const {AppText} = GlobalComponent;
+import {AppText} from '@components';
 
 interface AppContainerProps {
   children: React.ReactNode;

@@ -19,17 +19,17 @@ export function* invoke(
   errorCallback: (error: string) => any,
 ) {
   try {
-    const isConnected = yield select(connectSelector.getIsConnectedSelector);
+    //   const isConnected = yield select(connectSelector.getIsConnectedSelector);
 
-    if (!isConnected) {
-      if (showDialog) {
-        // Toast.show({
-        //   type: 'error',
-        //   props: 'Khong co ket noi mang',
-        // });
-        // return;
-      }
-    }
+    //   if (!isConnected) {
+    //     if (showDialog) {
+    //       // Toast.show({
+    //       //   type: 'error',
+    //       //   props: 'Khong co ket noi mang',
+    //       // });
+    //       // return;
+    //     }
+    //   }
     if (showDialog) {
       yield put(showLoading(actionType));
     }

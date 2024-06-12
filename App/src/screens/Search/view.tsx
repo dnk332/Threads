@@ -13,10 +13,7 @@ import {AppStyleSheet} from '@themes/responsive';
 import SearchItem from './Component/SearchItem';
 import SvgComponent from '@svg/index';
 import layout from '@themes/layout';
-import {AppComponent, GlobalComponent} from '@src/components';
-
-const {AppContainer, AppText} = GlobalComponent;
-const {AppInput} = AppComponent;
+import {AppContainer, AppText, AppInput} from '@components';
 
 const SearchScreenView = () => {
   const SearchInputPosition = useSharedValue(0);

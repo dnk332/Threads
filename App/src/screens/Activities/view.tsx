@@ -7,9 +7,7 @@ import {AppStyleSheet} from '@themes/responsive';
 import layout from '@themes/layout';
 import ActivityItem from './Components/ActivityItem';
 import ActivityFilterList from './Components/ActivityFilterList';
-import {GlobalComponent} from '@src/components';
-
-const {AppText, AppContainer} = GlobalComponent;
+import {AppText, AppContainer} from '@components';
 
 const ActivitiesScreenView = () => {
   const _renderItem = useCallback(({}) => {

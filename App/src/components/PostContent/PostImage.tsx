@@ -2,13 +2,11 @@ import React, {memo, useCallback, useEffect, useState} from 'react';
 import {Pressable} from 'react-native';
 
 import {getImageSize, ISize} from '@hooks/getImageInfo';
-import {GlobalComponent} from '@components';
+import {AppImage} from '@components';
 import {AppStyleSheet} from '@themes/responsive';
 import {imageHeight, imageWidth} from '@constants/deviceSize';
 import {navigateTo} from '@navigators';
 import {SCREEN_NAME} from '@navigation/ScreenName';
-
-const {AppImage} = GlobalComponent;
 
 export interface PostImageProps {
   link: string;

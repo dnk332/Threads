@@ -4,9 +4,7 @@ import {RouteProp} from '@react-navigation/native';
 
 import layout from '@themes/layout';
 import {NavigationStackParamList} from '@navigation/Stack';
-import {GlobalComponent} from '@src/components';
-
-const {AppImage, AppContainer} = GlobalComponent;
+import {AppContainer, AppImage} from '@components';
 
 type DetailsScreenRouteProp = RouteProp<
   NavigationStackParamList,

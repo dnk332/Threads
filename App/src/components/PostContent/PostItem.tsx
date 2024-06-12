@@ -1,7 +1,7 @@
 import React, {Fragment, memo, ReactElement, useRef, useState} from 'react';
 import {Pressable, View} from 'react-native';
 
-import {GlobalComponent, AppComponent} from '@components';
+import {Avatar, AppText} from '@components';
 import layout from '@themes/layout';
 import {colors} from '@themes/color';
 import {AppStyleSheet} from '@themes/responsive';
@@ -13,9 +13,6 @@ import ContentHandelArea from '@src/components/PostContent/ContentHandelArea';
 import MediaContent from '@src/components/PostContent/MediaContent';
 import {imageHeight} from '@constants/deviceSize';
 import SvgComponent from '@svg/index';
-
-const {Avatar} = AppComponent;
-const {AppText} = GlobalComponent;
 
 interface PostItemProps {
   userData: User;

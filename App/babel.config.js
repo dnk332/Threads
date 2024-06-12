@@ -38,7 +38,7 @@ module.exports = api => ({
           '@actions': `${__dirname}/src/redux/actions`,
           '@sagas': `${__dirname}/src/redux/sagas`,
           '@sagaHelper': `${__dirname}/src/redux/sagaHelper`,
-          '@apis': `${__dirname}/src/api`,
+          '@apis': `${__dirname}/src/apis`,
           '@navigators': `${__dirname}/src/navigation/NavigationService.ts`,
         },
       },

@@ -1,7 +1,5 @@
 import React from 'react';
-import {GlobalComponent} from '@components';
-
-const {AppText} = GlobalComponent;
+import {AppText} from '@components';
 
 interface TextContentProps {
   content: string;

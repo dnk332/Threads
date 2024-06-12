@@ -3,9 +3,7 @@ import {ScrollView, View} from 'react-native';
 
 import {AppStyleSheet} from '@themes/responsive';
 import {colors} from '@themes/color';
-import {GlobalComponent} from '@src/components';
-
-const {AppText} = GlobalComponent;
+import {AppText} from '@src/components';
 
 const activityFilter = [
   {id: 1, title: 'All'},

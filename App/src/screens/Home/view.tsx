@@ -5,16 +5,17 @@ import {FlashList} from '@shopify/flash-list';
 import {dummyPost} from '@constants/dummyData';
 import {colors} from '@themes/color';
 import {AppStyleSheet} from '@themes/responsive';
-import {AppComponent, GlobalComponent} from '@components';
-
-const {AppContainer} = GlobalComponent;
-const {PostItem} = AppComponent;
+import {AppContainer, PostItem, AppButton} from '@components';
+import {useDispatch} from 'react-redux';
+import {authActions} from '@actions';
 
 const ItemSeparator = () => {
   return <View style={styles.separator} />;
 };
 
 const HomeScreenView = () => {
+  const dispatch = useDispatch();
+
   const _renderItem = useCallback(({item}) => {
     let isRepliesPost = item.replies.length > 0;
     if (isRepliesPost) {
@@ -52,8 +53,18 @@ const HomeScreenView = () => {
     }
   }, []);
 
+  const onSignUp = () => {
+    dispatch(
+      authActions.onRegister(
+        {username: 'Fang0100', password: '123123'},
+        () => {},
+      ),
+    );
+  };
+
   return (
     <AppContainer>
+      <AppButton text="SIGN_UP" onPress={onSignUp} />
       <FlashList
         data={dummyPost}
         keyExtractor={item => item.id.toString()}
