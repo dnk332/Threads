@@ -11,7 +11,8 @@ import {
   LoginScreen,
   NewPostScreen,
   SwitchAccountScreen,
-} from '@screens';
+  AddNewAccountScreen,
+} from '@screens/index';
 
 export type NavigationStackParamList = {
   ROOT: undefined;
@@ -19,6 +20,7 @@ export type NavigationStackParamList = {
   NEW_POST_MODAL: {focused: boolean};
   LOGIN: undefined;
   SWITCH_ACCOUNT: undefined;
+  ADD_ACCOUNT: undefined;
 };
 
 const Stack = createNativeStackNavigator<NavigationStackParamList>();
@@ -38,6 +40,14 @@ function StackScreens() {
         <Stack.Screen name={'LOGIN'} component={LoginScreen} />
         <Stack.Screen name={'SWITCH_ACCOUNT'} component={SwitchAccountScreen} />
         <Stack.Screen name="IMAGE_VIEWER" component={ImageViewerScreen} />
+        <Stack.Screen
+          options={{
+            headerShown: false,
+            presentation: 'modal',
+          }}
+          name="ADD_ACCOUNT"
+          component={AddNewAccountScreen}
+        />
         <Stack.Screen
           options={{
             headerShown: false,

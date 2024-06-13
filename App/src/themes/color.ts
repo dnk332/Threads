@@ -7,6 +7,7 @@ const colors = {
   background: '#000000',
   transparent: 'transparent',
   background_secondary: '#101010',
+  blue: '#0070FA',
 
   //common colors
   white: '#ffffff',

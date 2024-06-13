@@ -8,8 +8,8 @@ import {PortalProvider} from '@gorhom/portal';
 
 import * as TimeAgo from '@hooks/TimeAgo';
 import layout from '@themes/layout';
-// import {PersistGate} from 'redux-persist/integration/react';
-import {store} from './redux/store';
+import {PersistGate} from 'redux-persist/integration/react';
+import {store, persist} from './redux/store';
 
 const Index = () => {
   useEffect(() => {
@@ -21,11 +21,11 @@ const Index = () => {
       <GestureHandlerRootView style={layout.fill}>
         <PortalProvider>
           <Provider store={store}>
-            {/* <PersistGate loading={null} persistor={persistor}> */}
-            <Fragment>
-              <StackScreens />
-            </Fragment>
-            {/* </PersistGate> */}
+            <PersistGate loading={null} persistor={persist}>
+              <Fragment>
+                <StackScreens />
+              </Fragment>
+            </PersistGate>
           </Provider>
         </PortalProvider>
       </GestureHandlerRootView>

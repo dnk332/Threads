@@ -5,26 +5,15 @@ import {AppStyleSheet} from '@themes/responsive';
 import {AppContainer, AppImage, AppText} from '@components';
 import {colors} from '@themes/color';
 import SvgComponent from '@src/assets/svg';
-import * as Navigator from '@navigators';
-import {useDispatch} from 'react-redux';
-import {authActions} from '@actions';
+import _ from 'lodash';
 
-const LoginView = () => {
-  const dispatch = useDispatch();
-  const onLogin = () => {
-    const opt = {
-      callback: () => {},
-      params: {
-        username: 'Fang0000',
-        password: '123123',
-      },
-    };
-    dispatch(authActions.onLoginSubmit(opt));
-  };
-  const onSwitchAccount = () => {
-    Navigator.navigateTo('SWITCH_ACCOUNT');
-  };
+interface LoginViewProps {
+  onLogin: () => void;
+  onSwitchAccount: () => void;
+  accountInfo: any;
+}
 
+const LoginView = ({onLogin, onSwitchAccount, accountInfo}: LoginViewProps) => {
   return (
     <View style={styles.container}>
       <AppImage
@@ -43,7 +32,7 @@ const LoginView = () => {
                 Log in with Instagram
               </AppText>
               <AppText fontSize={14} fontWeight={600}>
-                LoginView
+                {!_.isNil(accountInfo) ? accountInfo?.username : 'Account Name'}
               </AppText>
             </View>
           </View>

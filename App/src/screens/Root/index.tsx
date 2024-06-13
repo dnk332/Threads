@@ -6,7 +6,7 @@ import {
   ActivitiesScreen,
   SearchScreen,
   HomeScreen,
-} from '@screens';
+} from '@screens/index';
 import {colors} from '@themes/color';
 import {navigateTo} from '@navigation/NavigationService';
 import SvgComponent from '@svg/index';

@@ -23,7 +23,7 @@ const appReducer = combineReducers({
   user: userReducer,
 });
 const rootReducer = (state, action) => {
-  if (action.type === APP.CLEAR_REDUCER.HANDLER) {
+  if (action.type === APP.CLEAR_REDUCER) {
     return appReducer(undefined, action);
   }
   return appReducer(state, action);
