@@ -9,10 +9,10 @@ export const onLogin = (username: string, password: string, callback: any) => {
   };
 };
 
-export const onLogout = (callback: any) => {
+export const onLogout = () => {
   return {
-    type: AUTH.LOGIN,
-    payload: {callback},
+    type: AUTH.LOGOUT,
+    payload: {},
   };
 };
 

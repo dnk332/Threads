@@ -5,11 +5,12 @@ import {loadingActions, authActions} from '@actions';
 import {handleErrorMessage} from './handleError';
 // import i18n from 'i18next';
 import {tokenSelector} from '@selectors';
+import {Alert} from 'react-native';
 // import {signOutSubmit} from '@actions/authActions';
 // import {Toast} from 'react-native-toast-message/lib/src/Toast';
 
 const {showLoading, onFetching, nonFetching, hideLoading} = loadingActions;
-const {signOutSubmit} = authActions;
+const {onLogout} = authActions;
 
 export function* invoke(
   execution: () => any,
@@ -17,6 +18,7 @@ export function* invoke(
   showDialog: boolean,
   actionType: string,
   errorCallback: (error: string) => any,
+  checkNetwork?: boolean,
 ) {
   try {
     if (showDialog) {
@@ -38,6 +40,22 @@ export function* invoke(
     const token = yield select(tokenSelector);
 
     console.log('--------error--------', error);
+    if (
+      checkNetwork &&
+      error &&
+      error.response &&
+      error.response.status === 502
+    ) {
+      Alert.alert(
+        'Error',
+        'Please check your internet connection and try again later',
+        null,
+        {
+          userInterfaceStyle: 'dark',
+        },
+      );
+      return;
+    }
 
     if (
       error &&
@@ -47,7 +65,7 @@ export function* invoke(
         error.response?.data?.result === 'expried')
     ) {
       if (token) {
-        yield put(signOutSubmit());
+        yield put(onLogout());
       }
       return;
     }
