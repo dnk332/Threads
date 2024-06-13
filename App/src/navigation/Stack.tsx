@@ -12,6 +12,7 @@ import {
   NewPostScreen,
   SwitchAccountScreen,
   AddNewAccountScreen,
+  SplashScreen,
 } from '@screens/index';
 
 export type NavigationStackParamList = {
@@ -21,6 +22,7 @@ export type NavigationStackParamList = {
   LOGIN: undefined;
   SWITCH_ACCOUNT: undefined;
   ADD_ACCOUNT: undefined;
+  SPLASH: undefined;
 };
 
 const Stack = createNativeStackNavigator<NavigationStackParamList>();
@@ -35,7 +37,8 @@ function StackScreens() {
         screenOptions={{
           headerShown: false,
         }}
-        initialRouteName="LOGIN">
+        initialRouteName="SPLASH">
+        <Stack.Screen name={'SPLASH'} component={SplashScreen} />
         <Stack.Screen name={'ROOT'} component={RootScreen} />
         <Stack.Screen name={'LOGIN'} component={LoginScreen} />
         <Stack.Screen name={'SWITCH_ACCOUNT'} component={SwitchAccountScreen} />

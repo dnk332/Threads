@@ -9,6 +9,7 @@ import AppImage from '@src/components/AppImage';
 import AppGroupButton from '@src/components/AppGroupButton';
 import AppButton from '@src/components/AppButton';
 import AppContainer from '@src/components/AppContainer';
+import AppModal from '@src/components/AppModal';
 
 export {
   Avatar,
@@ -22,6 +23,7 @@ export {
   AppGroupButton,
   AppButton,
   AppContainer,
+  AppModal,
 };
 
 // App component only use for current project
