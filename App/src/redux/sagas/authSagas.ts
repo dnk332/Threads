@@ -13,25 +13,23 @@ function* onLogin({type, payload}) {
 
   yield invoke(
     function* execution() {
-      try {
-        const response = yield call(api.authApis.login, params);
+      const response = yield call(api.authApis.login, params);
 
-        callback?.({
-          success: response.code === 200,
-          message: response.message ?? response.msg,
-        });
-        console.log('response', response);
-        if (response.success) {
-          yield put(authActions.onLoginSuccess(response.access_token));
-          yield put(userActions.onUpdateUserInfoSuccess(response.user));
+      callback?.({
+        success: response.code === 200,
+        message: response.message ?? response.msg,
+      });
 
-          Navigator.navigateTo('ROOT');
-        }
-      } catch (error) {
-        callback?.({success: false, message: error.message});
+      if (response.success) {
+        yield put(authActions.saveToken(response.access_token));
+        yield put(userActions.updateUserInfo(response.user));
+
+        Navigator.navigateTo('ROOT');
       }
     },
-    () => {},
+    error => {
+      callback?.({success: false, message: error.message});
+    },
     false,
     type,
     () => {},
@@ -41,17 +39,15 @@ function* onRegister({type, payload}) {
   const {params, callback} = payload;
   yield invoke(
     function* execution() {
-      try {
-        const response = yield call(api.authApis.register, params);
-        callback?.({
-          success: response.code === 200,
-          message: response.message ?? response.msg,
-        });
-      } catch (error) {
-        callback?.({success: false, message: error.message});
-      }
+      const response = yield call(api.authApis.register, params);
+      callback?.({
+        success: response.code === 200,
+        message: response.message ?? response.msg,
+      });
     },
-    () => {},
+    error => {
+      callback?.({success: false, message: error.message});
+    },
     false,
     type,
     () => {},
@@ -59,11 +55,11 @@ function* onRegister({type, payload}) {
 }
 
 function* watchLogin() {
-  yield takeEvery(AUTH.LOGIN.HANDLER, onLogin);
+  yield takeEvery(AUTH.LOGIN, onLogin);
 }
 
 function* watchRegister() {
-  yield takeEvery(AUTH.REGISTER.HANDLER, onRegister);
+  yield takeEvery(AUTH.REGISTER, onRegister);
 }
 
 export default function* authSagas() {

@@ -2,30 +2,34 @@ import {actionTypes} from '@actions';
 
 const {AUTH} = actionTypes;
 
-export const onLoginSubmit = payload => {
+export const onLogin = (username: string, password: string, callback: any) => {
   return {
-    type: AUTH.LOGIN.HANDLER,
-    payload,
+    type: AUTH.LOGIN,
+    payload: {params: {username, password}, callback},
   };
 };
 
-export const onLoginSuccess = payload => {
+export const onLogout = (callback: any) => {
   return {
-    type: AUTH.LOGIN.SUCCESS,
-    payload,
+    type: AUTH.LOGIN,
+    payload: {callback},
   };
 };
 
-export const onRegisterSubmit = payload => {
+export const onRegister = (
+  username: string,
+  password: string,
+  callback: any,
+) => {
   return {
-    type: AUTH.REGISTER.HANDLER,
-    payload,
+    type: AUTH.REGISTER,
+    payload: {params: {username, password}, callback},
   };
 };
 
-export const onRegisterSuccess = payload => {
+export const saveToken = token => {
   return {
-    type: AUTH.REGISTER.SUCCESS,
-    payload,
+    type: AUTH.SAVE_TOKEN,
+    token,
   };
 };

@@ -6,14 +6,14 @@ const initialState = {
 
 const {AUTH} = actionTypes;
 
-export default (state = initialState, action) => {
+export default (state = initialState, action: any) => {
   switch (action?.type) {
-    case AUTH.LOGIN.SUCCESS:
+    case AUTH.SAVE_TOKEN:
       return {
         ...state,
-        token: action.payload,
+        token: action?.token,
       };
-    case AUTH.LOGOUT.SUCCESS:
+    case AUTH.LOGOUT:
       return {
         ...state,
         token: null,

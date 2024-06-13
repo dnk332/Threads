@@ -26,6 +26,7 @@
       "@apis": ["src/apis/index.ts"],
       "@navigators": ["src/navigation/NavigationService.ts"],
       "@appRedux/*": ["src/redux/*"],
+      "@configs": ["src/configs/index.ts"],
     },
     "target": "es5",
     "allowJs": true,

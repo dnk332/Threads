@@ -5,7 +5,7 @@ import {persistReducer} from 'redux-persist';
 import {actionTypes} from '@actions';
 
 import authReducer from './auth';
-import applicationReducer from './application';
+import applicationReducer from './app';
 import userReducer from './user';
 
 const {APP} = actionTypes;
