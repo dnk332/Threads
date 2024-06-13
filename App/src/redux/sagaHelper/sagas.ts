@@ -4,7 +4,7 @@ import {loadingActions, authActions} from '@actions';
 
 import {handleErrorMessage} from './handleError';
 // import i18n from 'i18next';
-import {authSelector} from '@selectors';
+import {tokenSelector} from '@selectors';
 // import {signOutSubmit} from '@actions/authActions';
 // import {Toast} from 'react-native-toast-message/lib/src/Toast';
 
@@ -35,7 +35,7 @@ export function* invoke(
       yield put(hideLoading(actionType));
     }
 
-    const token = yield select(authSelector.getUserTokenSelector);
+    const token = yield select(tokenSelector);
 
     console.log('--------error--------', error);
 
