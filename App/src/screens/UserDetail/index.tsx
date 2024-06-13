@@ -1,5 +1,5 @@
 import React from 'react';
-import UserDetailScreenView from './view';
+import UserDetailScreenView from '@screens/UserDetail/view';
 
 const UserDetailScreen = () => {
   return <UserDetailScreenView />;

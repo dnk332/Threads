@@ -27,9 +27,16 @@ export const onRegister = (
   };
 };
 
-export const saveToken = token => {
+export const saveToken = (token: string) => {
   return {
     type: AUTH.SAVE_TOKEN,
     token,
+  };
+};
+
+export const addAccountInfo = (accountInfo: any) => {
+  return {
+    type: AUTH.ADD_ACCOUNT_INFO,
+    accountInfo,
   };
 };

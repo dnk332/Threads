@@ -23,8 +23,7 @@ function* onLogin({type, payload}) {
       if (response.success) {
         yield put(authActions.saveToken(response.access_token));
         yield put(userActions.updateUserInfo(response.user));
-
-        Navigator.navigateTo('ROOT');
+        Navigator.navigateAndSimpleReset('ROOT');
       }
     },
     error => {
@@ -40,10 +39,11 @@ function* onRegister({type, payload}) {
   yield invoke(
     function* execution() {
       const response = yield call(api.authApis.register, params);
-      callback?.({
-        success: response.code === 200,
-        message: response.message ?? response.msg,
-      });
+
+      callback?.(response);
+      if (response.success) {
+        yield put(authActions.addAccountInfo(params));
+      }
     },
     error => {
       callback?.({success: false, message: error.message});

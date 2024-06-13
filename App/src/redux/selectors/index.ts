@@ -6,6 +6,10 @@ export const userInfoSelector = state => state.user.user;
 export const settingSelector = state => state.app.setting;
 export const languageSelector = state => state.app.language;
 
+export const listAccountInfoSelector = state => state.auth.listAccountInfo;
+export const currentAccountIndexSelector = state =>
+  state.auth.currentAccountIndex;
+
 //Temp
 // export const deviceSelector = state => state.app.device;
 export const homeSelector = state => state.home;

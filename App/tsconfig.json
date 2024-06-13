@@ -6,7 +6,7 @@
       "@services": ["src/services/*"],
       "@assets": ["src/assets/*"],
       "@components": ["src/components/index.ts"],
-      "@screens": ["src/screens/index.ts"],
+      "@screens/*": ["src/screens/*"],
       "@themes/*": ["src/themes/*"],
       "@utils/*": ["src/utils/*"],
       "@constants/*": ["src/constants/*"],
