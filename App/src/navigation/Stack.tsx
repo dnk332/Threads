@@ -3,7 +3,6 @@
 import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import BootSplash from 'react-native-bootsplash';
 
 import RootScreen from '../screens/Root';
 import {navigationRef} from '@navigators';
@@ -14,6 +13,7 @@ import {
   SwitchAccountScreen,
   AddNewAccountScreen,
   SplashScreen,
+  LoadingInfoScreen,
 } from '@screens/index';
 
 export type NavigationStackParamList = {
@@ -24,6 +24,7 @@ export type NavigationStackParamList = {
   SWITCH_ACCOUNT: undefined;
   ADD_ACCOUNT: undefined;
   SPLASH: undefined;
+  LOADING_INFO: undefined;
 };
 
 const Stack = createNativeStackNavigator<NavigationStackParamList>();
@@ -31,7 +32,6 @@ const Stack = createNativeStackNavigator<NavigationStackParamList>();
 function StackScreens() {
   return (
     <NavigationContainer
-      onReady={() => BootSplash.hide({fade: true})}
       ref={ref => {
         navigationRef.current = ref;
       }}>
@@ -39,10 +39,12 @@ function StackScreens() {
         screenOptions={{
           headerShown: false,
         }}
-        initialRouteName="ROOT">
+        initialRouteName="SPLASH">
+        <Stack.Screen name={'SPLASH'} component={SplashScreen} />
         <Stack.Screen name={'ROOT'} component={RootScreen} />
         <Stack.Screen name={'LOGIN'} component={LoginScreen} />
         <Stack.Screen name={'SWITCH_ACCOUNT'} component={SwitchAccountScreen} />
+        <Stack.Screen name={'LOADING_INFO'} component={LoadingInfoScreen} />
         <Stack.Screen name="IMAGE_VIEWER" component={ImageViewerScreen} />
         <Stack.Screen
           options={{

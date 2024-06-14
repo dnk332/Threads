@@ -19,7 +19,7 @@ const rootPersistConfig = {
 
 const appReducer = combineReducers({
   auth: authReducer,
-  application: applicationReducer,
+  app: applicationReducer,
   user: userReducer,
 });
 const rootReducer = (state, action) => {

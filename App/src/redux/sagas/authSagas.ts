@@ -13,6 +13,7 @@ function* onLogin({type, payload}) {
 
   yield invoke(
     function* execution() {
+      Navigator.navigateAndSimpleReset('LOADING_INFO');
       const response = yield call(api.authApis.login, params);
 
       callback?.({

@@ -1,26 +1,42 @@
 import React, {useEffect} from 'react';
-import {ActivityIndicator, View} from 'react-native';
+import {View} from 'react-native';
 import {useDispatch} from 'react-redux';
+import BootSplash from 'react-native-bootsplash';
 
-// import {appActions} from '@actions';
 import {AppStyleSheet} from '@src/themes/responsive';
-import {colors} from '@src/themes/color';
+import {appActions} from '@src/redux/actions';
+import * as Navigator from '@navigators';
+import {colors} from '@themes/color';
 import {AppImage} from '@src/components';
 
-export default function Splash({navigation}) {
+export default function Splash() {
   const dispatch = useDispatch();
+
+  const HideSplash = async () => {
+    await BootSplash.hide({fade: true});
+  };
+
+  useEffect(() => {
+    dispatch(
+      appActions.start(async () => {
+        await HideSplash();
+        Navigator.navigateAndSimpleReset('LOGIN');
+      }),
+    );
+  }, [dispatch]);
 
   return (
     <View style={[styles.container, {backgroundColor: colors.primary}]}>
       <View style={styles.contentLogo}>
-        <View style={styles.logo}>
-          <AppImage source={require('@assets/image/threads-logo.png')} />
-          <ActivityIndicator
-            size="large"
-            color={colors.white}
-            style={styles.loading}
-          />
-        </View>
+        <View />
+        <AppImage
+          containerStyle={styles.logo}
+          source={require('@assets/image/threads-logo.png')}
+        />
+        <AppImage
+          containerStyle={styles.metaLogo}
+          source={require('@assets/image/meta-logo.png')}
+        />
       </View>
     </View>
   );
@@ -33,19 +49,19 @@ const styles = AppStyleSheet.create({
     alignItems: 'center',
   },
   contentLogo: {
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    height: '90%',
   },
   logo: {
     width: 120,
-    height: 120,
+    height: undefined,
+    aspectRatio: 0.85,
   },
-  loading: {
-    position: 'absolute',
-    bottom: -70,
-    left: 0,
-    right: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
+  metaLogo: {
+    width: 66,
+    height: undefined,
+    aspectRatio: 5,
+    alignSelf: 'center',
   },
 });
