@@ -11,6 +11,7 @@ function* onStartApplication(action) {
   TimeAgo.SetUpTime();
 
   const domain = yield select(domainSelector);
+
   yield all([
     yield put({
       type: APP.SAVE_DOMAIN,

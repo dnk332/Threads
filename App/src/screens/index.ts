@@ -9,6 +9,7 @@ import LoginScreen from '@src/screens/Auth/Login';
 import SwitchAccountScreen from '@src/screens/Auth/SwitchAccount';
 import AddNewAccountScreen from '@src/screens/Auth/AddNewAccount';
 import SplashScreen from '@src/screens/Splash';
+import LoadingInfoScreen from '@src/screens/Auth/LoadingInfo';
 
 export {
   RootScreen,
@@ -22,4 +23,5 @@ export {
   AddNewAccountScreen,
   SwitchAccountScreen,
   SplashScreen,
+  LoadingInfoScreen,
 };
