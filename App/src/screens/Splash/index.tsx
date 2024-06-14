@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {ActivityIndicator, View} from 'react-native';
 import {useDispatch} from 'react-redux';
-import SplashScreen from 'react-native-splash-screen';
+
 // import {appActions} from '@actions';
 import {AppStyleSheet} from '@src/themes/responsive';
 import {colors} from '@src/themes/color';
@@ -9,15 +9,6 @@ import {AppImage} from '@src/components';
 
 export default function Splash({navigation}) {
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    // dispatch(
-    //   appActions.start(() => {
-    //     navigation.replace('Main');
-    //   }),
-    // );
-    SplashScreen.hide();
-  }, [dispatch, navigation]);
 
   return (
     <View style={[styles.container, {backgroundColor: colors.primary}]}>
