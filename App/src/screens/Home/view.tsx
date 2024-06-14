@@ -1,27 +1,102 @@
-import React, {Fragment, useCallback, useEffect} from 'react';
-import {View} from 'react-native';
-import {FlashList} from '@shopify/flash-list';
+import {SafeAreaView, View, PanResponder} from 'react-native';
+import React, {Fragment, useCallback} from 'react';
+import Lottie from 'lottie-react-native';
+import Animated, {
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
-import {dummyPost} from '@constants/dummyData';
+import {PostItem} from '@src/components';
+import {dummyPost} from '@src/constants/dummyData';
 import {colors} from '@themes/color';
-import {AppStyleSheet} from '@themes/responsive';
-import {AppContainer, PostItem} from '@components';
-
-import {tokenSelector, userInfoSelector} from '@selectors';
-import useSelectorShallow from '@hooks/useSelectorShallowEqual';
+import {AppStyleSheet} from '@src/themes/responsive';
 
 const ItemSeparator = () => {
   return <View style={styles.separator} />;
 };
 
-const HomeScreenView = () => {
-  const token = useSelectorShallow(tokenSelector);
-  const userInfo = useSelectorShallow(userInfoSelector);
+export default function PullToRefresh() {
+  const scrollPosition = useSharedValue(0);
+  const pullDownPosition = useSharedValue(0);
+  const isReadyToRefresh = useSharedValue(false);
+  const [refreshing, setRefreshing] = React.useState(false);
 
-  useEffect(() => {
-    console.log('token', token);
-    console.log('userInfo', userInfo);
-  }, [token, userInfo]);
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: event => {
+      scrollPosition.value = event.contentOffset.y;
+    },
+  });
+
+  const refreshContainerStyles = useAnimatedStyle(() => {
+    return {
+      height: pullDownPosition.value,
+    };
+  });
+
+  const onRefresh = (done: () => void) => {
+    setRefreshing(true);
+
+    setTimeout(() => {
+      setRefreshing(false);
+      done();
+    }, 2000);
+  };
+  const onPanRelease = () => {
+    pullDownPosition.value = withTiming(isReadyToRefresh.value ? 75 : 0, {
+      duration: 180,
+    });
+
+    if (isReadyToRefresh.value) {
+      isReadyToRefresh.value = false;
+
+      const onRefreshComplete = () => {
+        pullDownPosition.value = withTiming(0, {duration: 180});
+      };
+
+      // trigger the refresh action
+      onRefresh(onRefreshComplete);
+    }
+  };
+  const panResponderRef = React.useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (_, gestureState) =>
+        scrollPosition.value <= 0 && gestureState.dy >= 0,
+      onPanResponderMove: (_, gestureState) => {
+        const maxDistance = 150;
+        pullDownPosition.value = Math.max(
+          Math.min(maxDistance, gestureState.dy),
+          0,
+        );
+
+        if (
+          pullDownPosition.value >= maxDistance / 2 &&
+          isReadyToRefresh.value === false
+        ) {
+          isReadyToRefresh.value = true;
+        }
+
+        if (
+          pullDownPosition.value < maxDistance / 2 &&
+          isReadyToRefresh.value === true
+        ) {
+          isReadyToRefresh.value = false;
+        }
+      },
+      onPanResponderRelease: onPanRelease,
+      onPanResponderTerminate: onPanRelease,
+    }),
+  );
+  const pullDownStyles = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateY: pullDownPosition.value,
+        },
+      ],
+    };
+  });
 
   const _renderItem = useCallback(({item}) => {
     let isRepliesPost = item.replies.length > 0;
@@ -38,7 +113,6 @@ const HomeScreenView = () => {
             let isLastReplies =
               item.replies[item.replies.length - 1].id === replies.id;
             return (
-              /* eslint-disable-next-line react/no-array-index-key */
               <PostItem
                 key={index}
                 postData={replies.post}
@@ -61,22 +135,70 @@ const HomeScreenView = () => {
   }, []);
 
   return (
-    <AppContainer>
-      <FlashList
-        data={dummyPost}
-        keyExtractor={item => item.id.toString()}
-        renderItem={_renderItem}
-        showsVerticalScrollIndicator={false}
-        estimatedItemSize={10}
-        ItemSeparatorComponent={ItemSeparator}
-        onEndReachedThreshold={0.5}
-      />
-    </AppContainer>
-  );
-};
+    <>
+      <SafeAreaView style={styles.container}>
+        <View
+          pointerEvents={refreshing ? 'none' : 'auto'}
+          style={styles.container}>
+          <Animated.View
+            style={[styles.refreshContainer, refreshContainerStyles]}>
+            {refreshing && (
+              <Lottie
+                source={require('@assets/lottie/refresh.json')}
+                style={styles.lottieView}
+                autoPlay
+              />
+            )}
+          </Animated.View>
 
-export default HomeScreenView;
+          <Animated.View
+            style={[styles.contentContainer, pullDownStyles]}
+            {...panResponderRef.current.panHandlers}>
+            <Animated.FlatList
+              onScroll={scrollHandler}
+              data={dummyPost}
+              keyExtractor={item => item.id.toString()}
+              renderItem={_renderItem}
+              showsVerticalScrollIndicator={false}
+              ItemSeparatorComponent={ItemSeparator}
+              onEndReachedThreshold={16}
+            />
+          </Animated.View>
+        </View>
+      </SafeAreaView>
+    </>
+  );
+}
 
 const styles = AppStyleSheet.create({
+  lottieView: {
+    width: 40,
+    height: 40,
+    backgroundColor: 'transparent',
+  },
+  contentContainer: {flex: 1},
   separator: {borderBottomColor: colors.border, borderBottomWidth: 1},
+  container: {
+    flex: 1,
+    backgroundColor: colors.primary,
+  },
+  refreshContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  refreshIcon: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    width: 36,
+    height: 36,
+    marginTop: -18,
+    marginLeft: -18,
+    borderRadius: 18,
+    objectFit: 'contain',
+  },
 });
