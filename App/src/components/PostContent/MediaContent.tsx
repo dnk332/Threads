@@ -37,6 +37,7 @@ const MediaContent = ({content = []}: MediaContentProps) => {
       estimatedItemSize={3}
       ItemSeparatorComponent={ItemSeparator}
       ListHeaderComponent={Spacer}
+      nestedScrollEnabled
     />
   );
 };

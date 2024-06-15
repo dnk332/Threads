@@ -55,15 +55,21 @@ export default function PullToRefresh() {
         pullDownPosition.value = withTiming(0, {duration: 180});
       };
 
-      // trigger the refresh action
       onRefresh(onRefreshComplete);
     }
   };
   const panResponderRef = React.useRef(
     PanResponder.create({
-      onMoveShouldSetPanResponder: (_, gestureState) =>
-        scrollPosition.value <= 0 && gestureState.dy >= 0,
+      onMoveShouldSetPanResponder: (_, gestureState) => {
+        if (scrollPosition.value <= 0 && gestureState.dy > 0) {
+          return true;
+        }
+        return false;
+      },
       onPanResponderMove: (_, gestureState) => {
+        if (Math.abs(gestureState.dx) > Math.abs(gestureState.dy)) {
+          return;
+        }
         const maxDistance = 150;
         pullDownPosition.value = Math.max(
           Math.min(maxDistance, gestureState.dy),
@@ -150,7 +156,6 @@ export default function PullToRefresh() {
               />
             )}
           </Animated.View>
-
           <Animated.View
             style={[styles.contentContainer, pullDownStyles]}
             {...panResponderRef.current.panHandlers}>
@@ -162,6 +167,7 @@ export default function PullToRefresh() {
               showsVerticalScrollIndicator={false}
               ItemSeparatorComponent={ItemSeparator}
               onEndReachedThreshold={16}
+              nestedScrollEnabled
             />
           </Animated.View>
         </View>
