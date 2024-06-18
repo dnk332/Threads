@@ -6,9 +6,12 @@ package db
 
 import (
 	"context"
+
+	"github.com/google/uuid"
 )
 
 type Querier interface {
+	CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error)
 	// Create a new user
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
 	// Create a new user profile
@@ -19,6 +22,7 @@ type Querier interface {
 	DeleteUserProfile(ctx context.Context, id int64) error
 	// Get a list of all users
 	GetListUser(ctx context.Context, arg GetListUserParams) ([]User, error)
+	GetSession(ctx context.Context, id uuid.UUID) (Session, error)
 	// Get a user by ID
 	GetUserById(ctx context.Context, id int64) (User, error)
 	// Get a user by name

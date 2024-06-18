@@ -2,9 +2,10 @@ package api
 
 import (
 	"errors"
-	"github.com/briandnk/Threads/token"
 	"net/http"
 	"time"
+
+	"github.com/briandnk/Threads/token"
 
 	db "github.com/briandnk/Threads/db/sqlc"
 	"github.com/gin-gonic/gin"
@@ -50,7 +51,7 @@ func (server *Server) createUserProfile(ctx *gin.Context) {
 		return
 	}
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
-	if user.ID != authPayload.UserId {
+	if user.ID != authPayload.UserID {
 		err := errors.New("need authenticated user")
 		ctx.JSON(http.StatusUnauthorized, errorResponse(err))
 		return

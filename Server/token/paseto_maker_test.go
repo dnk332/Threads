@@ -1,9 +1,10 @@
 package token
 
 import (
-	"github.com/briandnk/Threads/utils"
 	"testing"
 	"time"
+
+	"github.com/briandnk/Threads/utils"
 
 	"github.com/stretchr/testify/require"
 )
@@ -28,7 +29,7 @@ func TestPasetoMaker(t *testing.T) {
 	require.NotEmpty(t, token)
 
 	require.NotZero(t, payload.ID)
-	require.Equal(t, userId, payload.UserId)
+	require.Equal(t, userId, payload.UserID)
 	require.WithinDuration(t, issuedAt, payload.IssuedAt, time.Second)
 	require.WithinDuration(t, expiredAt, payload.ExpiredAt, time.Second)
 }
