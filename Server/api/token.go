@@ -18,6 +18,37 @@ type renewAccessTokenResponse struct {
 	AccessToken          string    `json:"access_token"`
 	AccessTokenExpiresAt time.Time `json:"access_token_expires_at"`
 }
+type verifyTokenRequest struct {
+	AccessToken string `json:"access_token" binding:"required"`
+}
+
+type verifyTokenResponse struct {
+	Code string `json:"code"`
+}
+
+func (server *Server) VerifyToken(ctx *gin.Context) {
+	var req verifyTokenRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	_, err := server.tokenMaker.VerifyToken(req.AccessToken)
+
+	if err != nil {
+		rsp := verifyTokenResponse{
+			Code: "jwt_auth_invalid_token",
+		}
+		ctx.JSON(http.StatusUnauthorized, rsp)
+		return
+	}
+
+	rsp := verifyTokenResponse{
+		Code: "jwt_auth_valid_token",
+	}
+	ctx.JSON(http.StatusOK, rsp)
+
+}
 
 func (server *Server) renewAccessToken(ctx *gin.Context) {
 	var req renewAccessTokenRequest
