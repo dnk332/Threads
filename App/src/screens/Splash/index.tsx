@@ -12,15 +12,24 @@ import {AppImage} from '@src/components';
 export default function Splash() {
   const dispatch = useDispatch();
 
-  const HideSplash = async () => {
+  const HideSplash = async (): Promise<void> => {
     await BootSplash.hide({fade: true});
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve();
+      }, 1000);
+    });
   };
 
   useEffect(() => {
     dispatch(
-      appActions.start(async () => {
+      appActions.startAction(async response => {
         await HideSplash();
-        Navigator.navigateAndSimpleReset('LOGIN');
+        if (response['accessAble']) {
+          Navigator.navigateAndSimpleReset('ROOT');
+        } else {
+          Navigator.navigateAndSimpleReset('LOGIN');
+        }
       }),
     );
   }, [dispatch]);

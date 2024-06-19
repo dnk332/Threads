@@ -2,22 +2,22 @@ import {actionTypes} from '@actions';
 
 const {LOADING} = actionTypes;
 
-export const showLoading = payload => ({
+export const showLoadingAction = payload => ({
   type: LOADING.DIALOG.SHOW,
   payload,
 });
 
-export const hideLoading = payload => ({
+export const hideLoadingAction = payload => ({
   type: LOADING.DIALOG.HIDE,
   payload,
 });
 
-export const onFetching = payload => ({
+export const onFetchingAction = payload => ({
   type: LOADING.FETCH.FETCHING,
   payload,
 });
 
-export const nonFetching = payload => ({
+export const nonFetchingAction = payload => ({
   type: LOADING.FETCH.NON_FETCHING,
   payload,
 });

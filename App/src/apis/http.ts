@@ -9,9 +9,11 @@ import axios, {
 import * as Navigator from '@navigators';
 // import {otherSelector} from '@selectors';
 import {getParamsString} from '@utils/HelperUtil';
+import {store} from '@src/redux/store';
+import {tokenSelector} from '@src/redux/selectors';
 
-// const getToken = (): string | undefined =>
-//   otherSelector.tokenSelect(store.getState())?.access_token;
+const accessTokenValue = (): string | undefined =>
+  tokenSelector(store.getState())?.access_token;
 // const getDevice = (): any => otherSelector.deviceSelect(store.getState());
 // const getDomain = (): string | undefined =>
 //   otherSelector.domainSelect(store.getState());
@@ -41,15 +43,16 @@ class HTTP {
 
     api.interceptors.request.use(
       (config: InternalAxiosRequestConfig) => {
-        // const token = getToken();
+        const token = accessTokenValue();
         // const device = getDevice();
         if (!config.baseURL) {
           // config.baseURL = `${getDomain()}`;
           config.baseURL = 'http://localhost:8082';
         }
-        // if (token) {
-        //   config.headers.Authorization = `Bearer ${token}`;
-        // }
+        if (token) {
+          console.log('accessTokenValue', accessTokenValue);
+          config.headers.Authorization = `Bearer ${token}`;
+        }
         // if (device) {
         //   config.headers.set('Device-Id', device.deviceId);
         //   config.headers.set('Device-Model', device.model);
@@ -108,6 +111,7 @@ class HTTP {
 
   async post(endPoint: string, props?: RequestProps): Promise<any> {
     const {params, headers} = props;
+    console.log('accessTokenValue', accessTokenValue());
     console.log('==== POST ==== : ', endPoint, ' + params: ', params);
     try {
       const response = await this.http.post(endPoint, params ?? {}, {

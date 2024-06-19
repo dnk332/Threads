@@ -20,4 +20,5 @@ export const listingSelector = state => state.listing;
 export const reviewSelector = state => state.review;
 export const bookingSelector = state => state.booking;
 export const bookingRequestSelector = state => state.booking.request;
-export const tokenSelector = state => state.auth.token;
+
+export * from './auth';
