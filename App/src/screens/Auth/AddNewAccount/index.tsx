@@ -14,7 +14,7 @@ const AddNewAccount = () => {
       }
     };
 
-    dispatch(authActions.onRegister(username, password, callback));
+    dispatch(authActions.onRegisterAction(username, password, callback));
   };
   return <AddNewAccountView onRegister={onRegister} />;
 };

@@ -25,7 +25,7 @@ const Login = () => {
     let callback = () => {};
 
     dispatch(
-      authActions.onLogin(
+      authActions.onLoginAction(
         accountInfo?.username,
         accountInfo?.password,
         callback,

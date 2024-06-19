@@ -4,7 +4,8 @@ import _ from 'lodash';
 const initialState = {
   token: null,
   listAccountInfo: [],
-  currentAccountIndex: 0,
+  currentAccountIndex: 2,
+  refreshToken: null,
 };
 
 const {AUTH} = actionTypes;
@@ -15,6 +16,11 @@ export default (state = initialState, action: any) => {
       return {
         ...state,
         token: action?.token,
+      };
+    case AUTH.SAVE_REFRESH_TOKEN:
+      return {
+        ...state,
+        refreshToken: action?.refreshToken,
       };
     case AUTH.ADD_ACCOUNT_INFO:
       return {

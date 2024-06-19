@@ -29,7 +29,6 @@ const AddNewAccountView = ({onRegister}: AddNewAccountViewProps) => {
             style={styles.textInput}
           />
           <AppInput
-            autoFocus
             placeholder="Password"
             onChangeText={e => (password.current = e)}
             style={styles.textInput}

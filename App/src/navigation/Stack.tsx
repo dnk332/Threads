@@ -3,6 +3,7 @@
 import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import BootSplash from 'react-native-bootsplash';
 
 import RootScreen from '../screens/Root';
 import {navigationRef} from '@navigators';
@@ -32,6 +33,9 @@ const Stack = createNativeStackNavigator<NavigationStackParamList>();
 function StackScreens() {
   return (
     <NavigationContainer
+      onReady={() => {
+        BootSplash.hide({fade: true});
+      }}
       ref={ref => {
         navigationRef.current = ref;
       }}>
