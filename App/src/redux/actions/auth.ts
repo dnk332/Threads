@@ -58,3 +58,10 @@ export const authCheckAction = (callback: any) => {
     payload: {callback},
   };
 };
+
+export const setCurrentAccountIndexAction = index => {
+  return {
+    type: AUTH.CURRENT_ACCOUNT_INDEX,
+    index,
+  };
+};

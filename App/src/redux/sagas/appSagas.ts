@@ -27,7 +27,7 @@ function* onStartApplication(action) {
     success: boolean;
     message?: string;
   }) => {
-    if (_.isEmpty(message) || !success) {
+    if (!_.isEmpty(message) || !success) {
       action.callback?.({accessAble: false});
       return;
     }

@@ -10,6 +10,7 @@ import SwitchAccountScreen from '@src/screens/Auth/SwitchAccount';
 import AddNewAccountScreen from '@src/screens/Auth/AddNewAccount';
 import SplashScreen from '@src/screens/Splash';
 import LoadingInfoScreen from '@src/screens/Auth/LoadingInfo';
+import SettingsScreen from '@src/screens/Settings';
 
 export {
   RootScreen,
@@ -24,4 +25,5 @@ export {
   SwitchAccountScreen,
   SplashScreen,
   LoadingInfoScreen,
+  SettingsScreen,
 };

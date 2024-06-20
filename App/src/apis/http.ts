@@ -10,10 +10,10 @@ import * as Navigator from '@navigators';
 // import {otherSelector} from '@selectors';
 import {getParamsString} from '@utils/HelperUtil';
 import {store} from '@src/redux/store';
-import {tokenSelector} from '@src/redux/selectors';
+import {accessTokenSelector} from '@src/redux/selectors';
 
 const accessTokenValue = (): string | undefined =>
-  tokenSelector(store.getState())?.access_token;
+  accessTokenSelector(store.getState())?.access_token;
 // const getDevice = (): any => otherSelector.deviceSelect(store.getState());
 // const getDomain = (): string | undefined =>
 //   otherSelector.domainSelect(store.getState());
@@ -50,7 +50,7 @@ class HTTP {
           config.baseURL = 'http://localhost:8082';
         }
         if (token) {
-          console.log('accessTokenValue', accessTokenValue);
+          console.log('token', token);
           config.headers.Authorization = `Bearer ${token}`;
         }
         // if (device) {
@@ -70,6 +70,7 @@ class HTTP {
 
     api.interceptors.response.use(
       (response: AxiosResponse) => {
+        console.log('>>>> RESPONSE >>>> ', response);
         return {
           ...response,
           isSuccess: response.status === CodeResponse.SUCCESS,
@@ -94,7 +95,7 @@ class HTTP {
 
   async get(endPoint: string, props?: RequestProps): Promise<any> {
     const {params, headers} = props;
-    console.log('==== GET ==== : ', endPoint, ' + params: ', params);
+    console.log('==== GET ==== ', endPoint, ' + params: ', params);
     try {
       if (params) {
         endPoint = `${endPoint}${getParamsString(params)}`;
@@ -111,8 +112,7 @@ class HTTP {
 
   async post(endPoint: string, props?: RequestProps): Promise<any> {
     const {params, headers} = props;
-    console.log('accessTokenValue', accessTokenValue());
-    console.log('==== POST ==== : ', endPoint, ' + params: ', params);
+    console.log('==== POST ==== ', endPoint, ' + params: ', params);
     try {
       const response = await this.http.post(endPoint, params ?? {}, {
         headers: headers ?? {},
@@ -128,7 +128,7 @@ class HTTP {
 
   async put(endPoint: string, props: RequestProps): Promise<any> {
     const {params, headers} = props;
-    console.log('==== PUT ==== : ', endPoint, ' + params: ', params);
+    console.log('==== PUT ==== ', endPoint, ' + params: ', params);
     try {
       const response = await this.http.put(endPoint, params, {
         headers: headers ?? {},
@@ -142,7 +142,7 @@ class HTTP {
 
   async delete(endPoint: string, props: RequestProps): Promise<any> {
     const {headers} = props;
-    console.log('==== DELETE ==== : ', endPoint);
+    console.log('==== DELETE ==== ', endPoint);
     try {
       const response = await this.http.delete(endPoint, {
         headers: headers ?? {},

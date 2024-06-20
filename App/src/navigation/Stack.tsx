@@ -26,6 +26,7 @@ export type NavigationStackParamList = {
   ADD_ACCOUNT: undefined;
   SPLASH: undefined;
   LOADING_INFO: undefined;
+  SETTINGS: undefined;
 };
 
 const Stack = createNativeStackNavigator<NavigationStackParamList>();

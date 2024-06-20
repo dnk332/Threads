@@ -8,6 +8,7 @@ const colors = {
   transparent: 'transparent',
   background_secondary: '#101010',
   blue: '#0070FA',
+  red: '#F70F0F',
 
   //common colors
   white: '#ffffff',
@@ -15,7 +16,6 @@ const colors = {
   shadow: '#757575',
   dark_gray: '#1F1F1F',
   bottom_sheet_background: '#171717',
-
   // text colors
   text: '#ffffff',
   text_secondary: '#616161',

@@ -31,6 +31,7 @@ interface AppContainerProps {
   backButton?: React.ReactNode;
   haveTitle?: boolean;
   title?: string;
+  headerLine?: boolean;
 }
 const DefaultBackButton = () => (
   <Fragment>
@@ -54,6 +55,7 @@ const AppContainer = ({
   backButton,
   haveTitle = false,
   title = 'Threads',
+  headerLine = false,
 }: AppContainerProps) => {
   const statusbarHeight = useStatusBarHeight();
 
@@ -104,7 +106,7 @@ const AppContainer = ({
             },
             style,
           ]}>
-          <View style={styles.header}>
+          <View style={[styles.header, headerLine && styles.headerLine]}>
             {haveBackButton && (
               <Pressable
                 style={[layout.row, layout.alignItemsCenter, styles.button]}
@@ -143,7 +145,11 @@ const styles = AppStyleSheet.create({
   header: {
     backgroundColor: colors.primary,
     paddingHorizontal: 16,
+    paddingVertical: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
+  headerLine: {borderBottomColor: colors.border, borderBottomWidth: 1},
   button: {
     alignSelf: 'flex-start',
     padding: 4,

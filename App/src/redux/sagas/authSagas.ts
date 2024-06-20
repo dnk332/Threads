@@ -44,6 +44,7 @@ function* onRegister({type, payload}) {
   const {params, callback} = payload;
   yield invoke(
     function* execution() {
+      console.log('run onRegister');
       const response = yield call(authApis.registerApi, params);
 
       callback?.(response);
@@ -64,16 +65,20 @@ function* onAuthCheck({type, payload}) {
 
   yield invoke(
     function* execution() {
-      console.log('run auth check');
       const refreshToken = yield select(refreshTokenSelector);
       const accessToken = yield select(accessTokenSelector);
 
       if (!refreshToken && !accessToken) {
         callback?.({success: false, message: 'no token'});
       }
+      console.log('accessToken', accessToken);
+      console.log('refreshToken', refreshToken);
 
       if (accessToken) {
-        const response = yield call(authApis.verifyAccessTokenApi, accessToken);
+        const response = yield call(authApis.verifyAccessTokenApi, {
+          access_token: accessToken,
+        });
+
         if (response.code === 'jwt_auth_valid_token') {
           callback?.({success: true});
           return;
@@ -98,6 +103,25 @@ function* onAuthCheck({type, payload}) {
   );
 }
 
+function* onLogout({type, payload}) {
+  const {callback} = payload;
+
+  yield invoke(
+    function* execution() {
+      yield put(authActions.saveTokenAction(null));
+      yield put(authActions.saveRefreshTokenAction(null));
+      yield put(userActions.updateUserInfoAction({}));
+      Navigator.navigateAndSimpleReset('LOGIN');
+    },
+    error => {
+      callback?.({success: false, message: error.message});
+    },
+    false,
+    type,
+    () => {},
+  );
+}
+
 function* watchLogin() {
   yield takeEvery(AUTH.LOGIN, onLogin);
 }
@@ -109,7 +133,10 @@ function* watchRegister() {
 function* watchAuthCheck() {
   yield takeEvery(AUTH.AUTH_CHECK, onAuthCheck);
 }
+function* watchLogout() {
+  yield takeEvery(AUTH.LOGOUT, onLogout);
+}
 
 export default function* authSagas() {
-  yield all([watchLogin(), watchRegister(), watchAuthCheck()]);
+  yield all([watchLogin(), watchRegister(), watchAuthCheck(), watchLogout()]);
 }
