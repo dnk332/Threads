@@ -11,7 +11,7 @@ import _ from 'lodash';
 
 interface SwitchAccountViewProps {
   listAccountInfo: any;
-  onLogin: ({username, password}) => void;
+  onLogin: ({username, password}, accountIndex) => void;
 }
 
 const SwitchAccountView = ({
@@ -28,7 +28,7 @@ const SwitchAccountView = ({
         {_.isArray(listAccountInfo) ? (
           listAccountInfo.map((account: any, index) => (
             <Pressable
-              onPress={() => onLogin(account)}
+              onPress={() => onLogin(account, index)}
               key={index}
               style={styles.loginButton}>
               <View style={styles.buttonContent}>

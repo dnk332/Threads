@@ -1,5 +1,6 @@
 import React from 'react';
 import {useDispatch} from 'react-redux';
+import _ from 'lodash';
 
 import {authActions} from '@actions';
 import LoginView from '@src/screens/Auth/Login/view';
@@ -9,7 +10,6 @@ import {
   currentAccountIndexSelector,
 } from '@src/redux/selectors';
 import useSelectorShallow from '@src/hooks/useSelectorShallowEqual';
-import _ from 'lodash';
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -23,14 +23,17 @@ const Login = () => {
 
   const onLogin = () => {
     let callback = () => {};
-
-    dispatch(
-      authActions.onLoginAction(
-        accountInfo?.username,
-        accountInfo?.password,
-        callback,
-      ),
-    );
+    if (_.isEmpty(accountInfo)) {
+      onSwitchAccount();
+    } else {
+      dispatch(
+        authActions.onLoginAction(
+          accountInfo?.username,
+          accountInfo?.password,
+          callback,
+        ),
+      );
+    }
   };
 
   const onSwitchAccount = () => {

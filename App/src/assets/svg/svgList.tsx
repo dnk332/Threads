@@ -34,6 +34,12 @@ import GLOBE from '@svg/common/globe';
 import INSTAGRAM from '@svg/common/instagram';
 import LINE_2 from '@svg/common/line_2';
 import ARROW_RIGHT from '@svg/common/arrow_right';
+import INFO from '@svg/common/info';
+import LOCK from '@svg/common/lock';
+import NOTIFY from '@svg/common/notify';
+import USER_PLUS from '@svg/common/user_plus';
+import USER from '@svg/common/user';
+import LIFEBUOY from '@svg/common/lifebuoy';
 
 export const SVG_NAME = {
   // Root
@@ -73,4 +79,10 @@ export const SVG_NAME = {
   LINE_2,
   INSTAGRAM,
   ARROW_RIGHT,
+  INFO,
+  LOCK,
+  NOTIFY,
+  USER_PLUS,
+  USER,
+  LIFEBUOY,
 };

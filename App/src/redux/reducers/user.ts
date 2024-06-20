@@ -4,7 +4,7 @@ const initialState = {
   user: null,
 };
 
-const {USER, AUTH} = actionTypes;
+const {USER} = actionTypes;
 
 export default (state = initialState, action: any) => {
   switch (action?.type) {
@@ -12,11 +12,6 @@ export default (state = initialState, action: any) => {
       return {
         ...state,
         user: {...state.user, ...action.payload},
-      };
-    case AUTH.LOGOUT:
-      return {
-        ...state,
-        user: null,
       };
     default:
       return state;

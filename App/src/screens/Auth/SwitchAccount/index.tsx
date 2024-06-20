@@ -8,10 +8,11 @@ import {authActions} from '@src/redux/actions';
 const SwitchAccount = () => {
   const dispatch = useDispatch();
   const listAccountInfo = useSelectorShallow(listAccountInfoSelector);
-  const onLogin = ({username, password}) => {
+  const onLogin = ({username, password}, accountIndex) => {
     let callback = () => {};
 
-    dispatch(authActions.onLogin(username, password, callback));
+    dispatch(authActions.setCurrentAccountIndexAction(accountIndex));
+    dispatch(authActions.onLoginAction(username, password, callback));
   };
   return (
     <SwitchAccountView listAccountInfo={listAccountInfo} onLogin={onLogin} />

@@ -29,11 +29,15 @@ const LoginView = ({onLogin, onSwitchAccount, accountInfo}: LoginViewProps) => {
             />
             <View style={styles.buttonText}>
               <AppText fontSize={12} color={colors.text_gray}>
-                Log in with Instagram
+                {!_.isNil(accountInfo)
+                  ? 'Log in with Instagram'
+                  : 'Sign up with Instagram'}
               </AppText>
-              <AppText fontSize={14} fontWeight={600}>
-                {!_.isNil(accountInfo) ? accountInfo?.username : 'Account Name'}
-              </AppText>
+              {!_.isNil(accountInfo) && (
+                <AppText fontSize={14} fontWeight={600}>
+                  {accountInfo?.username}
+                </AppText>
+              )}
             </View>
           </View>
           <SvgComponent color={colors.text_gray} name={'ARROW_RIGHT'} />
