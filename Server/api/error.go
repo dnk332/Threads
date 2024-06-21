@@ -4,40 +4,45 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 )
 
+// errorResponse creates a standardized error response
 func errorResponse(errCode int, err error) (int, gin.H) {
-	errors := make(map[string]string)
-
-	errors["code"] = strconv.Itoa(errCode)
-	errors["timestamp"] = time.Now().Format(time.RFC3339)
-	errors["message"] = err.Error()
-
-	return errCode, gin.H{"error": errors}
-}
-
-func errorBindJSONResponse(errCode int, err error) (int, gin.H) {
-	errors := make(map[string]interface{})
-	errors["code"] = errCode
-	errors["timestamp"] = time.Now().Format(time.RFC3339)
-
-	switch err := err.(type) {
-	case validator.ValidationErrors:
-		for _, e := range err {
-			errors[e.Field()] = fmt.Sprintf("%s %s", e.Field(), msgForTag(e.Tag()))
-		}
-		return errCode, gin.H{"error": errors}
-	case *json.UnmarshalTypeError:
-		errors["message"] = fmt.Sprintf("%s type must be %s", err.Field, err.Type)
-		return errCode, gin.H{"error": errors}
+	errors := gin.H{
+		"message":   err.Error(),
+		"code":      strconv.Itoa(errCode),
+		"timestamp": time.Now().Format(time.RFC3339),
 	}
 	return errCode, gin.H{"error": errors}
 }
 
+// errorBindJSONResponse creates a standardized error response for JSON binding errors
+func errorBindJSONResponse(errCode int, err error) (int, gin.H) {
+	errors := make(map[string]interface{})
+
+	switch err := err.(type) {
+	case validator.ValidationErrors:
+		var errMessage []string
+		for _, e := range err {
+			errMessage = append(errMessage, fmt.Sprintf("%s %s", e.Field(), msgForTag(e.Tag())))
+		}
+		errors["message"] = strings.Join(errMessage, ", ")
+	case *json.UnmarshalTypeError:
+		errors["message"] = fmt.Sprintf("%s type must be %s", err.Field, err.Type)
+	default:
+		errors["message"] = err.Error()
+	}
+	errors["code"] = errCode
+	errors["timestamp"] = time.Now().Format(time.RFC3339)
+	return errCode, gin.H{"error": errors}
+}
+
+// msgForTag returns custom error messages for validation tags
 func msgForTag(tag string) string {
 	switch tag {
 	case "required":
@@ -48,6 +53,8 @@ func msgForTag(tag string) string {
 		return "value must begin with a capital letter"
 	case "email":
 		return "value must be in the correct email format"
+	case "alphanum":
+		return "value must contain only alphanumeric characters (letters and numbers)"
 	}
-	return "Unknown error"
+	return "unknown error"
 }
