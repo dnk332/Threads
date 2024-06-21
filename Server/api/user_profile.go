@@ -41,19 +41,21 @@ func createUserProfileRes(userProfile db.UserProfile) createUserProfileResponse 
 func (server *Server) createUserProfile(ctx *gin.Context) {
 	var req createUserProfileRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		ctx.JSON(errorBindJSONResponse(http.StatusBadRequest, err))
 		return
 	}
 
 	//Check is user id is valid or not
 	user, valid := server.validUser(ctx, req.UserId)
 	if !valid {
+		errMessage := errors.New("invalid user")
+		ctx.JSON(errorResponse(http.StatusUnauthorized, errMessage))
 		return
 	}
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
 	if user.ID != authPayload.UserID {
-		err := errors.New("need authenticated user")
-		ctx.JSON(http.StatusUnauthorized, errorResponse(err))
+		errMessage := errors.New("need authenticated user")
+		ctx.JSON(errorResponse(http.StatusUnauthorized, errMessage))
 		return
 	}
 
@@ -67,10 +69,10 @@ func (server *Server) createUserProfile(ctx *gin.Context) {
 	userProfile, err := server.store.CreateUserProfile(ctx, arg)
 	if err != nil {
 		if db.ErrorCode(err) == db.UniqueViolation {
-			ctx.JSON(http.StatusForbidden, errorResponse(err))
+			ctx.JSON(errorResponse(http.StatusConflict, err))
 			return
 		}
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		ctx.JSON(errorResponse(http.StatusInternalServerError, err))
 		return
 	}
 

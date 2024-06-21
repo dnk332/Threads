@@ -2,11 +2,11 @@ package api
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 	"time"
 
 	db "github.com/briandnk/Threads/db/sqlc"
+	"github.com/briandnk/Threads/token"
 	"github.com/briandnk/Threads/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -25,7 +25,7 @@ type userResponse struct {
 	CreatedAt         time.Time `json:"created_at"`
 }
 
-func createUserResponse(user db.User, password string) userResponse {
+func createUserResponse(user db.User) userResponse {
 	return userResponse{
 		UserID:            user.ID,
 		Username:          user.Username,
@@ -38,13 +38,14 @@ func createUserResponse(user db.User, password string) userResponse {
 func (server *Server) createUser(ctx *gin.Context) {
 	var req createUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		ctx.JSON(errorBindJSONResponse(http.StatusBadRequest, err))
 		return
 	}
 
 	hashedPassword, err := utils.HashPassword(req.Password)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		err := errors.New("failed to hash password")
+		ctx.JSON(errorResponse(http.StatusBadRequest, err))
 		return
 	}
 
@@ -56,14 +57,15 @@ func (server *Server) createUser(ctx *gin.Context) {
 	user, err := server.store.CreateUser(ctx, arg)
 	if err != nil {
 		if db.ErrorCode(err) == db.UniqueViolation {
-			ctx.JSON(http.StatusForbidden, errorResponse(err))
+			err := errors.New("username already exists")
+			ctx.JSON(errorResponse(http.StatusConflict, err))
 			return
 		}
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		ctx.JSON(errorResponse(http.StatusBadRequest, err))
 		return
 	}
 
-	rsp := createUserResponse(user, req.Password)
+	rsp := createUserResponse(user)
 	ctx.JSON(http.StatusOK, rsp)
 }
 
@@ -74,8 +76,7 @@ type getAccountRequest struct {
 func (server *Server) getUser(ctx *gin.Context) {
 	var req getAccountRequest
 	if err := ctx.ShouldBindUri(&req); err != nil {
-		fmt.Print("ERROR:", err)
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		ctx.JSON(errorResponse(http.StatusBadRequest, err))
 		return
 	}
 
@@ -85,12 +86,12 @@ func (server *Server) getUser(ctx *gin.Context) {
 		return
 	}
 
-	//authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
-	//if user.ID != authPayload.UserId {
-	//	err := errors.New("user doesn't belong to the authenticated user")
-	//	ctx.JSON(http.StatusUnauthorized, errorResponse(err))
-	//	return
-	//}
+	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
+	if user.ID != authPayload.UserID {
+		err := errors.New("user doesn't belong to the authenticated user")
+		ctx.JSON(errorResponse(http.StatusUnauthorized, err))
+		return
+	}
 
 	ctx.JSON(http.StatusOK, user)
 }
@@ -98,16 +99,16 @@ func (server *Server) validUser(ctx *gin.Context, userId int64) (db.User, bool) 
 	user, err := server.store.GetUserById(ctx, userId)
 	if err != nil {
 		if errors.Is(err, db.ErrRecordNotFound) {
-			ctx.JSON(http.StatusNotFound, errorResponse(err))
+			ctx.JSON(errorResponse(http.StatusNotFound, err))
 			return user, false
 		}
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		ctx.JSON(errorResponse(http.StatusInternalServerError, err))
 		return user, false
 	}
 
 	if user.IsFrozen {
-		err := errors.New("user is frozen")
-		ctx.JSON(http.StatusUnauthorized, errorResponse(err))
+		errMessage := errors.New("user is frozen")
+		ctx.JSON(errorResponse(http.StatusUnauthorized, errMessage))
 		return user, false
 	}
 
@@ -131,23 +132,23 @@ type loginUserResponse struct {
 func (server *Server) loginUser(ctx *gin.Context) {
 	var req loginUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		ctx.JSON(errorResponse(http.StatusBadRequest, err))
 		return
 	}
 
 	user, err := server.store.GetUserByName(ctx, req.Username)
 	if err != nil {
 		if errors.Is(err, db.ErrRecordNotFound) {
-			ctx.JSON(http.StatusNotFound, errorResponse(err))
+			ctx.JSON(errorResponse(http.StatusNotFound, err))
 			return
 		}
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		ctx.JSON(errorResponse(http.StatusInternalServerError, err))
 		return
 	}
 
 	err = utils.CheckPassword(req.Password, user.HashedPassword)
 	if err != nil {
-		ctx.JSON(http.StatusUnauthorized, errorResponse(err))
+		ctx.JSON(errorResponse(http.StatusUnauthorized, err))
 		return
 	}
 
@@ -156,7 +157,7 @@ func (server *Server) loginUser(ctx *gin.Context) {
 		server.config.AccessTokenDuration,
 	)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		ctx.JSON(errorResponse(http.StatusInternalServerError, err))
 		return
 	}
 
@@ -165,7 +166,7 @@ func (server *Server) loginUser(ctx *gin.Context) {
 		server.config.RefreshTokenDuration,
 	)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		ctx.JSON(errorResponse(http.StatusInternalServerError, err))
 		return
 	}
 
@@ -179,7 +180,7 @@ func (server *Server) loginUser(ctx *gin.Context) {
 		ExpiresAt:    refreshPayload.ExpiredAt,
 	})
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		ctx.JSON(errorResponse(http.StatusInternalServerError, err))
 		return
 	}
 
@@ -189,7 +190,7 @@ func (server *Server) loginUser(ctx *gin.Context) {
 		AccessTokenExpiresAt:  accessPayload.ExpiredAt,
 		RefreshToken:          refreshToken,
 		RefreshTokenExpiresAt: refreshPayload.ExpiredAt,
-		User:                  createUserResponse(user, req.Password),
+		User:                  createUserResponse(user),
 	}
 	ctx.JSON(http.StatusOK, rsp)
 }
