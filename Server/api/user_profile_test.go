@@ -3,12 +3,13 @@ package api
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/briandnk/Threads/token"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
+
+	"github.com/briandnk/Threads/token"
 
 	mockdb "github.com/briandnk/Threads/db/mock"
 	db "github.com/briandnk/Threads/db/sqlc"

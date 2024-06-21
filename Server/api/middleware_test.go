@@ -2,12 +2,13 @@ package api
 
 import (
 	"fmt"
-	"github.com/briandnk/Threads/token"
-	"github.com/briandnk/Threads/utils"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
+
+	"github.com/briandnk/Threads/token"
+	"github.com/briandnk/Threads/utils"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/require"
@@ -88,7 +89,7 @@ func TestAuthMiddleware(t *testing.T) {
 
 		t.Run(tc.name, func(t *testing.T) {
 			server := newTestServer(t, nil)
-			authPath := "/auth"
+			authPath := "/"
 			server.router.GET(
 				authPath,
 				authMiddleware(server.tokenMaker),

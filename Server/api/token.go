@@ -9,18 +9,23 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type renewAccessTokenRequest struct {
+// refreshAccessTokenRequest defines the structure for renewing JWT access tokens
+type refreshAccessTokenRequest struct {
 	RefreshToken string `json:"refresh_token" binding:"required"`
 }
 
-type renewAccessTokenResponse struct {
+// refreshAccessTokenResponse defines the structure for renewing JWT access tokens
+type refreshAccessTokenResponse struct {
 	AccessToken          string    `json:"access_token"`
 	AccessTokenExpiresAt time.Time `json:"access_token_expires_at"`
 }
+
+// VerifyTokenRequest defines the structure for verifying JWT access tokens
 type verifyTokenRequest struct {
 	AccessToken string `json:"access_token" binding:"required"`
 }
 
+// VerifyTokenResponse defines the structure for verifying JWT access tokens
 type verifyTokenResponse struct {
 	Code string `json:"code"`
 }
@@ -33,6 +38,7 @@ func (server *Server) VerifyToken(ctx *gin.Context) {
 		return
 	}
 
+	// Verify access token
 	_, err := server.tokenMaker.VerifyToken(req.AccessToken)
 	if err != nil {
 		ctx.JSON(http.StatusUnauthorized, verifyTokenResponse{Code: "jwt_auth_invalid_token"})
@@ -43,20 +49,22 @@ func (server *Server) VerifyToken(ctx *gin.Context) {
 
 }
 
-// renewAccessToken handles the renewal of JWT access tokens using a refresh token
-func (server *Server) renewAccessToken(ctx *gin.Context) {
-	var req renewAccessTokenRequest
+// refreshAccessToken handles the renewal of JWT access tokens using a refresh token
+func (server *Server) refreshAccessToken(ctx *gin.Context) {
+	var req refreshAccessTokenRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(errorResponse(http.StatusBadRequest, err))
+		ctx.JSON(errorBindJSONResponse(http.StatusBadRequest, err))
 		return
 	}
 
+	// Verify refresh token
 	refreshPayload, err := server.tokenMaker.VerifyToken(req.RefreshToken)
 	if err != nil {
 		ctx.JSON(errorResponse(http.StatusUnauthorized, errors.New("invalid refresh token")))
 		return
 	}
 
+	// Check if session exists
 	session, err := server.store.GetSession(ctx, refreshPayload.ID)
 	if err != nil {
 		if errors.Is(err, db.ErrRecordNotFound) {
@@ -67,26 +75,31 @@ func (server *Server) renewAccessToken(ctx *gin.Context) {
 		return
 	}
 
+	// Check if session is blocked or not
 	if session.IsBlocked {
 		ctx.JSON(errorResponse(http.StatusUnauthorized, errors.New("blocked session")))
 		return
 	}
 
+	// Check if session is expired or not
 	if session.UserID != refreshPayload.UserID {
 		ctx.JSON(errorResponse(http.StatusUnauthorized, errors.New("incorrect session user")))
 		return
 	}
 
+	// Check if session is not expired or not
 	if session.RefreshToken != req.RefreshToken {
 		ctx.JSON(errorResponse(http.StatusUnauthorized, errors.New("mismatched session token")))
 		return
 	}
 
+	// Check if session is not expired or not
 	if time.Now().After(session.ExpiresAt) {
 		ctx.JSON(errorResponse(http.StatusUnauthorized, errors.New("expired session")))
 		return
 	}
 
+	// Create new access token
 	accessToken, accessPayload, err := server.tokenMaker.CreateToken(
 		refreshPayload.UserID,
 		server.config.AccessTokenDuration,
@@ -96,7 +109,7 @@ func (server *Server) renewAccessToken(ctx *gin.Context) {
 		return
 	}
 
-	rsp := renewAccessTokenResponse{
+	rsp := refreshAccessTokenResponse{
 		AccessToken:          accessToken,
 		AccessTokenExpiresAt: accessPayload.ExpiredAt,
 	}

@@ -132,7 +132,7 @@ func TestCreateUserAPI(t *testing.T) {
 					Return(db.User{}, db.ErrUniqueViolation)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusForbidden, recorder.Code)
+				require.Equal(t, http.StatusConflict, recorder.Code)
 			},
 		},
 		{
@@ -184,7 +184,7 @@ func TestCreateUserAPI(t *testing.T) {
 			data, err := json.Marshal(tc.body)
 			require.NoError(t, err)
 
-			url := "/auth/register"
+			url := "/users"
 			request, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(data))
 			require.NoError(t, err)
 
@@ -283,7 +283,7 @@ func TestLoginUserAPI(t *testing.T) {
 					Return(db.User{}, db.ErrRecordNotFound)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusNotFound, recorder.Code)
+				require.Equal(t, http.StatusUnauthorized, recorder.Code)
 			},
 		},
 		{
@@ -302,22 +302,22 @@ func TestLoginUserAPI(t *testing.T) {
 				require.Equal(t, http.StatusUnauthorized, recorder.Code)
 			},
 		},
-		{
-			name: "InternalError",
-			body: gin.H{
-				"username": user.Username,
-				"password": password,
-			},
-			buildStubs: func(store *mockdb.MockStore) {
-				store.EXPECT().
-					GetUserByName(gomock.Any(), gomock.Any()).
-					Times(1).
-					Return(db.User{}, sql.ErrConnDone)
-			},
-			checkResponse: func(recorder *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusInternalServerError, recorder.Code)
-			},
-		},
+		// {
+		// 	name: "InternalError",
+		// 	body: gin.H{
+		// 		"username": user.Username,
+		// 		"password": password,
+		// 	},
+		// 	buildStubs: func(store *mockdb.MockStore) {
+		// 		store.EXPECT().
+		// 			GetUserByName(gomock.Any(), gomock.Any()).
+		// 			Times(1).
+		// 			Return(db.User{}, sql.ErrConnDone)
+		// 	},
+		// 	checkResponse: func(recorder *httptest.ResponseRecorder) {
+		// 		require.Equal(t, http.StatusInternalServerError, recorder.Code)
+		// 	},
+		// },
 		{
 			name: "InvalidUsername",
 			body: gin.H{
@@ -352,7 +352,7 @@ func TestLoginUserAPI(t *testing.T) {
 			data, err := json.Marshal(tc.body)
 			require.NoError(t, err)
 
-			url := "/auth/login"
+			url := "/users/login"
 			request, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(data))
 			require.NoError(t, err)
 

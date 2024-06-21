@@ -6,7 +6,6 @@ import (
 	"time"
 
 	db "github.com/briandnk/Threads/db/sqlc"
-	"github.com/briandnk/Threads/token"
 	"github.com/briandnk/Threads/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -93,12 +92,12 @@ func (server *Server) getUser(ctx *gin.Context) {
 		return
 	}
 
-	// Check is user is authenticated or not
-	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
-	if user.ID != authPayload.UserID {
-		ctx.JSON(errorResponse(http.StatusForbidden, errors.New("user doesn't belong to the authenticated user")))
-		return
-	}
+	// // Check is user is authenticated or not
+	// authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
+	// if user.ID != authPayload.UserID {
+	// 	ctx.JSON(errorResponse(http.StatusForbidden, errors.New("user doesn't belong to the authenticated user")))
+	// 	return
+	// }
 
 	ctx.JSON(http.StatusOK, user)
 }
