@@ -60,47 +60,45 @@ function* onRegister({type, payload}) {
     () => {},
   );
 }
-function* onAuthCheck({type, payload}) {
-  const {callback} = payload;
+function* onAuthCheck(actions) {
+  const {callback} = actions.payload || {};
 
-  yield invoke(
-    function* execution() {
-      const refreshToken = yield select(refreshTokenSelector);
-      const accessToken = yield select(accessTokenSelector);
+  const {refreshToken, accessToken} = yield all({
+    refreshToken: select(refreshTokenSelector),
+    accessToken: select(accessTokenSelector),
+  });
 
-      if (!refreshToken && !accessToken) {
-        callback?.({success: false, message: 'no token'});
+  if (!refreshToken && !accessToken) {
+    callback?.({success: false, message: 'no token'});
+    return;
+  }
+
+  if (accessToken) {
+    try {
+      const {code} = yield call(authApis.verifyAccessTokenApi, {
+        access_token: accessToken,
+      });
+      if (code === 'jwt_auth_valid_token') {
+        callback?.({success: true});
+        return;
       }
-      console.log('accessToken', accessToken);
-      console.log('refreshToken', refreshToken);
+    } catch (error) {
+      console.log('verify token fail');
+    }
+  }
 
-      if (accessToken) {
-        const response = yield call(authApis.verifyAccessTokenApi, {
-          access_token: accessToken,
-        });
+  if (refreshToken) {
+    const {access_token} = yield call(refreshAccessTokenApi, {
+      refresh_token: refreshToken,
+    }) || {};
+    if (access_token) {
+      yield put(saveTokenAction(access_token));
+      callback?.({success: true});
+      return;
+    }
+  }
 
-        if (response.code === 'jwt_auth_valid_token') {
-          callback?.({success: true});
-          return;
-        }
-      }
-
-      if (refreshToken) {
-        const response = yield call(refreshAccessTokenApi, refreshToken);
-        if (response && response['accessToken']) {
-          yield put(saveTokenAction(response['accessToken']));
-          callback?.({success: true});
-          return;
-        }
-      }
-    },
-    error => {
-      callback?.({success: false, message: error.message});
-    },
-    false,
-    type,
-    () => {},
-  );
+  callback?.({success: false, message: 'token verification failed'});
 }
 
 function* onLogout({type, payload}) {
@@ -108,6 +106,7 @@ function* onLogout({type, payload}) {
 
   yield invoke(
     function* execution() {
+      yield call(authApis.logoutApi, null);
       yield put(authActions.saveTokenAction(null));
       yield put(authActions.saveRefreshTokenAction(null));
       yield put(userActions.updateUserInfoAction({}));

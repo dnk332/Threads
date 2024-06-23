@@ -6,17 +6,17 @@ import axios, {
 } from 'axios';
 
 // import {store} from '@store';
-import * as Navigator from '@navigators';
+
 // import {otherSelector} from '@selectors';
+import {popToTop} from '@navigation/NavigationService';
 import {getParamsString} from '@utils/HelperUtil';
 import {store} from '@src/redux/store';
-import {accessTokenSelector} from '@src/redux/selectors';
+import {accessTokenSelector, domainSelector} from '@src/redux/selectors';
 
 const accessTokenValue = (): string | undefined =>
-  accessTokenSelector(store.getState())?.access_token;
+  accessTokenSelector(store.getState());
 // const getDevice = (): any => otherSelector.deviceSelect(store.getState());
-// const getDomain = (): string | undefined =>
-//   otherSelector.domainSelect(store.getState());
+const getDomain = (): string | undefined => domainSelector(store.getState());
 
 export const CodeResponse = {
   SUCCESS: 200,
@@ -46,8 +46,7 @@ class HTTP {
         const token = accessTokenValue();
         // const device = getDevice();
         if (!config.baseURL) {
-          // config.baseURL = `${getDomain()}`;
-          config.baseURL = 'http://localhost:8082';
+          config.baseURL = `${getDomain()}`;
         }
         if (token) {
           console.log('token', token);
@@ -81,7 +80,7 @@ class HTTP {
         const code = error.response?.data['code'];
         const message = error.response?.data['message'];
         if (code && this.exceptionCode.includes(code)) {
-          Navigator.popToTop();
+          popToTop();
         }
         if (message) {
           error.message = message;
@@ -103,7 +102,6 @@ class HTTP {
       const response = await this.http.get(endPoint, {
         headers: headers ?? {},
       });
-      console.log('response', response);
       return Promise.resolve(response.data);
     } catch (error) {
       return Promise.reject(error);

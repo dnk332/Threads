@@ -40,13 +40,12 @@ func (server *Server) setupRouter() {
 	router.POST("/users", server.createUser)
 	router.POST("/users/login", server.loginUser)
 	router.GET("/users/:id", server.getUser)
+	router.POST("/tokens/verify", server.VerifyToken)
+	router.POST("/tokens/refresh", server.refreshAccessToken)
 
 	// Routes that require authentication
 	authRoutes := router.Group("/").Use(authMiddleware(server.tokenMaker))
 	{
-		authRoutes.POST("/tokens/refresh", server.refreshAccessToken)
-		authRoutes.POST("/tokens/verify", server.VerifyToken)
-
 		authRoutes.POST("/user-profiles", server.createUserProfile)
 		authRoutes.GET("/users/logout", server.logoutUser)
 	}
