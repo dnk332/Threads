@@ -46,7 +46,9 @@ func (server *Server) setupRouter() {
 	{
 		authRoutes.POST("/tokens/refresh", server.refreshAccessToken)
 		authRoutes.POST("/tokens/verify", server.VerifyToken)
+
 		authRoutes.POST("/user-profiles", server.createUserProfile)
+		authRoutes.GET("/users/logout", server.logoutUser)
 	}
 
 	server.router = router

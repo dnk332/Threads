@@ -2,6 +2,7 @@ package api
 
 import (
 	"errors"
+	"log"
 	"net/http"
 	"time"
 
@@ -46,10 +47,11 @@ func (server *Server) createUserProfile(ctx *gin.Context) {
 	var req createUserProfileRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(errorBindJSONResponse(http.StatusBadRequest, err))
+		log.Printf("[ERROR] Failed to parse request body: %v", err)
 		return
 	}
 
-	//Check is user id is valid or not
+	// Check is user id is valid or not
 	user, valid := server.validUser(ctx, req.UserId)
 	if !valid {
 		return
@@ -59,6 +61,7 @@ func (server *Server) createUserProfile(ctx *gin.Context) {
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
 	if user.ID != authPayload.UserID {
 		ctx.JSON(errorResponse(http.StatusUnauthorized, errors.New("need authenticated user")))
+		log.Printf("[ERROR] User is not authenticated")
 		return
 	}
 
@@ -75,9 +78,11 @@ func (server *Server) createUserProfile(ctx *gin.Context) {
 	if err != nil {
 		if db.ErrorCode(err) == db.UniqueViolation {
 			ctx.JSON(errorResponse(http.StatusConflict, errors.New("email already in use")))
+			log.Printf("[ERROR] Email already in use")
 			return
 		}
 		ctx.JSON(errorResponse(http.StatusInternalServerError, err))
+		log.Printf("[ERROR] Failed to create user profile: %v", err)
 		return
 	}
 
