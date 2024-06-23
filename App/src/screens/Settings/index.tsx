@@ -9,7 +9,6 @@ const SettingsScreen = () => {
   const onLogout = () => {
     dispatch(authActions.onLogoutAction());
   };
-
   const HandelOptionSetting = (type: string) => {
     switch (type) {
       case 'Logout':

@@ -14,10 +14,7 @@ const SettingsScreenView = ({HandelOptionSetting}: SettingScreenViewProps) => {
   const SettingItem = useCallback(
     ({setting}) => {
       return (
-        <Pressable
-          onPress={() => {
-            HandelOptionSetting(setting.title);
-          }}>
+        <Pressable onPress={HandelOptionSetting(setting.title)}>
           <View style={styles.settingItemWrapper}>
             <SvgComponent name={setting.icon} />
             <AppText>{setting.title}</AppText>
