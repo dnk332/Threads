@@ -89,68 +89,135 @@ func TestCreateUserProfileAPI(t *testing.T) {
 				requireBodyMatchUserProfile(t, recorder.Body, userProfile)
 			},
 		},
-		//{
-		//	name: "InternalError",
-		//	body: gin.H{
-		//		"username": user.Username,
-		//		"password": password,
-		//	},
-		//	buildStubs: func(store *mockdb.MockStore) {
-		//		store.EXPECT().
-		//			CreateUser(gomock.Any(), gomock.Any()).
-		//			Times(1).
-		//			Return(db.User{}, sql.ErrConnDone)
-		//	},
-		//	checkResponse: func(recorder *httptest.ResponseRecorder) {
-		//		require.Equal(t, http.StatusInternalServerError, recorder.Code)
-		//	},
-		//},
-		//{
-		//	name: "DuplicateUsername",
-		//	body: gin.H{
-		//		"username": user.Username,
-		//		"password": password,
-		//	},
-		//	buildStubs: func(store *mockdb.MockStore) {
-		//		store.EXPECT().
-		//			CreateUser(gomock.Any(), gomock.Any()).
-		//			Times(1).
-		//			Return(db.User{}, db.ErrUniqueViolation)
-		//	},
-		//	checkResponse: func(recorder *httptest.ResponseRecorder) {
-		//		require.Equal(t, http.StatusForbidden, recorder.Code)
-		//	},
-		//},
-		//{
-		//	name: "TooShortUsername",
-		//	body: gin.H{
-		//		"username": "abc",
-		//		"password": password,
-		//	},
-		//	buildStubs: func(store *mockdb.MockStore) {
-		//		store.EXPECT().
-		//			CreateUser(gomock.Any(), gomock.Any()).
-		//			Times(0)
-		//	},
-		//	checkResponse: func(recorder *httptest.ResponseRecorder) {
-		//		require.Equal(t, http.StatusBadRequest, recorder.Code)
-		//	},
-		//},
-		//{
-		//	name: "TooShortPassword",
-		//	body: gin.H{
-		//		"username": user.Username,
-		//		"password": "123",
-		//	},
-		//	buildStubs: func(store *mockdb.MockStore) {
-		//		store.EXPECT().
-		//			CreateUser(gomock.Any(), gomock.Any()).
-		//			Times(0)
-		//	},
-		//	checkResponse: func(recorder *httptest.ResponseRecorder) {
-		//		require.Equal(t, http.StatusBadRequest, recorder.Code)
-		//	},
-		//},
+		{
+			name: "InvalidUserID",
+			body: gin.H{
+				"user_id": 0,
+				"name":    userProfile.Name,
+				"email":   userProfile.Email,
+				"bio":     userProfile.Bio,
+			},
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
+			},
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					GetUserById(gomock.Any(), gomock.Any()).
+					Times(0)
+				store.EXPECT().
+					CreateUserProfile(gomock.Any(), gomock.Any()).
+					Times(0)
+
+			},
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
+			},
+		},
+		{
+			name: "InvalidEmail",
+			body: gin.H{
+				"user_id": userProfile.UserID,
+				"name":    userProfile.Name,
+				"email":   "invalid-email",
+				"bio":     userProfile.Bio,
+			},
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
+			},
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					GetUserById(gomock.Any(), gomock.Any()).
+					Times(0)
+				store.EXPECT().
+					CreateUserProfile(gomock.Any(), gomock.Any()).
+					Times(0)
+
+			},
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
+			},
+		},
+		{
+			name: "InvalidName",
+			body: gin.H{
+				"user_id": userProfile.UserID,
+				"name":    "invalid-name",
+				"email":   userProfile.Email,
+				"bio":     userProfile.Bio,
+			},
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
+			},
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					GetUserById(gomock.Any(), gomock.Any()).
+					Times(0)
+				store.EXPECT().
+					CreateUserProfile(gomock.Any(), gomock.Any()).
+					Times(0)
+
+			},
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
+			},
+		},
+		{
+			name: "NoAuthorization",
+			body: gin.H{
+				"user_id": userProfile.UserID,
+				"name":    userProfile.Name,
+				"email":   userProfile.Email,
+				"bio":     userProfile.Bio,
+			},
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+			},
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					GetUserById(gomock.Any(), gomock.Any()).
+					Times(0)
+
+				store.EXPECT().
+					CreateUserProfile(gomock.Any(), gomock.Any()).
+					Times(0)
+
+			},
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusUnauthorized, recorder.Code)
+			},
+		},
+		{
+			name: "DuplicateUserProfile",
+			body: gin.H{
+				"user_id": userProfile.UserID,
+				"name":    userProfile.Name,
+				"email":   userProfile.Email,
+				"bio":     userProfile.Bio,
+			},
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
+			},
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					GetUserById(gomock.Any(), user.ID).
+					Times(1).
+					Return(user, nil)
+
+				arg := db.CreateUserProfileParams{
+					UserID: userProfile.UserID,
+					Name:   userProfile.Name,
+					Email:  userProfile.Email,
+					Bio:    userProfile.Bio,
+				}
+				store.EXPECT().
+					CreateUserProfile(gomock.Any(), gomock.Eq(arg)).
+					Times(1).
+					Return(db.UserProfile{}, db.ErrUniqueViolation)
+
+			},
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusConflict, recorder.Code)
+			},
+		},
 	}
 
 	for i := range testCases {

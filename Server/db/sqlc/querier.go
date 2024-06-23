@@ -11,18 +11,24 @@ import (
 )
 
 type Querier interface {
+	// Create a new session
 	CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error)
 	// Create a new user
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
 	// Create a new user profile
 	CreateUserProfile(ctx context.Context, arg CreateUserProfileParams) (UserProfile, error)
+	// Get a session by user ID
+	DeleteSession(ctx context.Context, id uuid.UUID) error
 	// Delete a user by ID
 	DeleteUser(ctx context.Context, id int64) error
 	// Delete a user profile by ID
 	DeleteUserProfile(ctx context.Context, id int64) error
 	// Get a list of all users
 	GetListUser(ctx context.Context, arg GetListUserParams) ([]User, error)
+	// Get a session
 	GetSession(ctx context.Context, id uuid.UUID) (Session, error)
+	// Get a session by user ID
+	GetSessionByUserID(ctx context.Context, userID int64) (Session, error)
 	// Get a user by ID
 	GetUserById(ctx context.Context, id int64) (User, error)
 	// Get a user by name
