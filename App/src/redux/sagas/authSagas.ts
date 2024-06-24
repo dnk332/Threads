@@ -27,7 +27,6 @@ function* onLogin({type, payload}) {
       });
 
       if (response.success) {
-        console.log('response', response);
         yield put(authActions.saveTokenAction(response.access_token));
         yield put(authActions.saveRefreshTokenAction(response.refresh_token));
         yield put(authActions.updateCurrentAccountAction(response.user));
@@ -110,7 +109,7 @@ function* onLogout({type, payload}) {
       yield call(authApis.logoutApi, null);
       yield put(authActions.saveTokenAction(null));
       yield put(authActions.saveRefreshTokenAction(null));
-      yield put(userActions.updateUserInfoAction(null));
+      yield put(userActions.saveUserInfoAction(null));
       Navigator.navigateAndSimpleReset(SCREEN_NAME.LOGIN);
     },
     error => {

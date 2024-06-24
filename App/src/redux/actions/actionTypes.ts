@@ -23,6 +23,7 @@ export const AUTH = {
 export const USER = {
   GET_USER_INFO: 'USER/GET_USER_INFO',
   UPDATE_INFO: 'USER/UPDATE_INFO',
+  SAVE_INFO: 'USER/SAVE_INFO',
 };
 
 export const LOADING = {

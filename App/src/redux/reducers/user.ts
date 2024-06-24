@@ -1,17 +1,17 @@
 import {actionTypes} from '@actions';
 
 const initialState = {
-  user: null,
+  userInfo: null,
 };
 
 const {USER} = actionTypes;
 
 export default (state = initialState, action: any) => {
   switch (action?.type) {
-    case USER.UPDATE_INFO:
+    case USER.SAVE_INFO:
       return {
         ...state,
-        user: {...state.user, ...action.payload},
+        user: {...state.userInfo, ...action.payload},
       };
     default:
       return state;

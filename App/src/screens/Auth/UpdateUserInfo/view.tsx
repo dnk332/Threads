@@ -1,59 +1,89 @@
 import React from 'react';
+import {useFormik} from 'formik';
 
 import {
   AppButton,
   AppContainer,
+  AppFormInput,
   AppImage,
-  AppInput,
   AppText,
 } from '@components';
 import {AppStyleSheet} from '@themes/responsive';
 import {colors} from '@themes/color';
 import {View} from 'react-native';
 import {DismissKeyboardView} from '@src/components/DissmissKeyboardView';
+import {UserProfile} from '@src/types/user';
+import {UPDATE_USER_PROFILE_FORM_SCHEME} from './validate';
 
-interface UpdateUserInfoViewProps {}
+interface UpdateUserInfoViewProps {
+  onUpdateUserProfile: (data: UserProfile) => void;
+}
 
-const UpdateUserInfoView = ({}: UpdateUserInfoViewProps) => {
+const initValues: UserProfile = {
+  name: '',
+  email: '',
+  bio: '',
+};
+
+const UpdateUserInfoView = ({onUpdateUserProfile}: UpdateUserInfoViewProps) => {
+  const formik = useFormik({
+    initialValues: {
+      ...initValues,
+    },
+    onSubmit: values => {
+      onUpdateUserProfile(values);
+    },
+    validationSchema: UPDATE_USER_PROFILE_FORM_SCHEME,
+  });
+
   return (
     <AppContainer style={styles.container}>
       <DismissKeyboardView style={styles.content}>
         <AppText align="center" fontWeight={700} fontSize={26}>
-          UPDATE USER PROFILE
+          Update user profile
         </AppText>
         <View style={styles.inputField}>
-          <AppInput
+          <AppFormInput
+            onChangeText={value =>
+              formik.setFieldValue('name', value.toLocaleLowerCase())
+            }
+            value={formik.values.name}
             autoFocus
-            placeholder="Username, email or mobile number"
+            placeholder="Username"
             style={styles.textInput}
+            messageError={formik.errors.name}
+            error={formik.touched.name && formik.errors.name}
           />
-          <AppInput
-            autoFocus
-            placeholder="Username, email or mobile number"
+          <AppFormInput
+            onChangeText={value =>
+              formik.setFieldValue('email', value.toLocaleLowerCase())
+            }
+            value={formik.values.email}
+            placeholder="Email"
             style={styles.textInput}
+            messageError={formik.errors.email}
+            error={formik.touched.email && formik.errors.email}
           />
-          <AppInput
-            autoFocus
-            placeholder="Username, email or mobile number"
+          <AppFormInput
+            onChangeText={formik.handleChange('bio')}
+            value={formik.values.bio}
+            placeholder="Bio"
             style={styles.textInput}
-          />
-          <AppInput
-            autoFocus
-            placeholder="Username, email or mobile number"
-            style={styles.textInput}
+            messageError={formik.errors.bio}
+            error={formik.touched.bio && formik.errors.bio}
           />
           <AppButton
-            onPress={() => {}}
+            onPress={formik.handleSubmit}
             text="Update"
             buttonColor={colors.blue}
             buttonStyle={styles.button}
             borderRadius={100}
           />
+          <AppImage
+            containerStyle={styles.metaImage}
+            source={require('@assets/image/meta-logo.png')}
+          />
         </View>
-        <AppImage
-          containerStyle={styles.metaImage}
-          source={require('@assets/image/meta-logo.png')}
-        />
       </DismissKeyboardView>
     </AppContainer>
   );
@@ -63,29 +93,13 @@ export default UpdateUserInfoView;
 
 const styles = AppStyleSheet.create({
   container: {marginTop: 0, paddingTop: 16},
-  contentContainer: {
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-    marginTop: 14,
-    padding: 16,
-  },
-  igImage: {
-    width: 72,
-    height: 72,
-    alignSelf: 'center',
-  },
   inputField: {
     gap: 16,
     marginHorizontal: 16,
     flex: 1,
     marginVertical: 16,
   },
-  textInput: {
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 10,
-    padding: 16,
-  },
+  textInput: {},
   button: {
     width: '100%',
     padding: 16,
@@ -95,6 +109,8 @@ const styles = AppStyleSheet.create({
     height: undefined,
     aspectRatio: 5,
     alignSelf: 'center',
+    bottom: '5%',
+    position: 'absolute',
   },
   content: {
     justifyContent: 'space-around',

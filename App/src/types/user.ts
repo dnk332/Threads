@@ -6,3 +6,9 @@ export type User = {
   password_changed_at: string;
   created_at: string;
 };
+
+export type UserProfile = {
+  name: string;
+  email: string;
+  bio: string;
+};
