@@ -22,8 +22,17 @@ import RepliesTab from '@screens/UserDetail/Components/RepliesTab';
 
 import {width as DeviceWidth} from '@utils/DeviceInfo';
 import Header from './Components/Header';
+import {User, UserProfile} from '@src/types/user';
 
-const UserDetailScreenView = () => {
+interface UserDetailScreenViewProps {
+  currentUser: UserProfile;
+  currentAccount: User;
+}
+
+const UserDetailScreenView = ({
+  currentUser,
+  currentAccount,
+}: UserDetailScreenViewProps) => {
   const refMap = useRef<CollapsibleRef>();
   const headerRef = useRef<number>(234);
 
@@ -97,7 +106,13 @@ const UserDetailScreenView = () => {
         }}
         snapThreshold={1}
         ref={refMap}
-        renderHeader={() => <Header ref={headerRef} />}
+        renderHeader={() => (
+          <Header
+            ref={headerRef}
+            currentUser={currentUser}
+            currentAccount={currentAccount}
+          />
+        )}
         headerHeight={headerRef.current}
         tabBarHeight={40}
         renderTabBar={TabBar}>

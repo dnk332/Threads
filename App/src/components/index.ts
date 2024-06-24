@@ -10,6 +10,7 @@ import AppGroupButton from '@src/components/AppGroupButton';
 import AppButton from '@src/components/AppButton';
 import AppContainer from '@src/components/AppContainer';
 import AppModal from '@src/components/AppModal';
+import AppFormInput from '@src/components/AppFormInput';
 
 export {
   Avatar,
@@ -24,6 +25,7 @@ export {
   AppButton,
   AppContainer,
   AppModal,
+  AppFormInput,
 };
 
 // App component only use for current project
@@ -43,4 +45,5 @@ export const GlobalComponent = {
   AppImage,
   AppText,
   AppContainer,
+  AppFormInput,
 };

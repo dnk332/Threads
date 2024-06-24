@@ -55,6 +55,8 @@ func msgForTag(tag string) string {
 		return "value must be in the correct email format"
 	case "alphanum":
 		return "value must contain only alphanumeric characters (letters and numbers)"
+	case "lowercase":
+		return "value must contain only low case letters"
 	}
 	return "unknown error"
 }

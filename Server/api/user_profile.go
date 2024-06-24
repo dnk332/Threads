@@ -15,7 +15,7 @@ import (
 // createUserProfileRequest defines the structure for user profile creation requests
 type createUserProfileRequest struct {
 	UserId int64  `json:"user_id"`
-	Name   string `json:"name" binding:"required,alpha,min=6"`
+	Name   string `json:"name" binding:"required,lowercase,min=6"`
 	Email  string `json:"email" binding:"required,email"`
 	Bio    string `json:"bio"`
 }

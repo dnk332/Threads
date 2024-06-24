@@ -22,7 +22,7 @@ type Querier interface {
 	// Delete a user by ID
 	DeleteUser(ctx context.Context, id int64) error
 	// Delete a user profile by ID
-	DeleteUserProfile(ctx context.Context, id int64) error
+	DeleteUserProfile(ctx context.Context, userID int64) error
 	// Get a list of all users
 	GetListUser(ctx context.Context, arg GetListUserParams) ([]User, error)
 	// Get a session
@@ -36,7 +36,7 @@ type Querier interface {
 	// Get a user by ID for update
 	GetUserForUpdate(ctx context.Context, id int64) (User, error)
 	// Get a user profile by ID
-	GetUserProfileById(ctx context.Context, id int64) (UserProfile, error)
+	GetUserProfileById(ctx context.Context, userID int64) (UserProfile, error)
 	// Update a user's information
 	UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error)
 	// Update a user's profile

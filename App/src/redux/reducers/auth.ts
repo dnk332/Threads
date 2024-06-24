@@ -1,7 +1,13 @@
 import {actionTypes} from '@actions';
+import {User} from '@src/types/user';
 import _ from 'lodash';
 
-const initialState = {
+const initialState: {
+  token: string | null;
+  listAccountInfo: User[];
+  refreshToken: string | null;
+  currentAccount: User;
+} = {
   token: null,
   listAccountInfo: [],
   refreshToken: null,

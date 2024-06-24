@@ -20,3 +20,4 @@ export const bookingSelector = state => state.booking;
 export const bookingRequestSelector = state => state.booking.request;
 
 export * from './auth';
+export * from './user';
