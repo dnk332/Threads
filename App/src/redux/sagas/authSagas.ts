@@ -8,6 +8,7 @@ import {userActions} from '@actions';
 import {accessTokenSelector, refreshTokenSelector} from '../selectors';
 import {refreshAccessTokenApi} from '@src/apis/authApis';
 import {saveTokenAction} from '../actions/auth';
+import SCREEN_NAME from '@src/navigation/ScreenName';
 
 const {AUTH} = actionTypes;
 const {authApis} = api;
@@ -17,7 +18,7 @@ function* onLogin({type, payload}) {
 
   yield invoke(
     function* execution() {
-      Navigator.navigateAndSimpleReset('LOADING_INFO');
+      Navigator.navigateAndSimpleReset(SCREEN_NAME.LOADING_INFO);
       const response = yield call(authApis.loginApi, params);
 
       callback?.({
@@ -26,10 +27,11 @@ function* onLogin({type, payload}) {
       });
 
       if (response.success) {
+        console.log('response', response);
         yield put(authActions.saveTokenAction(response.access_token));
         yield put(authActions.saveRefreshTokenAction(response.refresh_token));
-        yield put(userActions.updateUserInfoAction(response.user));
-        Navigator.navigateAndSimpleReset('ROOT');
+        yield put(authActions.updateCurrentAccountAction(response.user));
+        Navigator.navigateAndSimpleReset(SCREEN_NAME.ROOT);
       }
     },
     error => {
@@ -44,7 +46,6 @@ function* onRegister({type, payload}) {
   const {params, callback} = payload;
   yield invoke(
     function* execution() {
-      console.log('run onRegister');
       const response = yield call(authApis.registerApi, params);
 
       callback?.(response);
@@ -109,8 +110,8 @@ function* onLogout({type, payload}) {
       yield call(authApis.logoutApi, null);
       yield put(authActions.saveTokenAction(null));
       yield put(authActions.saveRefreshTokenAction(null));
-      yield put(userActions.updateUserInfoAction({}));
-      Navigator.navigateAndSimpleReset('LOGIN');
+      yield put(userActions.updateUserInfoAction(null));
+      Navigator.navigateAndSimpleReset(SCREEN_NAME.LOGIN);
     },
     error => {
       callback?.({success: false, message: error.message});

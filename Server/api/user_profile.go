@@ -90,3 +90,59 @@ func (server *Server) createUserProfile(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, rsp)
 }
+
+// getUserProfileRequest defines the structure for user profile retrieval requests
+type getUserProfileRequest struct {
+	UserID int64 `uri:"user_id" binding:"required,min=1"`
+}
+
+// getUserProfileResponse defines the structure for user profile responses
+type getUserProfileResponse struct {
+	Name  string `json:"name"`
+	Email string `json:"email"`
+	Bio   string `json:"bio"`
+}
+
+// getUserProfileRes maps a db.UserProfile to getUserProfileResponse
+func getUserProfileRes(userProfile db.UserProfile) getUserProfileResponse {
+	return getUserProfileResponse{
+		Name:  userProfile.Name,
+		Email: userProfile.Email,
+		Bio:   userProfile.Bio,
+	}
+}
+
+// getUserProfile handles the user profile retrieval process
+func (server *Server) getUserProfile(ctx *gin.Context) {
+	var req getUserProfileRequest
+	if err := ctx.ShouldBindUri(&req); err != nil {
+		ctx.JSON(errorBindJSONResponse(http.StatusBadRequest, err))
+		log.Printf("[ERROR] Failed to parse request URI: %v", err)
+		return
+	}
+
+	// Check is user id is valid or not
+	user, valid := server.validUser(ctx, req.UserID)
+	if !valid {
+		return
+	}
+
+	// Check is user is authenticated or not
+	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
+	if user.ID != authPayload.UserID {
+		ctx.JSON(errorResponse(http.StatusUnauthorized, errors.New("need authenticated user")))
+		log.Printf("[ERROR] User is not authenticated")
+		return
+	}
+
+	// Get user profile
+	userProfile, err := server.store.GetUserProfileById(ctx, req.UserID)
+	if err != nil {
+		ctx.JSON(errorResponse(http.StatusNotFound, errors.New("user profile not found")))
+		log.Printf("[ERROR] Failed to get user profile: %v", err)
+		return
+	}
+
+	rsp := getUserProfileRes(userProfile)
+	ctx.JSON(http.StatusOK, rsp)
+}

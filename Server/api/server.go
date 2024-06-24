@@ -47,6 +47,7 @@ func (server *Server) setupRouter() {
 	authRoutes := router.Group("/").Use(authMiddleware(server.tokenMaker))
 	{
 		authRoutes.POST("/user-profiles", server.createUserProfile)
+		authRoutes.GET("/user-profiles/:user_id", server.getUserProfile)
 		authRoutes.GET("/users/logout", server.logoutUser)
 	}
 

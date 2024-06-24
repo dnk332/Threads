@@ -2,20 +2,28 @@ import React from 'react';
 import SwitchAccountView from '@src/screens/Auth/SwitchAccount/view';
 import {listAccountInfoSelector} from '@src/redux/selectors';
 import useSelectorShallow from '@src/hooks/useSelectorShallowEqual';
-import {useDispatch} from 'react-redux';
-import {authActions} from '@src/redux/actions';
+
+import * as Navigator from '@navigators';
+import SCREEN_NAME from '@src/navigation/ScreenName';
 
 const SwitchAccount = () => {
-  const dispatch = useDispatch();
   const listAccountInfo = useSelectorShallow(listAccountInfoSelector);
-  const onLogin = ({username, password}, accountIndex) => {
-    let callback = () => {};
+  const onLogin = username => {
+    Navigator.navigateTo(SCREEN_NAME.ADD_ACCOUNT, {
+      username: username,
+      waitToLogin: true,
+    });
+  };
 
-    dispatch(authActions.setCurrentAccountIndexAction(accountIndex));
-    dispatch(authActions.onLoginAction(username, password, callback));
+  const onAddAccount = () => {
+    Navigator.navigateTo(SCREEN_NAME.ADD_ACCOUNT);
   };
   return (
-    <SwitchAccountView listAccountInfo={listAccountInfo} onLogin={onLogin} />
+    <SwitchAccountView
+      onAddAccount={onAddAccount}
+      listAccountInfo={listAccountInfo}
+      onLogin={onLogin}
+    />
   );
 };
 

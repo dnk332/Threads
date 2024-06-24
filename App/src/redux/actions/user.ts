@@ -8,3 +8,13 @@ export const updateUserInfoAction = payload => {
     payload,
   };
 };
+
+export const getUserInfoAction = (user_id: number, callback: any) => {
+  return {
+    type: USER.GET_USER_INFO,
+    payload: {
+      user_id,
+      callback,
+    },
+  };
+};

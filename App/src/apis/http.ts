@@ -97,12 +97,15 @@ class HTTP {
     console.log('==== GET ==== ', endPoint, ' + params: ', params);
     try {
       if (params) {
-        endPoint = `${endPoint}${getParamsString(params)}`;
+        endPoint = `${endPoint}/${getParamsString(params)}`;
       }
       const response = await this.http.get(endPoint, {
         headers: headers ?? {},
       });
-      return Promise.resolve(response.data);
+      if (typeof response.data === 'string') {
+        return Promise.resolve({message: response.data, success: true});
+      }
+      return Promise.resolve({...response.data, success: true});
     } catch (error) {
       return Promise.reject(error);
     }

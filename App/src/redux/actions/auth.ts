@@ -65,3 +65,10 @@ export const setCurrentAccountIndexAction = index => {
     index,
   };
 };
+
+export const updateCurrentAccountAction = currentAccount => {
+  return {
+    type: AUTH.UPDATE_CURRENT_ACCOUNT,
+    currentAccount,
+  };
+};

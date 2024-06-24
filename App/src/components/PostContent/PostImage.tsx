@@ -6,7 +6,7 @@ import {AppImage} from '@components';
 import {AppStyleSheet} from '@themes/responsive';
 import {imageHeight, imageWidth} from '@constants/deviceSize';
 import {navigateTo} from '@navigators';
-import {SCREEN_NAME} from '@navigation/ScreenName';
+import SCREEN_NAME from '@src/navigation/ScreenName';
 
 export interface PostImageProps {
   link: string;

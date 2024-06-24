@@ -3,6 +3,7 @@ package api
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -43,6 +44,19 @@ func requireBodyMatchUserProfile(t *testing.T, body *bytes.Buffer, userProfile d
 	require.Equal(t, userProfile.Bio, gotUserProfile.Bio)
 	require.Equal(t, userProfile.CreatedAt, gotUserProfile.CreatedAt)
 	require.Equal(t, userProfile.UpdatedAt, gotUserProfile.UpdatedAt)
+}
+
+func requireBodyMatchGetUserProfile(t *testing.T, body *bytes.Buffer, userProfile db.UserProfile) {
+	data, err := io.ReadAll(body)
+	require.NoError(t, err)
+
+	var gotUserProfile db.UserProfile
+	err = json.Unmarshal(data, &gotUserProfile)
+
+	require.NoError(t, err)
+	require.Equal(t, userProfile.Name, gotUserProfile.Name)
+	require.Equal(t, userProfile.Email, gotUserProfile.Email)
+	require.Equal(t, userProfile.Bio, gotUserProfile.Bio)
 }
 
 func TestCreateUserProfileAPI(t *testing.T) {
@@ -244,6 +258,144 @@ func TestCreateUserProfileAPI(t *testing.T) {
 			tc.setupAuth(t, request, server.tokenMaker)
 			server.router.ServeHTTP(recorder, request)
 			tc.checkResponse(recorder)
+		})
+	}
+}
+
+func TestGetUserProfileAPI(t *testing.T) {
+	user, _ := randomUser(t)
+	userProfile := randomUserProfile(user)
+
+	testCases := []struct {
+		name          string
+		userID        int64
+		setupAuth     func(t *testing.T, request *http.Request, tokenMaker token.Maker)
+		buildStubs    func(store *mockdb.MockStore)
+		checkResponse func(t *testing.T, recorder *httptest.ResponseRecorder)
+	}{
+		{
+			name:   "OK",
+			userID: userProfile.UserID,
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
+			},
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					GetUserById(gomock.Any(), userProfile.UserID).
+					Times(1).
+					Return(user, nil)
+
+				store.EXPECT().
+					GetUserProfileById(gomock.Any(), userProfile.UserID).
+					Times(1).
+					Return(userProfile, nil)
+
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusOK, recorder.Code)
+				requireBodyMatchGetUserProfile(t, recorder.Body, userProfile)
+			},
+		},
+		{
+			name:   "NotFound",
+			userID: userProfile.UserID,
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
+			},
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					GetUserById(gomock.Any(), userProfile.UserID).
+					Times(1).
+					Return(user, nil)
+
+				store.EXPECT().
+					GetUserProfileById(gomock.Any(), userProfile.UserID).
+					Times(1).
+					Return(db.UserProfile{}, db.ErrRecordNotFound)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusNotFound, recorder.Code)
+			},
+		},
+		{
+			name:   "InvalidID",
+			userID: 0,
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
+			},
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					GetUserById(gomock.Any(), gomock.Any()).
+					Times(0)
+
+				store.EXPECT().
+					GetUserProfileById(gomock.Any(), gomock.Any()).
+					Times(0)
+
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusBadRequest, recorder.Code)
+			},
+		},
+		{
+			name:   "Unauthorized",
+			userID: userProfile.UserID,
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, 0, time.Minute)
+			},
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					GetUserById(gomock.Any(), userProfile.UserID).
+					Times(1).
+					Return(user, nil)
+
+				store.EXPECT().
+					GetUserProfileById(gomock.Any(), userProfile.UserID).
+					Times(0)
+
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusUnauthorized, recorder.Code)
+			},
+		},
+		{
+			name:   "NoAuthorization",
+			userID: userProfile.UserID,
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+			},
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					GetUserById(gomock.Any(), gomock.Any()).
+					Times(0)
+
+				store.EXPECT().
+					GetUserProfileById(gomock.Any(), gomock.Any()).
+					Times(0)
+
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusUnauthorized, recorder.Code)
+			},
+		},
+	}
+	for i := range testCases {
+		tc := testCases[i]
+		t.Run(tc.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			store := mockdb.NewMockStore(ctrl)
+			tc.buildStubs(store)
+
+			server := newTestServer(t, store)
+			recorder := httptest.NewRecorder()
+
+			url := fmt.Sprintf("/user-profiles/%d", tc.userID)
+			request, err := http.NewRequest(http.MethodGet, url, nil)
+			require.NoError(t, err)
+			tc.setupAuth(t, request, server.tokenMaker)
+			server.router.ServeHTTP(recorder, request)
+			tc.checkResponse(t, recorder)
 		})
 	}
 }
