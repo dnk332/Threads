@@ -1,60 +1,54 @@
 import React, {useCallback} from 'react';
+import {ListRenderItemInfo, FlashList} from '@shopify/flash-list';
 
 import {AppStyleSheet} from '@themes/responsive';
 import {AppContainer, AppImage, AppText} from '@components';
 import {colors} from '@themes/color';
 import {Pressable, View} from 'react-native';
 import SvgComponent from '@src/assets/svg';
+import {User} from '@src/types/user';
 
-import * as Navigator from '@navigators';
-import _ from 'lodash';
+const ItemSeparator = () => {
+  return <View style={styles.separator} />;
+};
 
 interface SwitchAccountViewProps {
-  listAccountInfo: any;
-  onLogin: ({username, password}, accountIndex) => void;
+  listAccountInfo: User[];
+  onLogin: (username: string) => void;
+  onAddAccount: () => void;
 }
 
 const SwitchAccountView = ({
   listAccountInfo,
   onLogin,
+  onAddAccount,
 }: SwitchAccountViewProps) => {
-  const onAddAccount = () => {
-    Navigator.navigateTo('ADD_ACCOUNT');
-  };
-
-  const ListAccountItem = useCallback(() => {
-    return (
-      <View style={styles.accountsInfo}>
-        {_.isArray(listAccountInfo) ? (
-          listAccountInfo.map((account: any, index) => (
-            <Pressable
-              onPress={() => onLogin(account, index)}
-              key={index}
-              style={styles.loginButton}>
-              <View style={styles.buttonContent}>
-                <AppImage
-                  containerStyle={styles.buttonIcon}
-                  source={require('@assets/image/instagram-logo.png')}
-                />
-                <View style={styles.buttonText}>
-                  <AppText fontSize={12} color={colors.text_gray}>
-                    Log in with Instagram
-                  </AppText>
-                  <AppText fontSize={14} fontWeight={600}>
-                    {account.username}
-                  </AppText>
-                </View>
-              </View>
-              <SvgComponent color={colors.text_gray} name={'ARROW_RIGHT'} />
-            </Pressable>
-          ))
-        ) : (
-          <></>
-        )}
-      </View>
-    );
-  }, [listAccountInfo, onLogin]);
-
+  const AccountItem = useCallback(
+    ({item: user}: ListRenderItemInfo<User>) => {
+      return (
+        <Pressable
+          onPress={() => onLogin(user.username)}
+          style={styles.loginButton}>
+          <View style={styles.buttonContent}>
+            <AppImage
+              containerStyle={styles.buttonIcon}
+              source={require('@assets/image/instagram-logo.png')}
+            />
+            <View style={styles.buttonText}>
+              <AppText fontSize={12} color={colors.text_gray}>
+                Log in with Instagram
+              </AppText>
+              <AppText fontSize={14} fontWeight={600}>
+                {user.username}
+              </AppText>
+            </View>
+          </View>
+          <SvgComponent color={colors.text_gray} name={'ARROW_RIGHT'} />
+        </Pressable>
+      );
+    },
+    [onLogin],
+  );
   return (
     <AppContainer haveBackButton containerStyle={styles.container}>
       <View style={styles.headerContainer}>
@@ -65,7 +59,17 @@ const SwitchAccountView = ({
           {`Add or create a Threads profile by login in with an\nInstagram account`}
         </AppText>
       </View>
-      <ListAccountItem />
+      <FlashList
+        contentContainerStyle={styles.accountsInfoWrapper}
+        style={styles.accountsInfo}
+        keyExtractor={user => user.username.toString()}
+        data={listAccountInfo}
+        renderItem={AccountItem}
+        showsVerticalScrollIndicator={false}
+        estimatedItemSize={10}
+        onEndReachedThreshold={16}
+        ItemSeparatorComponent={ItemSeparator}
+      />
       <Pressable onPress={onAddAccount} style={styles.addAccountButton}>
         <AppText color={colors.text_gray} fontSize={12} fontWeight={600}>
           Log in with another Instagram account
@@ -81,7 +85,7 @@ const styles = AppStyleSheet.create({
   container: {flex: 1},
   headerContainer: {
     gap: 10,
-    marginTop: 16,
+    marginVertical: 16,
   },
   loginButton: {
     marginHorizontal: 16,
@@ -117,9 +121,22 @@ const styles = AppStyleSheet.create({
     height: 86,
     paddingTop: 16,
   },
+  registerAccountButton: {
+    alignSelf: 'center',
+    paddingVertical: 40,
+    backgroundColor: colors.background,
+    width: '100%',
+    alignItems: 'center',
+  },
   accountsInfo: {
-    gap: 8,
-    flex: 1,
     justifyContent: 'center',
+  },
+  separator: {
+    height: 8,
+    width: 8,
+  },
+  accountsInfoWrapper: {
+    flex: 1,
+    paddingBottom: 90,
   },
 });

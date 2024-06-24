@@ -1,51 +1,50 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 
-import {AppButton, AppContainer, AppImage, AppInput} from '@components';
+import {
+  AppButton,
+  AppContainer,
+  AppImage,
+  AppInput,
+  AppText,
+} from '@components';
 import {AppStyleSheet} from '@themes/responsive';
 import {colors} from '@themes/color';
 import {View} from 'react-native';
 import {DismissKeyboardView} from '@src/components/DissmissKeyboardView';
-import _ from 'lodash';
 
-interface AddNewAccountViewProps {
-  onRegister: (username: string, password: string) => void;
-  username?: string;
-}
+interface UpdateUserInfoViewProps {}
 
-const AddNewAccountView = ({onRegister, username}: AddNewAccountViewProps) => {
-  const [usernameValue, setUsernameValue] = React.useState('');
-  const password = React.useRef('');
-
-  useEffect(() => {
-    if (!_.isEmpty(username)) {
-      setUsernameValue(username);
-    }
-  }, [username]);
-
+const UpdateUserInfoView = ({}: UpdateUserInfoViewProps) => {
   return (
     <AppContainer style={styles.container}>
       <DismissKeyboardView style={styles.content}>
-        <AppImage
-          containerStyle={styles.igImage}
-          source={require('@assets/image/instagram-logo.png')}
-        />
+        <AppText align="center" fontWeight={700} fontSize={26}>
+          UPDATE USER PROFILE
+        </AppText>
         <View style={styles.inputField}>
           <AppInput
             autoFocus
             placeholder="Username, email or mobile number"
-            onChangeText={setUsernameValue}
             style={styles.textInput}
-            value={usernameValue}
           />
           <AppInput
-            autoFocus={!_.isEmpty(username)}
-            placeholder="Password"
-            onChangeText={e => (password.current = e)}
+            autoFocus
+            placeholder="Username, email or mobile number"
+            style={styles.textInput}
+          />
+          <AppInput
+            autoFocus
+            placeholder="Username, email or mobile number"
+            style={styles.textInput}
+          />
+          <AppInput
+            autoFocus
+            placeholder="Username, email or mobile number"
             style={styles.textInput}
           />
           <AppButton
-            onPress={() => onRegister(usernameValue, password.current)}
-            text="Log in"
+            onPress={() => {}}
+            text="Update"
             buttonColor={colors.blue}
             buttonStyle={styles.button}
             borderRadius={100}
@@ -60,7 +59,7 @@ const AddNewAccountView = ({onRegister, username}: AddNewAccountViewProps) => {
   );
 };
 
-export default AddNewAccountView;
+export default UpdateUserInfoView;
 
 const styles = AppStyleSheet.create({
   container: {marginTop: 0, paddingTop: 16},
@@ -78,6 +77,8 @@ const styles = AppStyleSheet.create({
   inputField: {
     gap: 16,
     marginHorizontal: 16,
+    flex: 1,
+    marginVertical: 16,
   },
   textInput: {
     borderWidth: 1,

@@ -14,6 +14,7 @@ import {navigateTo} from '@navigation/NavigationService';
 import SvgComponent from '@svg/index';
 import {SVG_NAME} from '@svg/svgList';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import SCREEN_NAME from '@src/navigation/ScreenName';
 
 export type BottomTabsStackParamList = {
   HOME: undefined;
@@ -102,7 +103,7 @@ const RootScreen = () => {
         listeners={() => ({
           tabPress: e => {
             e.preventDefault();
-            navigateTo('NEW_POST_MODAL', {focused: true});
+            navigateTo(SCREEN_NAME.NEW_POST_MODAL, {focused: true});
           },
         })}
       />

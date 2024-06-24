@@ -6,13 +6,13 @@ import layout from '@themes/layout';
 import {NavigationStackParamList} from '@navigation/Stack';
 import {AppContainer, AppImage} from '@components';
 
-type DetailsScreenRouteProp = RouteProp<
+type ImageViewerScreenRouteProp = RouteProp<
   NavigationStackParamList,
   'IMAGE_VIEWER'
 >;
 
 type ImageViewerProps = {
-  route: DetailsScreenRouteProp;
+  route: ImageViewerScreenRouteProp;
 };
 
 const ImageViewerScreen = ({route}: ImageViewerProps) => {

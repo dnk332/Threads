@@ -15,18 +15,37 @@ import {
   AddNewAccountScreen,
   SplashScreen,
   LoadingInfoScreen,
+  UpdateUserInfoScreen,
 } from '@screens/index';
+import {User} from '@src/types/user';
+import SCREEN_NAME from './ScreenName';
 
-export type NavigationStackParamList = {
+export interface NavigationStackParamList {
   ROOT: undefined;
   IMAGE_VIEWER: {imageLink: string};
   NEW_POST_MODAL: {focused: boolean};
   LOGIN: undefined;
   SWITCH_ACCOUNT: undefined;
-  ADD_ACCOUNT: undefined;
+  ADD_ACCOUNT: {username?: string; waitToLogin?: boolean};
   SPLASH: undefined;
   LOADING_INFO: undefined;
   SETTINGS: undefined;
+  UPDATE_USER_INFO: {currentAccount: User};
+  [key: string]:
+    | undefined
+    | {
+        imageLink?: string;
+        focused?: boolean;
+        username?: string;
+        waitToLogin?: boolean;
+        currentAccount?: User;
+      };
+}
+
+// Type to map SCREEN_NAME keys to NavigationStackParamList keys
+export type ScreenNameKeys = keyof typeof SCREEN_NAME;
+export type NavigationParams = {
+  [K in ScreenNameKeys]: NavigationStackParamList[K];
 };
 
 const Stack = createNativeStackNavigator<NavigationStackParamList>();
@@ -37,26 +56,33 @@ function StackScreens() {
       onReady={() => {
         BootSplash.hide({fade: true});
       }}
-      ref={ref => {
-        navigationRef.current = ref;
-      }}>
+      ref={navigationRef}>
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
         }}
-        initialRouteName="SPLASH">
-        <Stack.Screen name={'SPLASH'} component={SplashScreen} />
-        <Stack.Screen name={'ROOT'} component={RootScreen} />
-        <Stack.Screen name={'LOGIN'} component={LoginScreen} />
-        <Stack.Screen name={'SWITCH_ACCOUNT'} component={SwitchAccountScreen} />
-        <Stack.Screen name={'LOADING_INFO'} component={LoadingInfoScreen} />
-        <Stack.Screen name="IMAGE_VIEWER" component={ImageViewerScreen} />
+        initialRouteName={SCREEN_NAME.SPLASH}>
+        <Stack.Screen name={SCREEN_NAME.SPLASH} component={SplashScreen} />
+        <Stack.Screen name={SCREEN_NAME.ROOT} component={RootScreen} />
+        <Stack.Screen name={SCREEN_NAME.LOGIN} component={LoginScreen} />
+        <Stack.Screen
+          name={SCREEN_NAME.SWITCH_ACCOUNT}
+          component={SwitchAccountScreen}
+        />
+        <Stack.Screen
+          name={SCREEN_NAME.LOADING_INFO}
+          component={LoadingInfoScreen}
+        />
+        <Stack.Screen
+          name={SCREEN_NAME.IMAGE_VIEWER}
+          component={ImageViewerScreen}
+        />
         <Stack.Screen
           options={{
             headerShown: false,
             presentation: 'modal',
           }}
-          name="ADD_ACCOUNT"
+          name={SCREEN_NAME.ADD_ACCOUNT}
           component={AddNewAccountScreen}
         />
         <Stack.Screen
@@ -64,7 +90,15 @@ function StackScreens() {
             headerShown: false,
             presentation: 'modal',
           }}
-          name="NEW_POST_MODAL"
+          name={SCREEN_NAME.UPDATE_USER_INFO}
+          component={UpdateUserInfoScreen}
+        />
+        <Stack.Screen
+          options={{
+            headerShown: false,
+            presentation: 'modal',
+          }}
+          name={SCREEN_NAME.NEW_POST_MODAL}
           component={NewPostScreen}
         />
       </Stack.Navigator>

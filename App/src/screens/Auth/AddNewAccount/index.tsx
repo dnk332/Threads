@@ -2,21 +2,45 @@ import React from 'react';
 import AddNewAccountView from '@screens/Auth/AddNewAccount/view';
 
 import {authActions} from '@actions';
-import * as Navigator from '@navigators';
 import {useDispatch} from 'react-redux';
+import {RouteProp} from '@react-navigation/native';
+import {NavigationStackParamList} from '@src/navigation/Stack';
 
-const AddNewAccount = () => {
+type AddNewAccountScreenRouteProp = RouteProp<
+  NavigationStackParamList,
+  'ADD_ACCOUNT'
+>;
+
+type AddNewAccountProps = {
+  route: AddNewAccountScreenRouteProp;
+};
+
+const AddNewAccount = ({route}: AddNewAccountProps) => {
+  const username = route.params?.username || '';
+  const waitToLogin = route.params?.waitToLogin || false;
+
   const dispatch = useDispatch();
-  const onRegister = (username: string, password: string) => {
+  const onRegister = (usernameValue: string, passwordValue: string) => {
     let callback = res => {
       if (res.success) {
-        Navigator.goBack();
+        dispatch(
+          authActions.onLoginAction(usernameValue, passwordValue, callback),
+        );
       }
     };
 
-    dispatch(authActions.onRegisterAction(username, password, callback));
+    if (waitToLogin) {
+      dispatch(
+        authActions.onLoginAction(usernameValue, passwordValue, () => {}),
+      );
+    } else {
+      dispatch(
+        authActions.onRegisterAction(usernameValue, passwordValue, callback),
+      );
+    }
   };
-  return <AddNewAccountView onRegister={onRegister} />;
+
+  return <AddNewAccountView username={username} onRegister={onRegister} />;
 };
 
 export default AddNewAccount;

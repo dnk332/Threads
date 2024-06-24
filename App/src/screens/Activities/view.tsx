@@ -29,7 +29,7 @@ const ActivitiesScreenView = () => {
           renderItem={_renderItem}
           showsVerticalScrollIndicator={false}
           estimatedItemSize={10}
-          onEndReachedThreshold={0.5}
+          onEndReachedThreshold={16}
         />
       </View>
     </AppContainer>

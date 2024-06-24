@@ -240,7 +240,7 @@ func (server *Server) logoutUser(ctx *gin.Context) {
 	session, err := server.store.GetSessionByUserID(ctx, authPayload.UserID)
 	if err != nil {
 		ctx.JSON(errorResponse(http.StatusUnauthorized, errors.New("session not found")))
-		log.Printf("[ERROR] Failed to get session : %v", err)
+		log.Printf("[ERROR] Failed to get session: %v", err)
 		return
 	}
 

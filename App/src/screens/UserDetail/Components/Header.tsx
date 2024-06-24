@@ -15,6 +15,7 @@ import {colors} from '@themes/color';
 import {AppStyleSheet} from '@themes/responsive';
 import {Avatar, AppButton, AppText} from '@components';
 import * as Navigator from '@navigators';
+import SCREEN_NAME from '@src/navigation/ScreenName';
 
 const Header = forwardRef<number | null, any>((props, headerRef) => {
   const scrollY = useCurrentTabScrollY();
@@ -59,7 +60,7 @@ const Header = forwardRef<number | null, any>((props, headerRef) => {
   });
 
   const openSetting = () => {
-    Navigator.navigateTo('SETTINGS');
+    Navigator.navigateTo(SCREEN_NAME.SETTINGS);
   };
 
   return (

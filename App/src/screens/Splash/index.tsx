@@ -8,6 +8,7 @@ import {appActions} from '@src/redux/actions';
 import * as Navigator from '@navigators';
 import {colors} from '@themes/color';
 import {AppImage} from '@src/components';
+import SCREEN_NAME from '@src/navigation/ScreenName';
 
 export default function Splash() {
   const dispatch = useDispatch();
@@ -26,9 +27,9 @@ export default function Splash() {
       appActions.startAction(async response => {
         await HideSplash();
         if (response['accessAble']) {
-          Navigator.navigateAndSimpleReset('ROOT');
+          Navigator.navigateAndSimpleReset(SCREEN_NAME.ROOT);
         } else {
-          Navigator.navigateAndSimpleReset('LOGIN');
+          Navigator.navigateAndSimpleReset(SCREEN_NAME.LOGIN);
         }
       }),
     );
