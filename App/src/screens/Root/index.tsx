@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import {
@@ -7,7 +7,6 @@ import {
   SearchScreen,
   HomeScreen,
   SettingsScreen,
-  // SettingsScreen,
 } from '@screens/index';
 import {colors} from '@themes/color';
 import {navigateTo} from '@navigation/NavigationService';
@@ -15,6 +14,9 @@ import SvgComponent from '@svg/index';
 import {SVG_NAME} from '@svg/svgList';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SCREEN_NAME from '@src/navigation/ScreenName';
+import isTokenExpired from '@src/utils/CheckTokenExpired';
+import {useDispatch} from 'react-redux';
+import {authActions} from '@src/redux/actions';
 
 export type BottomTabsStackParamList = {
   HOME: undefined;
@@ -60,6 +62,21 @@ const screenOptions = {
 };
 
 const RootScreen = () => {
+  const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   const intervalId = setInterval(async () => {
+  //     const expired = await isTokenExpired();
+  //     if (expired) {
+  //       console.log('expired');
+  //       const callback = () => {};
+  //       dispatch(authActions.authCheckAction(callback));
+  //     }
+  //   }, 15 * 60 * 1000);
+
+  //   return () => clearInterval(intervalId);
+  // }, [dispatch]);
+
   return (
     <Tab.Navigator screenOptions={screenOptions}>
       <Tab.Screen

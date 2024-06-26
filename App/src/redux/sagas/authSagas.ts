@@ -7,13 +7,13 @@ import * as Navigator from '@navigators';
 import {userActions} from '@actions';
 import {accessTokenSelector, refreshTokenSelector} from '../selectors';
 import {refreshAccessTokenApi} from '@src/apis/authApis';
-import {saveTokenAction} from '../actions/auth';
 import SCREEN_NAME from '@src/navigation/ScreenName';
+import {AuthActionType, LoginActionI} from '../actionTypes/authActionTypes';
 
 const {AUTH} = actionTypes;
 const {authApis} = api;
 
-function* onLogin({type, payload}) {
+function* onLogin({type, payload}: LoginActionI) {
   const {params, callback} = payload;
 
   yield invoke(
@@ -21,20 +21,25 @@ function* onLogin({type, payload}) {
       Navigator.navigateAndSimpleReset(SCREEN_NAME.LOADING_INFO);
       const response = yield call(authApis.loginApi, params);
 
-      callback?.({
-        success: response.code === 200,
+      callback({
         message: response.message ?? response.msg,
+        success: response.code === 200,
       });
 
       if (response.success) {
-        yield put(authActions.saveTokenAction(response.access_token));
-        yield put(authActions.saveRefreshTokenAction(response.refresh_token));
-        yield put(authActions.updateCurrentAccountAction(response.user));
+        yield put(
+          authActions.setTokenAction(
+            response.access_token,
+            response.access_token_expires_at,
+          ),
+        );
+        yield put(authActions.setRefreshTokenAction(response.refresh_token));
+        yield put(authActions.setAccountInfoAction(response.user));
         Navigator.navigateAndSimpleReset(SCREEN_NAME.ROOT);
       }
     },
     error => {
-      callback?.({success: false, message: error.message});
+      callback({success: false, message: error.message});
     },
     false,
     type,
@@ -49,7 +54,7 @@ function* onRegister({type, payload}) {
 
       callback?.(response);
       if (response.success) {
-        yield put(authActions.addAccountInfoAction(params));
+        yield put(authActions.setAccountInfoAction(params));
       }
     },
     error => {
@@ -61,44 +66,57 @@ function* onRegister({type, payload}) {
   );
 }
 function* onAuthCheck(actions) {
-  const {callback} = actions.payload || {};
-
-  const {refreshToken, accessToken} = yield all({
-    refreshToken: select(refreshTokenSelector),
-    accessToken: select(accessTokenSelector),
-  });
-
-  if (!refreshToken && !accessToken) {
-    callback?.({success: false, message: 'no token'});
-    return;
-  }
-
-  if (accessToken) {
-    try {
-      const {code} = yield call(authApis.verifyAccessTokenApi, {
-        access_token: accessToken,
+  const {type, payload} = actions;
+  const {callback} = payload || {};
+  yield invoke(
+    function* execution() {
+      const {refreshToken, accessToken} = yield all({
+        refreshToken: select(refreshTokenSelector),
+        accessToken: select(accessTokenSelector),
       });
-      if (code === 'jwt_auth_valid_token') {
-        callback?.({success: true});
+
+      if (!refreshToken && !accessToken) {
+        callback?.({success: false, message: 'no token'});
         return;
       }
-    } catch (error) {
-      console.log('verify token fail');
-    }
-  }
 
-  if (refreshToken) {
-    const {access_token} = yield call(refreshAccessTokenApi, {
-      refresh_token: refreshToken,
-    }) || {};
-    if (access_token) {
-      yield put(saveTokenAction(access_token));
-      callback?.({success: true});
-      return;
-    }
-  }
+      if (accessToken) {
+        try {
+          const {code} = yield call(authApis.verifyAccessTokenApi, {
+            access_token: accessToken,
+          });
+          if (code === 'jwt_auth_valid_token') {
+            callback?.({success: true});
+            return;
+          }
+        } catch (error) {
+          console.log('verify token fail');
+        }
+      }
 
-  callback?.({success: false, message: 'token verification failed'});
+      if (refreshToken) {
+        const {access_token, access_token_expires_at} = yield call(
+          refreshAccessTokenApi,
+          {
+            refresh_token: refreshToken,
+          },
+        ) || {};
+        if (access_token) {
+          yield put(
+            authActions.setTokenAction(access_token, access_token_expires_at),
+          );
+          callback?.({success: true});
+          return;
+        }
+      }
+    },
+    () => {
+      put(authActions.logoutAction());
+    },
+    false,
+    type,
+    () => {},
+  );
 }
 
 function* onLogout({type, payload}) {
@@ -107,8 +125,8 @@ function* onLogout({type, payload}) {
   yield invoke(
     function* execution() {
       yield call(authApis.logoutApi, null);
-      yield put(authActions.saveTokenAction(null));
-      yield put(authActions.saveRefreshTokenAction(null));
+      yield put(authActions.setTokenAction(null, null));
+      yield put(authActions.setRefreshTokenAction(null));
       yield put(userActions.saveUserInfoAction(null));
       Navigator.navigateAndSimpleReset(SCREEN_NAME.LOGIN);
     },
@@ -122,7 +140,7 @@ function* onLogout({type, payload}) {
 }
 
 function* watchLogin() {
-  yield takeEvery(AUTH.LOGIN, onLogin);
+  yield takeEvery(AuthActionType.LOGIN, onLogin);
 }
 
 function* watchRegister() {
