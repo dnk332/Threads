@@ -42,6 +42,7 @@ module.exports = api => ({
           '@navigators': `${__dirname}/src/navigation/NavigationService.ts`,
           '@appRedux': `${__dirname}/src/redux`,
           '@configs': `${__dirname}/src/configs`,
+          '@actionTypes': `${__dirname}/src/redux/actionTypes`,
         },
       },
     ],

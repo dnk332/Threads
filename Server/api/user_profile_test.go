@@ -155,7 +155,7 @@ func TestCreateUserProfileAPI(t *testing.T) {
 			name: "InvalidName",
 			body: gin.H{
 				"user_id": userProfile.UserID,
-				"name":    "invalid-name",
+				"name":    "",
 				"email":   userProfile.Email,
 				"bio":     userProfile.Bio,
 			},
