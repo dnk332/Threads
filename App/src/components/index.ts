@@ -11,6 +11,7 @@ import AppButton from '@src/components/AppButton';
 import AppContainer from '@src/components/AppContainer';
 import AppModal from '@src/components/AppModal';
 import AppFormInput from '@src/components/AppFormInput';
+import DissmissKeyboardView from '@src/components/DissmissKeyboardView';
 
 export {
   Avatar,
@@ -26,6 +27,7 @@ export {
   AppContainer,
   AppModal,
   AppFormInput,
+  DissmissKeyboardView,
 };
 
 // App component only use for current project
@@ -46,4 +48,5 @@ export const GlobalComponent = {
   AppText,
   AppContainer,
   AppFormInput,
+  DissmissKeyboardView,
 };

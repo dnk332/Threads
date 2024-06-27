@@ -1,9 +1,12 @@
 import {actionTypes} from '@actions';
 
+export interface IAppState {
+  domain: string;
+  device: object;
+}
+
 const initialState = {
   domain: null,
-  theme: null,
-  setting: null,
   device: null,
 };
 
@@ -11,12 +14,6 @@ const {APP} = actionTypes;
 
 export default (state = initialState, action: any) => {
   switch (action.type) {
-    case APP.CHANGE_LANGUAGE:
-      return {
-        ...state,
-        language: action?.language,
-      };
-
     case APP.SAVE_DOMAIN:
       return {
         ...state,
@@ -29,15 +26,6 @@ export default (state = initialState, action: any) => {
         device: {
           ...state.device,
           ...action?.device,
-        },
-      };
-
-    case APP.SAVE_SETTING:
-      return {
-        ...state,
-        setting: {
-          ...state.setting,
-          ...action?.setting,
         },
       };
     default:

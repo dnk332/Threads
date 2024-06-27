@@ -1,10 +1,12 @@
 import React from 'react';
-import AddNewAccountView from '@screens/Auth/AddNewAccount/view';
-
-import {authActions} from '@actions';
 import {useDispatch} from 'react-redux';
 import {RouteProp} from '@react-navigation/native';
+
+import AddNewAccountView from '@screens/Auth/AddNewAccount/view';
 import {NavigationStackParamList} from '@src/navigation/Stack';
+import {AppDispatch} from '@src/redux/store';
+import {loginAction, registerAction} from '@src/redux/actions/auth';
+import {Callback} from '@src/redux/actionTypes/actionTypeBase';
 
 type AddNewAccountScreenRouteProp = RouteProp<
   NavigationStackParamList,
@@ -15,28 +17,21 @@ type AddNewAccountProps = {
   route: AddNewAccountScreenRouteProp;
 };
 
-const AddNewAccount = ({route}: AddNewAccountProps) => {
+const AddNewAccount: React.FC<AddNewAccountProps> = ({route}) => {
   const username = route.params?.username || '';
   const waitToLogin = route.params?.waitToLogin || false;
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const onRegister = (usernameValue: string, passwordValue: string) => {
-    let callback = res => {
+    let callback: Callback = res => {
       if (res.success) {
-        dispatch(
-          authActions.onLoginAction(usernameValue, passwordValue, callback),
-        );
+        dispatch(loginAction(usernameValue, passwordValue, callback));
       }
     };
-
     if (waitToLogin) {
-      dispatch(
-        authActions.onLoginAction(usernameValue, passwordValue, () => {}),
-      );
+      dispatch(loginAction(usernameValue, passwordValue, () => {}));
     } else {
-      dispatch(
-        authActions.onRegisterAction(usernameValue, passwordValue, callback),
-      );
+      dispatch(registerAction(usernameValue, passwordValue, callback));
     }
   };
 

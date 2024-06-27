@@ -23,11 +23,12 @@
       "@actions": ["src/redux/actions/index.ts"],
       "@sagas": ["src/redux/sagas/index.ts"],
       "@sagaHelper": ["src/redux/sagaHelper/index.ts"],
-      "@apis": ["src/apis/index.ts"],
+      "@apis": ["src/services/apis/index.ts"],
       "@navigators": ["src/navigation/NavigationService.ts"],
       "@appRedux/*": ["src/redux/*"],
       "@configs": ["src/configs/index.ts"],
-      "@actionTypes/*": ["src/redux/actionTypes/*"]
+      "@actionTypes/*": ["src/redux/actionTypes/*"],
+      "@apiTypes/*": ["src/services/apiTypes/*"]
     },
     "target": "es5",
     "allowJs": true,

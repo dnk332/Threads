@@ -13,7 +13,11 @@ interface LoginViewProps {
   accountInfo: any;
 }
 
-const LoginView = ({onLogin, onSwitchAccount, accountInfo}: LoginViewProps) => {
+const LoginView: React.FC<LoginViewProps> = ({
+  onLogin,
+  onSwitchAccount,
+  accountInfo,
+}) => {
   return (
     <View style={styles.container}>
       <AppImage

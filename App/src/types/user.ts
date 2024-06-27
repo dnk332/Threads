@@ -1,4 +1,4 @@
-export interface UserI {
+export interface IUser {
   username: string;
   avatar: string;
   user_id: number;
@@ -7,8 +7,11 @@ export interface UserI {
   created_at: string;
 }
 
-export interface UserProfileI {
+export interface IUserProfile {
+  user_id: number;
   name: string;
   email: string;
   bio: string;
+  created_at: string;
+  UpdatedAt: string;
 }

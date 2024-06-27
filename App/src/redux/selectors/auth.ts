@@ -1,4 +1,25 @@
-export const refreshTokenSelector = state => state.auth.refreshToken;
-export const accessTokenSelector = state => state.auth.token;
-export const currentAccountSelector = state => state.auth.currentAccount;
-export const tokenDurationSelector = state => state.auth.tokenDuration;
+import {createSelector} from 'reselect';
+import {IGlobalState} from '@reducers';
+
+const getAuth = (state: IGlobalState) => state.auth;
+
+export const listAccountSelector = createSelector(
+  [getAuth],
+  auth => auth.listAccount,
+);
+export const currentAccountSelector = createSelector(
+  [getAuth],
+  auth => auth.currentAccount,
+);
+export const refreshTokenSelector = createSelector(
+  [getAuth],
+  auth => auth.refreshToken,
+);
+export const accessTokenSelector = createSelector(
+  [getAuth],
+  auth => auth.token,
+);
+export const tokenDurationSelector = createSelector(
+  [getAuth],
+  auth => auth.tokenDuration,
+);

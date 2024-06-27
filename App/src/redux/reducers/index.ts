@@ -4,9 +4,9 @@ import {persistReducer} from 'redux-persist';
 
 import {actionTypes} from '@actions';
 
-import authReducer from './auth';
+import authReducer, {IAuthState} from './auth';
 import applicationReducer from './app';
-import userReducer from './user';
+import userReducer, {IUserState} from './user';
 
 const {APP} = actionTypes;
 
@@ -16,6 +16,12 @@ const rootPersistConfig = {
   whitelist: ['application', 'auth'],
   timeout: 10000,
 };
+
+export interface IGlobalState {
+  user: IUserState;
+  app: any;
+  auth: IAuthState;
+}
 
 const appReducer = combineReducers({
   auth: authReducer,

@@ -98,17 +98,23 @@ type getUserProfileRequest struct {
 
 // getUserProfileResponse defines the structure for user profile responses
 type getUserProfileResponse struct {
-	Name  string `json:"name"`
-	Email string `json:"email"`
-	Bio   string `json:"bio"`
+	UserId    int64     `json:"user_id"`
+	Name      string    `json:"name"`
+	Email     string    `json:"email"`
+	Bio       string    `json:"bio"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 // getUserProfileRes maps a db.UserProfile to getUserProfileResponse
 func getUserProfileRes(userProfile db.UserProfile) getUserProfileResponse {
 	return getUserProfileResponse{
-		Name:  userProfile.Name,
-		Email: userProfile.Email,
-		Bio:   userProfile.Bio,
+		UserId:    userProfile.UserID,
+		Name:      userProfile.Name,
+		Email:     userProfile.Email,
+		Bio:       userProfile.Bio,
+		CreatedAt: userProfile.CreatedAt,
+		UpdatedAt: userProfile.UpdatedAt,
 	}
 }
 

@@ -1,19 +1,29 @@
-import {actionTypes} from '@actions';
+import {IUserProfile} from '@src/types/user';
+import * as actions from '@actionTypes/userActionTypes';
 
-const initialState = {
-  userInfo: null,
+export interface IUserState {
+  userProfile: IUserProfile;
+}
+
+const initialState: IUserState = {
+  userProfile: null,
 };
 
-const {USER} = actionTypes;
-
-export default (state = initialState, action: any) => {
-  switch (action?.type) {
-    case USER.SAVE_INFO:
+export default function userReducer(
+  state: IUserState = initialState,
+  action: actions.UserAction,
+) {
+  const actionType = actions.UserActionType;
+  switch (action.type) {
+    case actionType.SET_PROFILE:
       return {
         ...state,
-        user: {...state.userInfo, ...action.payload},
+        userProfile: {
+          ...state.userProfile,
+          ...action.payload.params.user_profile,
+        },
       };
     default:
       return state;
   }
-};
+}

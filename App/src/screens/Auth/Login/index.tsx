@@ -7,17 +7,18 @@ import {currentAccountSelector} from '@src/redux/selectors';
 import useSelectorShallow from '@src/hooks/useSelectorShallowEqual';
 import SCREEN_NAME from '@src/navigation/ScreenName';
 
-const Login = () => {
-  let currentAccount = useSelectorShallow(currentAccountSelector);
+const Login: React.FC = () => {
+  const currentAccount = useSelectorShallow(currentAccountSelector);
+
   const onLogin = () => {
     if (_.isEmpty(currentAccount)) {
       onSwitchAccount();
-      return;
+    } else {
+      Navigator.navigateTo(SCREEN_NAME.ADD_ACCOUNT, {
+        username: currentAccount.username,
+        waitToLogin: true,
+      });
     }
-    Navigator.navigateTo(SCREEN_NAME.ADD_ACCOUNT, {
-      username: currentAccount.username,
-      waitToLogin: true,
-    });
   };
 
   const onSwitchAccount = () => {

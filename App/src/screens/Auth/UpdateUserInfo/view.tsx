@@ -1,5 +1,6 @@
 import React from 'react';
 import {useFormik} from 'formik';
+import {View} from 'react-native';
 
 import {
   AppButton,
@@ -7,29 +8,31 @@ import {
   AppFormInput,
   AppImage,
   AppText,
+  DissmissKeyboardView,
 } from '@components';
 import {AppStyleSheet} from '@themes/responsive';
 import {colors} from '@themes/color';
-import {View} from 'react-native';
-import {DismissKeyboardView} from '@src/components/DissmissKeyboardView';
-import {UserProfile} from '@src/types/user';
+import {IUserProfile} from '@src/types/user';
 import {UPDATE_USER_PROFILE_FORM_SCHEME} from './validate';
 
+interface IUserProfileSubset
+  extends Pick<IUserProfile, 'name' | 'email' | 'bio'> {}
+
 interface UpdateUserInfoViewProps {
-  onUpdateUserProfile: (data: UserProfile) => void;
+  onUpdateUserProfile: (data: IUserProfileSubset) => void;
 }
 
-const initValues: UserProfile = {
+const initValues: IUserProfileSubset = {
   name: '',
   email: '',
   bio: '',
 };
 
-const UpdateUserInfoView = ({onUpdateUserProfile}: UpdateUserInfoViewProps) => {
+const UpdateUserInfoView: React.FC<UpdateUserInfoViewProps> = ({
+  onUpdateUserProfile,
+}) => {
   const formik = useFormik({
-    initialValues: {
-      ...initValues,
-    },
+    initialValues: initValues,
     onSubmit: values => {
       onUpdateUserProfile(values);
     },
@@ -38,31 +41,31 @@ const UpdateUserInfoView = ({onUpdateUserProfile}: UpdateUserInfoViewProps) => {
 
   return (
     <AppContainer style={styles.container}>
-      <DismissKeyboardView style={styles.content}>
+      <DissmissKeyboardView style={styles.content}>
         <AppText align="center" fontWeight={700} fontSize={26}>
-          Update user profile
+          Update User Profile
         </AppText>
         <View style={styles.inputField}>
           <AppFormInput
             onChangeText={value =>
-              formik.setFieldValue('name', value.toLocaleLowerCase())
+              formik.setFieldValue('name', value.toLowerCase())
             }
             value={formik.values.name}
             autoFocus
             placeholder="Username"
             style={styles.textInput}
             messageError={formik.errors.name}
-            error={formik.touched.name && formik.errors.name}
+            error={formik.touched.name && !!formik.errors.name}
           />
           <AppFormInput
             onChangeText={value =>
-              formik.setFieldValue('email', value.toLocaleLowerCase())
+              formik.setFieldValue('email', value.toLowerCase())
             }
             value={formik.values.email}
             placeholder="Email"
             style={styles.textInput}
             messageError={formik.errors.email}
-            error={formik.touched.email && formik.errors.email}
+            error={formik.touched.email && !!formik.errors.email}
           />
           <AppFormInput
             onChangeText={formik.handleChange('bio')}
@@ -70,7 +73,7 @@ const UpdateUserInfoView = ({onUpdateUserProfile}: UpdateUserInfoViewProps) => {
             placeholder="Bio"
             style={styles.textInput}
             messageError={formik.errors.bio}
-            error={formik.touched.bio && formik.errors.bio}
+            error={formik.touched.bio && !!formik.errors.bio}
           />
           <AppButton
             onPress={formik.handleSubmit}
@@ -84,7 +87,7 @@ const UpdateUserInfoView = ({onUpdateUserProfile}: UpdateUserInfoViewProps) => {
             source={require('@assets/image/meta-logo.png')}
           />
         </View>
-      </DismissKeyboardView>
+      </DissmissKeyboardView>
     </AppContainer>
   );
 };
@@ -92,7 +95,10 @@ const UpdateUserInfoView = ({onUpdateUserProfile}: UpdateUserInfoViewProps) => {
 export default UpdateUserInfoView;
 
 const styles = AppStyleSheet.create({
-  container: {marginTop: 0, paddingTop: 16},
+  container: {
+    marginTop: 0,
+    paddingTop: 16,
+  },
   inputField: {
     gap: 16,
     marginHorizontal: 16,
@@ -106,11 +112,10 @@ const styles = AppStyleSheet.create({
   },
   metaImage: {
     width: 66,
-    height: undefined,
     aspectRatio: 5,
     alignSelf: 'center',
-    bottom: '5%',
     position: 'absolute',
+    bottom: '5%',
   },
   content: {
     justifyContent: 'space-around',

@@ -44,7 +44,7 @@ func (server *Server) VerifyToken(ctx *gin.Context) {
 	_, err := server.tokenMaker.VerifyToken(req.AccessToken)
 	if err != nil {
 		log.Printf("[ERROR] Invalid token: %v", err)
-		ctx.JSON(http.StatusUnauthorized, verifyTokenResponse{Code: "jwt_auth_valid_token"})
+		ctx.JSON(http.StatusUnauthorized, verifyTokenResponse{Code: "jwt_auth_invalid_token"})
 		return
 	}
 	ctx.JSON(http.StatusOK, verifyTokenResponse{Code: "jwt_auth_valid_token"})
