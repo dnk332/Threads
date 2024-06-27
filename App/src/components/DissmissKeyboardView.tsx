@@ -8,4 +8,5 @@ const DismissKeyboardHOC = Comp => {
     </TouchableWithoutFeedback>
   );
 };
-export const DismissKeyboardView = DismissKeyboardHOC(View);
+const DismissKeyboardView = DismissKeyboardHOC(View);
+export default DismissKeyboardView;

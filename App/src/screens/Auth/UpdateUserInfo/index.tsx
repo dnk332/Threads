@@ -1,21 +1,27 @@
 import React from 'react';
-
-import UpdateUserInfoView from '@screens/Auth/UpdateUserInfo/view';
 import {useDispatch} from 'react-redux';
-import {userActions} from '@src/redux/actions';
+import UpdateUserInfoView from '@screens/Auth/UpdateUserInfo/view';
 import {goBack} from '@navigators';
-const UpdateUserInfo = () => {
-  const dispatch = useDispatch();
+import {updateUserProfileAction} from '@src/redux/actions/user';
+import {Callback} from '@src/redux/actionTypes/actionTypeBase';
+import {IUserProfile} from '@src/types/user';
+import {AppDispatch} from '@store';
 
-  const onUpdateUserProfile = data => {
-    const {name, email, bio} = data;
-    const callback = res => {
+interface IUserProfileSubset
+  extends Pick<IUserProfile, 'name' | 'email' | 'bio'> {}
+
+const UpdateUserInfo: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const onUpdateUserProfile = ({name, email, bio}: IUserProfileSubset) => {
+    const callback: Callback = res => {
       if (res.success) {
         goBack();
       }
     };
-    dispatch(userActions.updateUserInfoAction(name, email, bio, callback));
+    dispatch(updateUserProfileAction(name, email, bio, callback));
   };
+
   return <UpdateUserInfoView onUpdateUserProfile={onUpdateUserProfile} />;
 };
 

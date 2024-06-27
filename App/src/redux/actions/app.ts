@@ -1,23 +1,34 @@
-import {actionTypes} from '@actions';
+import {
+  AppActionType,
+  IClearStorageAction,
+  ISetAppConnectivityAction,
+  ISetDomainAction,
+  IStartAction,
+} from '@actionTypes/appActionTypes';
+import {Callback} from '@actionTypes/actionTypeBase';
 
-const {APP} = actionTypes;
-
-export const startAction = (callback: any) => {
-  return {
-    type: APP.START_APPLICATION,
+export const startAction = (callback: Callback): IStartAction => ({
+  type: AppActionType.START_APPLICATION,
+  payload: {
     callback,
-  };
-};
-
-export const changeLanguageAction = language => {
-  return {
-    type: APP.CHANGE_LANGUAGE,
-    language,
-  };
-};
-
-export const clearStorageAction = () => {
-  return {
-    type: APP.CLEAR_REDUCER,
-  };
-};
+  },
+});
+export const clearStorageAction = (): IClearStorageAction => ({
+  type: AppActionType.CLEAR_REDUCER,
+});
+export const setDomainAction = (domain: string): ISetDomainAction => ({
+  type: AppActionType.SET_DOMAIN,
+  payload: {
+    params: {domain},
+  },
+});
+export const setAppConnectivityChangeAction = (
+  status: string,
+): ISetAppConnectivityAction => ({
+  type: AppActionType.SET_APP_CONNECTIVITY,
+  payload: {
+    params: {
+      status,
+    },
+  },
+});

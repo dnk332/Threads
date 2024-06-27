@@ -1,40 +1,53 @@
 import {all, call, put, select, takeEvery} from 'redux-saga/effects';
 
-import {actionTypes, authActions} from '@actions';
-import api from '@apis';
+import {authActions} from '@actions';
+import api from '@src/services/apis';
 import {invoke} from '@appRedux/sagaHelper/sagas';
 import * as Navigator from '@navigators';
 import {userActions} from '@actions';
 import {accessTokenSelector, refreshTokenSelector} from '../selectors';
-import {refreshAccessTokenApi} from '@src/apis/authApis';
+import {refreshAccessTokenApi} from '@src/services/apis/authApis';
 import SCREEN_NAME from '@src/navigation/ScreenName';
-import {AuthActionType, LoginActionI} from '../actionTypes/authActionTypes';
+import {
+  AuthActionType,
+  IAuthCheckAction,
+  ILoginAction,
+  ILogoutAction,
+  IRegisterAction,
+} from '../actionTypes/authActionTypes';
+import {
+  ResponseLoginApi,
+  ResponseRefreshTokenApi,
+  ResponseRegisterApi,
+  ResponseVerifyTokenApi,
+} from '@src/services/apiTypes/authApiTypes';
 
-const {AUTH} = actionTypes;
 const {authApis} = api;
 
-function* onLogin({type, payload}: LoginActionI) {
+function* loginSaga({type, payload}: ILoginAction) {
   const {params, callback} = payload;
-
   yield invoke(
     function* execution() {
       Navigator.navigateAndSimpleReset(SCREEN_NAME.LOADING_INFO);
-      const response = yield call(authApis.loginApi, params);
-
+      const response: ResponseLoginApi = yield call(
+        authApis.loginApi,
+        params.username,
+        params.password,
+      );
+      const data = response.data;
       callback({
-        message: response.message ?? response.msg,
-        success: response.code === 200,
+        data: data,
+        success: response.success,
       });
-
       if (response.success) {
         yield put(
           authActions.setTokenAction(
-            response.access_token,
-            response.access_token_expires_at,
+            data.access_token,
+            data.access_token_expires_at,
           ),
         );
-        yield put(authActions.setRefreshTokenAction(response.refresh_token));
-        yield put(authActions.setAccountInfoAction(response.user));
+        yield put(authActions.setRefreshTokenAction(data.refresh_token));
+        yield put(authActions.setAccountInfoAction(data.user));
         Navigator.navigateAndSimpleReset(SCREEN_NAME.ROOT);
       }
     },
@@ -46,27 +59,33 @@ function* onLogin({type, payload}: LoginActionI) {
     () => {},
   );
 }
-function* onRegister({type, payload}) {
+function* registerSaga({type, payload}: IRegisterAction) {
   const {params, callback} = payload;
   yield invoke(
     function* execution() {
-      const response = yield call(authApis.registerApi, params);
-
-      callback?.(response);
+      const response: ResponseRegisterApi = yield call(
+        authApis.registerApi,
+        params.username,
+        params.password,
+      );
+      const data = response.data;
+      callback({
+        data: data,
+        success: response.success,
+      });
       if (response.success) {
-        yield put(authActions.setAccountInfoAction(params));
+        yield put(authActions.setAccountInfoAction(response.data.user));
       }
     },
     error => {
-      callback?.({success: false, message: error.message});
+      callback({success: false, message: error.message});
     },
     false,
     type,
     () => {},
   );
 }
-function* onAuthCheck(actions) {
-  const {type, payload} = actions;
+function* authCheckSaga({type, payload}: IAuthCheckAction) {
   const {callback} = payload || {};
   yield invoke(
     function* execution() {
@@ -76,17 +95,18 @@ function* onAuthCheck(actions) {
       });
 
       if (!refreshToken && !accessToken) {
-        callback?.({success: false, message: 'no token'});
+        callback({success: false, message: 'no token'});
         return;
       }
 
       if (accessToken) {
         try {
-          const {code} = yield call(authApis.verifyAccessTokenApi, {
-            access_token: accessToken,
-          });
-          if (code === 'jwt_auth_valid_token') {
-            callback?.({success: true});
+          const response: ResponseVerifyTokenApi = yield call(
+            authApis.verifyAccessTokenApi,
+            accessToken,
+          );
+          if (response.data.code === 'jwt_auth_valid_token') {
+            callback({success: true});
             return;
           }
         } catch (error) {
@@ -95,17 +115,18 @@ function* onAuthCheck(actions) {
       }
 
       if (refreshToken) {
-        const {access_token, access_token_expires_at} = yield call(
+        const response: ResponseRefreshTokenApi = yield call(
           refreshAccessTokenApi,
-          {
-            refresh_token: refreshToken,
-          },
+          refreshToken,
         ) || {};
-        if (access_token) {
+        if (response.data.access_token) {
           yield put(
-            authActions.setTokenAction(access_token, access_token_expires_at),
+            authActions.setTokenAction(
+              response.data.access_token,
+              response.data.access_token_expires_at,
+            ),
           );
-          callback?.({success: true});
+          callback({success: true});
           return;
         }
       }
@@ -119,19 +140,19 @@ function* onAuthCheck(actions) {
   );
 }
 
-function* onLogout({type, payload}) {
+function* logoutSaga({type, payload}: ILogoutAction) {
   const {callback} = payload;
 
   yield invoke(
     function* execution() {
-      yield call(authApis.logoutApi, null);
+      yield call(authApis.logoutApi);
       yield put(authActions.setTokenAction(null, null));
       yield put(authActions.setRefreshTokenAction(null));
       yield put(userActions.saveUserInfoAction(null));
       Navigator.navigateAndSimpleReset(SCREEN_NAME.LOGIN);
     },
     error => {
-      callback?.({success: false, message: error.message});
+      callback({success: false, message: error.message});
     },
     false,
     type,
@@ -140,18 +161,18 @@ function* onLogout({type, payload}) {
 }
 
 function* watchLogin() {
-  yield takeEvery(AuthActionType.LOGIN, onLogin);
+  yield takeEvery(AuthActionType.LOGIN, loginSaga);
 }
 
 function* watchRegister() {
-  yield takeEvery(AUTH.REGISTER, onRegister);
+  yield takeEvery(AuthActionType.REGISTER, registerSaga);
 }
 
 function* watchAuthCheck() {
-  yield takeEvery(AUTH.AUTH_CHECK, onAuthCheck);
+  yield takeEvery(AuthActionType.AUTH_CHECK, authCheckSaga);
 }
 function* watchLogout() {
-  yield takeEvery(AUTH.LOGOUT, onLogout);
+  yield takeEvery(AuthActionType.LOGOUT, logoutSaga);
 }
 
 export default function* authSagas() {

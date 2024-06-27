@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import {
@@ -14,9 +14,6 @@ import SvgComponent from '@svg/index';
 import {SVG_NAME} from '@svg/svgList';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SCREEN_NAME from '@src/navigation/ScreenName';
-import isTokenExpired from '@src/utils/CheckTokenExpired';
-import {useDispatch} from 'react-redux';
-import {authActions} from '@src/redux/actions';
 
 export type BottomTabsStackParamList = {
   HOME: undefined;
@@ -62,21 +59,6 @@ const screenOptions = {
 };
 
 const RootScreen = () => {
-  const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   const intervalId = setInterval(async () => {
-  //     const expired = await isTokenExpired();
-  //     if (expired) {
-  //       console.log('expired');
-  //       const callback = () => {};
-  //       dispatch(authActions.authCheckAction(callback));
-  //     }
-  //   }, 15 * 60 * 1000);
-
-  //   return () => clearInterval(intervalId);
-  // }, [dispatch]);
-
   return (
     <Tab.Navigator screenOptions={screenOptions}>
       <Tab.Screen

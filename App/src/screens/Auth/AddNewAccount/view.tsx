@@ -1,18 +1,26 @@
 import React, {useEffect} from 'react';
+import _ from 'lodash';
 
-import {AppButton, AppContainer, AppImage, AppInput} from '@components';
+import {
+  AppButton,
+  AppContainer,
+  AppImage,
+  AppInput,
+  DissmissKeyboardView,
+} from '@components';
 import {AppStyleSheet} from '@themes/responsive';
 import {colors} from '@themes/color';
 import {View} from 'react-native';
-import {DismissKeyboardView} from '@src/components/DissmissKeyboardView';
-import _ from 'lodash';
 
 interface AddNewAccountViewProps {
   onRegister: (username: string, password: string) => void;
   username?: string;
 }
 
-const AddNewAccountView = ({onRegister, username}: AddNewAccountViewProps) => {
+const AddNewAccountView: React.FC<AddNewAccountViewProps> = ({
+  onRegister,
+  username,
+}) => {
   const [usernameValue, setUsernameValue] = React.useState('');
   const password = React.useRef('');
 
@@ -24,7 +32,7 @@ const AddNewAccountView = ({onRegister, username}: AddNewAccountViewProps) => {
 
   return (
     <AppContainer style={styles.container}>
-      <DismissKeyboardView style={styles.content}>
+      <DissmissKeyboardView style={styles.content}>
         <AppImage
           containerStyle={styles.igImage}
           source={require('@assets/image/instagram-logo.png')}
@@ -55,7 +63,7 @@ const AddNewAccountView = ({onRegister, username}: AddNewAccountViewProps) => {
           containerStyle={styles.metaImage}
           source={require('@assets/image/meta-logo.png')}
         />
-      </DismissKeyboardView>
+      </DissmissKeyboardView>
     </AppContainer>
   );
 };

@@ -1,7 +1,6 @@
 import {createStore, applyMiddleware} from 'redux';
-import {persistStore} from 'redux-persist';
+import {persistStore, persistReducer} from 'redux-persist';
 import createSagaMiddleware from 'redux-saga';
-import persistReducer from 'redux-persist/es/persistReducer';
 import autoMergeLevel1 from 'redux-persist/lib/stateReconciler/autoMergeLevel1';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {composeWithDevTools} from 'redux-devtools-extension';
@@ -9,36 +8,40 @@ import {composeWithDevTools} from 'redux-devtools-extension';
 import rootReducer from '@reducers';
 import rootSagas from '@sagas';
 
+// Middleware binding function
 const bindMiddleware = middleware => applyMiddleware(...middleware);
 
 /**
- * Redux Setting
+ * Redux Persist Configuration
  */
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
   whitelist: ['app', 'auth'],
-  version: 1.0,
+  version: 1,
   stateReconciler: autoMergeLevel1,
 };
 
+// Persisted reducer
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const middlewares = [];
+// Saga middleware
 const sagaMiddleware = createSagaMiddleware();
-middlewares.push(sagaMiddleware);
+const middlewares = [sagaMiddleware];
 
-let store;
-if (__DEV__) {
-  store = createStore(
-    persistedReducer,
-    composeWithDevTools(applyMiddleware(...middlewares)),
-  );
-} else {
-  store = createStore(persistedReducer, bindMiddleware(middlewares));
-}
+// Store configuration with Redux DevTools support in development mode
+const store = createStore(
+  persistedReducer,
+  __DEV__
+    ? composeWithDevTools(bindMiddleware(middlewares))
+    : bindMiddleware(middlewares),
+);
 
-const persist = persistStore(store);
-export {store, persist};
+// Persistor instance
+const persistor = persistStore(store);
 
+// Run root sagas
 sagaMiddleware.run(rootSagas);
+
+export {store, persistor};
+export type AppDispatch = typeof store.dispatch;

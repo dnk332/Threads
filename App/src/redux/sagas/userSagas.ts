@@ -1,30 +1,39 @@
 import {all, call, put, select, takeLatest} from 'redux-saga/effects';
 
-import {actionTypes, userActions} from '@actions';
-import api from '@apis';
+import {userActions} from '@actions';
+import api from '@src/services/apis';
 import {invoke} from '@appRedux/sagaHelper/sagas';
 import {currentAccountSelector} from '../selectors';
+import {
+  IGetUserProfileAction,
+  IUpdateUserProfileAction,
+  UserActionType,
+} from '../actionTypes/userActionTypes';
+import {
+  ResponseGetUserInfoApi,
+  ResponseUpdateUserInfoApi,
+} from '@src/services/apiTypes/userApiTypes';
 
-const {USER} = actionTypes;
 const {userApis} = api;
 
-function* getUserInfo({type, payload}) {
-  const {user_id, callback} = payload;
+function* getUserProfileSaga({type, payload}: IGetUserProfileAction) {
+  const {params, callback} = payload;
   yield invoke(
     function* execution() {
-      const response = yield call(userApis.getUserInfoApi, user_id);
-
-      yield callback?.({
+      const response: ResponseGetUserInfoApi = yield call(
+        userApis.getUserInfoApi,
+        params.user_id,
+      );
+      yield callback({
         success: true,
         data: response,
       });
-
       if (response.success) {
-        yield put(userActions.saveUserInfoAction(response));
+        yield put(userActions.saveUserInfoAction(response.data.user_profile));
       }
     },
     error => {
-      callback?.({success: false, message: error.message});
+      callback({success: false, message: error.message});
     },
     false,
     type,
@@ -32,29 +41,28 @@ function* getUserInfo({type, payload}) {
   );
 }
 
-function* updateUserInfo({type, payload}) {
-  const {name, email, bio, callback} = payload;
+function* updateUserProfileSaga({type, payload}: IUpdateUserProfileAction) {
+  const {params, callback} = payload;
   yield invoke(
     function* execution() {
       const currentAccount = yield select(currentAccountSelector);
-      const response = yield call(userApis.updateUserInfoApi, {
-        user_id: currentAccount.user_id,
-        name,
-        email,
-        bio,
-      });
-
-      yield callback?.({
+      const response: ResponseUpdateUserInfoApi = yield call(
+        userApis.updateUserInfoApi,
+        currentAccount.user_id,
+        params.name,
+        params.email,
+        params.bio,
+      );
+      yield callback({
         success: true,
         data: response,
       });
-
       if (response.success) {
-        yield put(userActions.saveUserInfoAction(response));
+        yield put(userActions.saveUserInfoAction(response.data.user_profile));
       }
     },
     error => {
-      callback?.({success: false, message: error.message});
+      callback({success: false, message: error.message});
     },
     false,
     type,
@@ -62,14 +70,14 @@ function* updateUserInfo({type, payload}) {
   );
 }
 
-function* watchGetUserInfo() {
-  yield takeLatest(USER.GET_USER_INFO, getUserInfo);
+function* watchGetUserProfile() {
+  yield takeLatest(UserActionType.GET_USER_PROFILE, getUserProfileSaga);
 }
 
-function* watchUpdateUserInfo() {
-  yield takeLatest(USER.UPDATE_INFO, updateUserInfo);
+function* watchUpdateUserProfile() {
+  yield takeLatest(UserActionType.UPDATE_PROFILE, updateUserProfileSaga);
 }
 
 export default function* userSagas() {
-  yield all([watchGetUserInfo(), watchUpdateUserInfo()]);
+  yield all([watchGetUserProfile(), watchUpdateUserProfile()]);
 }

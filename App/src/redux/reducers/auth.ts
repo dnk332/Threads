@@ -1,49 +1,48 @@
-import {actionTypes} from '@actions';
-import {User} from '@src/types/user';
+import {IUser} from '@src/types/user';
 import _ from 'lodash';
+import * as actions from '@actionTypes/authActionTypes';
 
-const initialState: {
+export interface IAuthState {
   token: string | null;
   tokenDuration: string | null;
-  listAccountInfo: User[];
+  listAccount: IUser[];
   refreshToken: string | null;
-  currentAccount: User;
-} = {
+  currentAccount: IUser;
+}
+
+const initialState: IAuthState = {
   token: null,
-  listAccountInfo: [],
+  listAccount: [],
   refreshToken: null,
   currentAccount: null,
   tokenDuration: null,
 };
 
-const {AUTH} = actionTypes;
-
-export default (state = initialState, action: any) => {
-  switch (action?.type) {
-    case AUTH.SAVE_TOKEN:
+export default function authReducer(
+  state: IAuthState = initialState,
+  action: actions.AuthAction,
+): IAuthState {
+  const actionType = actions.AuthActionType;
+  switch (action.type) {
+    case actionType.SET_TOKEN:
       return {
         ...state,
-        token: action?.token,
-        tokenDuration: action?.duration,
+        token: action.payload.params.token,
+        tokenDuration: action.payload.params.duration,
       };
-    case AUTH.SAVE_REFRESH_TOKEN:
+    case actionType.SET_REFRESH_TOKEN:
       return {
         ...state,
-        refreshToken: action?.refreshToken,
+        refreshToken: action.payload.params.refreshToken,
       };
-    case AUTH.ADD_ACCOUNT_INFO:
+    case actionType.SET_ACCOUNT_INFO:
       return {
         ...state,
-        listAccountInfo: !_.isArray(state.listAccountInfo)
-          ? [action?.accountInfo]
-          : [...state.listAccountInfo, action?.accountInfo],
-      };
-    case AUTH.UPDATE_CURRENT_ACCOUNT:
-      return {
-        ...state,
-        currentAccount: action?.currentAccount,
+        listAccount: !_.isArray(state.listAccount)
+          ? [action.payload.params.accountInfo]
+          : [...state.listAccount, action.payload.params.accountInfo],
       };
     default:
       return state;
   }
-};
+}

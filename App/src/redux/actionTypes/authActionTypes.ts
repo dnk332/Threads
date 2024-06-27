@@ -1,5 +1,5 @@
-import {UserI} from '@src/types/user';
-import {AuthActionBase} from './actionTypeBase';
+import {IUser} from '@src/types/user';
+import {ActionBase} from './actionTypeBase';
 
 export const AuthActionType = {
   LOGIN: 'AUTH/LOGIN',
@@ -16,57 +16,57 @@ export const AuthActionType = {
 export type AuthActionType =
   (typeof AuthActionType)[keyof typeof AuthActionType];
 
-export interface LoginActionI
-  extends AuthActionBase<{
+export interface ILoginAction
+  extends ActionBase<{
     username: string;
     password: string;
   }> {
   type: typeof AuthActionType.LOGIN;
 }
 
-export interface LogoutActionI extends AuthActionBase<{}> {
+export interface ILogoutAction extends ActionBase<{}> {
   type: typeof AuthActionType.LOGOUT;
 }
 
-export interface RegisterActionI
-  extends AuthActionBase<{
+export interface IRegisterAction
+  extends ActionBase<{
     username: string;
     password: string;
   }> {
   type: typeof AuthActionType.REGISTER;
 }
 
-export interface SetTokenActionI
-  extends AuthActionBase<{
+export interface ISetTokenAction
+  extends ActionBase<{
     token: string;
     duration: string;
   }> {
   type: typeof AuthActionType.SET_TOKEN;
 }
 
-export interface SetRefreshTokenActionI
-  extends AuthActionBase<{
+export interface ISetRefreshTokenAction
+  extends ActionBase<{
     refreshToken: string;
   }> {
   type: typeof AuthActionType.SET_REFRESH_TOKEN;
 }
 
-export interface SetAccountInfoActionI
-  extends AuthActionBase<{
-    accountInfo: UserI;
+export interface ISetAccountInfoAction
+  extends ActionBase<{
+    accountInfo: IUser;
   }> {
   type: typeof AuthActionType.SET_ACCOUNT_INFO;
 }
 
-export interface AuthCheckActionI extends AuthActionBase<{}> {
+export interface IAuthCheckAction extends ActionBase<{}> {
   type: typeof AuthActionType.AUTH_CHECK;
 }
 
 export type AuthAction =
-  | LoginActionI
-  | LogoutActionI
-  | RegisterActionI
-  | SetTokenActionI
-  | SetRefreshTokenActionI
-  | SetAccountInfoActionI
-  | AuthCheckActionI;
+  | ILoginAction
+  | ILogoutAction
+  | IRegisterAction
+  | ISetTokenAction
+  | ISetRefreshTokenAction
+  | ISetAccountInfoAction
+  | IAuthCheckAction;

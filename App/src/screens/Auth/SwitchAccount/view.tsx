@@ -1,69 +1,66 @@
 import React, {useCallback} from 'react';
 import {ListRenderItemInfo, FlashList} from '@shopify/flash-list';
+import {Pressable, View} from 'react-native';
 
 import {AppStyleSheet} from '@themes/responsive';
 import {AppContainer, AppImage, AppText} from '@components';
 import {colors} from '@themes/color';
-import {Pressable, View} from 'react-native';
 import SvgComponent from '@src/assets/svg';
-import {User} from '@src/types/user';
+import {IUser} from '@src/types/user';
 
-const ItemSeparator = () => {
-  return <View style={styles.separator} />;
-};
+const ItemSeparator = () => <View style={styles.separator} />;
 
 interface SwitchAccountViewProps {
-  listAccountInfo: User[];
+  listAccount: IUser[];
   onLogin: (username: string) => void;
   onAddAccount: () => void;
 }
 
-const SwitchAccountView = ({
-  listAccountInfo,
+const SwitchAccountView: React.FC<SwitchAccountViewProps> = ({
+  listAccount,
   onLogin,
   onAddAccount,
-}: SwitchAccountViewProps) => {
+}) => {
   const AccountItem = useCallback(
-    ({item: user}: ListRenderItemInfo<User>) => {
-      return (
-        <Pressable
-          onPress={() => onLogin(user.username)}
-          style={styles.loginButton}>
-          <View style={styles.buttonContent}>
-            <AppImage
-              containerStyle={styles.buttonIcon}
-              source={require('@assets/image/instagram-logo.png')}
-            />
-            <View style={styles.buttonText}>
-              <AppText fontSize={12} color={colors.text_gray}>
-                Log in with Instagram
-              </AppText>
-              <AppText fontSize={14} fontWeight={600}>
-                {user.username}
-              </AppText>
-            </View>
+    ({item: user}: ListRenderItemInfo<IUser>) => (
+      <Pressable
+        onPress={() => onLogin(user.username)}
+        style={styles.loginButton}>
+        <View style={styles.buttonContent}>
+          <AppImage
+            containerStyle={styles.buttonIcon}
+            source={require('@assets/image/instagram-logo.png')}
+          />
+          <View style={styles.buttonText}>
+            <AppText fontSize={12} color={colors.text_gray}>
+              Log in with Instagram
+            </AppText>
+            <AppText fontSize={14} fontWeight={600}>
+              {user.username}
+            </AppText>
           </View>
-          <SvgComponent color={colors.text_gray} name={'ARROW_RIGHT'} />
-        </Pressable>
-      );
-    },
+        </View>
+        <SvgComponent color={colors.text_gray} name={'ARROW_RIGHT'} />
+      </Pressable>
+    ),
     [onLogin],
   );
+
   return (
     <AppContainer haveBackButton containerStyle={styles.container}>
       <View style={styles.headerContainer}>
-        <AppText fontSize={24} fontWeight={700} align={'center'}>
+        <AppText fontSize={24} fontWeight={700} align="center">
           Switch accounts
         </AppText>
-        <AppText color={colors.text_gray} align={'center'}>
-          {`Add or create a Threads profile by login in with an\nInstagram account`}
+        <AppText color={colors.text_gray} align="center">
+          {`Add or create a Threads profile by logging in with an\nInstagram account`}
         </AppText>
       </View>
       <FlashList
         contentContainerStyle={styles.accountsInfoWrapper}
         style={styles.accountsInfo}
         keyExtractor={user => user.username.toString()}
-        data={listAccountInfo}
+        data={listAccount}
         renderItem={AccountItem}
         showsVerticalScrollIndicator={false}
         estimatedItemSize={10}
@@ -120,13 +117,6 @@ const styles = AppStyleSheet.create({
     alignItems: 'center',
     height: 86,
     paddingTop: 16,
-  },
-  registerAccountButton: {
-    alignSelf: 'center',
-    paddingVertical: 40,
-    backgroundColor: colors.background,
-    width: '100%',
-    alignItems: 'center',
   },
   accountsInfo: {
     justifyContent: 'center',
