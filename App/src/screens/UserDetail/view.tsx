@@ -22,11 +22,11 @@ import RepliesTab from '@screens/UserDetail/Components/RepliesTab';
 
 import {width as DeviceWidth} from '@utils/DeviceInfo';
 import Header from './Components/Header';
-import {User, UserProfile} from '@src/types/user';
+import {IUser, IUserProfile} from '@src/types/user';
 
 interface UserDetailScreenViewProps {
-  currentUser: UserProfile;
-  currentAccount: User;
+  currentUser: IUserProfile;
+  currentAccount: IUser;
 }
 
 const UserDetailScreenView = ({

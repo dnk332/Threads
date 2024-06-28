@@ -1,13 +1,14 @@
 import React from 'react';
 import SettingsScreenView from '@screens/Settings/view';
 import {useDispatch} from 'react-redux';
-import {authActions} from '@src/redux/actions';
+import {logoutAction} from '@src/redux/actions/auth';
+import {AppDispatch} from '@src/redux/store';
 
 const SettingsScreen = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const onLogout = () => {
-    dispatch(authActions.onLogoutAction());
+    dispatch(logoutAction());
   };
   const HandelOptionSetting = (type: string) => {
     switch (type) {

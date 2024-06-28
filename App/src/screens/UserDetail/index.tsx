@@ -3,13 +3,13 @@ import React from 'react';
 import UserDetailScreenView from '@screens/UserDetail/view';
 import {
   currentAccountSelector,
-  currentUserSelector,
+  currentUserProfileSelector,
 } from '@src/redux/selectors';
-import useSelectorShallow from '@src/hooks/useSelectorShallowEqual';
+import {useSelector} from 'react-redux';
 
 const UserDetailScreen = () => {
-  let currentUser = useSelectorShallow(currentUserSelector);
-  let currentAccount = useSelectorShallow(currentAccountSelector);
+  let currentUser = useSelector(currentUserProfileSelector);
+  let currentAccount = useSelector(currentAccountSelector);
   return (
     <UserDetailScreenView
       currentUser={currentUser}
