@@ -16,11 +16,11 @@ import {AppStyleSheet} from '@themes/responsive';
 import {Avatar, AppButton, AppText} from '@components';
 import * as Navigator from '@navigators';
 import SCREEN_NAME from '@src/navigation/ScreenName';
-import {User, UserProfile} from '@src/types/user';
+import {IUser, IUserProfile} from '@src/types/user';
 
 interface HeaderProps {
-  currentUser: UserProfile;
-  currentAccount: User;
+  currentUser: IUserProfile;
+  currentAccount: IUser;
 }
 
 const Header = forwardRef<number | null, any>(

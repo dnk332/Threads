@@ -1,4 +1,3 @@
-// import {StyleSheet} from 'react-native';
 import React from 'react';
 import {
   NavigationProp,
@@ -17,15 +16,7 @@ export type NewPostScreenProps = {
 };
 
 const NewPostScreen = () => {
-  // const sheetRef = useRef<any>();
-
-  // useEffect(() => {
-  //   sheetRef.current?.snapTo(0);
-  // }, []);
-
   return <NewPostScreenView />;
 };
 
 export default NewPostScreen;
-
-// const styles = StyleSheet.create({});

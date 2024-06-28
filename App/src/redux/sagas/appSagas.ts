@@ -5,40 +5,53 @@ import {domainSelector} from '@selectors';
 import {Setting} from '@configs';
 import * as TimeAgo from '@hooks/TimeAgo';
 import _ from 'lodash';
+import {AppActionType, IStartAction} from '../actionTypes/appActionTypes';
+import {invoke} from '../sagaHelper/sagas';
 
 const {APP} = actionTypes;
 
-function* onStartApplication(action) {
-  TimeAgo.SetUpTime();
-
-  const domain = yield select(domainSelector);
-
-  yield all([
-    yield put({
-      type: APP.SAVE_DOMAIN,
-      domain: domain ?? Setting.domain,
-    }),
-  ]);
-
-  const checkAuth = ({
-    success,
-    message = '',
-  }: {
-    success: boolean;
-    message?: string;
-  }) => {
-    if (!_.isEmpty(message) || !success) {
-      action.callback?.({accessAble: false});
-      return;
-    }
-    action.callback?.({accessAble: true});
-  };
-
-  yield put(authActions.authCheckAction(checkAuth));
+function* startApplicationSaga({type, payload}: IStartAction) {
+  const {callback} = payload;
+  yield invoke(
+    function* execution() {
+      TimeAgo.SetUpTime();
+      const domain = yield select(domainSelector);
+      yield all([
+        yield put({
+          type: APP.SAVE_DOMAIN,
+          domain: domain ?? Setting.domain,
+        }),
+      ]);
+      const checkAuth = ({
+        success,
+        message = '',
+      }: {
+        success: boolean;
+        message?: string;
+      }) => {
+        if (!_.isEmpty(message) || !success) {
+          callback({
+            success: false,
+          });
+          return;
+        }
+        callback({
+          success: true,
+        });
+      };
+      yield put(authActions.authCheckAction(checkAuth));
+    },
+    error => {
+      callback({success: false, message: error.message});
+    },
+    false,
+    type,
+    () => {},
+  );
 }
 
 function* watchStartApplication() {
-  yield takeEvery(APP.START_APPLICATION, onStartApplication);
+  yield takeEvery(AppActionType.START_APPLICATION, startApplicationSaga);
 }
 
 export default function* applicationSagas() {

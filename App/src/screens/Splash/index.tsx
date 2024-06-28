@@ -4,15 +4,15 @@ import {useDispatch} from 'react-redux';
 import BootSplash from 'react-native-bootsplash';
 
 import {AppStyleSheet} from '@src/themes/responsive';
-import {appActions} from '@src/redux/actions';
 import * as Navigator from '@navigators';
 import {colors} from '@themes/color';
 import {AppImage} from '@src/components';
 import SCREEN_NAME from '@src/navigation/ScreenName';
+import {startAction} from '@src/redux/actions/app';
+import {AppDispatch} from '@src/redux/store';
 
 export default function Splash() {
-  const dispatch = useDispatch();
-
+  const dispatch: AppDispatch = useDispatch();
   const HideSplash = async (): Promise<void> => {
     await BootSplash.hide({fade: true});
     return new Promise(resolve => {
@@ -24,9 +24,9 @@ export default function Splash() {
 
   useEffect(() => {
     dispatch(
-      appActions.startAction(async response => {
+      startAction(async response => {
         await HideSplash();
-        if (response['accessAble']) {
+        if (response.data['accessAble']) {
           Navigator.navigateAndSimpleReset(SCREEN_NAME.ROOT);
         } else {
           Navigator.navigateAndSimpleReset(SCREEN_NAME.LOGIN);

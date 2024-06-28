@@ -8,7 +8,7 @@ import {PortalProvider} from '@gorhom/portal';
 
 import layout from '@themes/layout';
 import {PersistGate} from 'redux-persist/integration/react';
-import {store, persist} from './redux/store';
+import {store, persistor} from './redux/store';
 
 const Index = () => {
   return (
@@ -16,7 +16,7 @@ const Index = () => {
       <GestureHandlerRootView style={layout.fill}>
         <PortalProvider>
           <Provider store={store}>
-            <PersistGate loading={null} persistor={persist}>
+            <PersistGate loading={null} persistor={persistor}>
               <Fragment>
                 <StackScreens />
               </Fragment>
