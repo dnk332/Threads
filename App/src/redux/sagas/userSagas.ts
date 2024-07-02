@@ -2,7 +2,6 @@ import {all, call, put, select, takeLatest} from 'redux-saga/effects';
 
 import {userActions} from '@actions';
 import api from '@src/services/apis';
-import {invoke} from '@appRedux/sagaHelper/sagas';
 import {currentAccountSelector} from '../selectors';
 import {
   IGetUserProfileAction,
@@ -13,6 +12,7 @@ import {
   ResponseGetUserInfoApi,
   ResponseUpdateUserInfoApi,
 } from '@src/services/apiTypes/userApiTypes';
+import {invoke} from '../sagaHelper/invokeSaga';
 
 const {userApis} = api;
 

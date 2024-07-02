@@ -26,7 +26,7 @@ export default function Splash() {
     dispatch(
       startAction(async response => {
         await HideSplash();
-        if (response.data['accessAble']) {
+        if (response.success) {
           Navigator.navigateAndSimpleReset(SCREEN_NAME.ROOT);
         } else {
           Navigator.navigateAndSimpleReset(SCREEN_NAME.LOGIN);

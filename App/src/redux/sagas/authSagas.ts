@@ -2,7 +2,7 @@ import {all, call, put, select, takeEvery} from 'redux-saga/effects';
 
 import {authActions} from '@actions';
 import api from '@src/services/apis';
-import {invoke} from '@appRedux/sagaHelper/sagas';
+import {invoke} from '@appRedux/sagaHelper/invokeSaga';
 import * as Navigator from '@navigators';
 import {userActions} from '@actions';
 import {accessTokenSelector, refreshTokenSelector} from '../selectors';
@@ -131,18 +131,14 @@ function* authCheckSaga({type, payload}: IAuthCheckAction) {
         }
       }
     },
-    () => {
-      put(authActions.logoutAction());
-    },
+    () => {},
     false,
     type,
     () => {},
   );
 }
 
-function* logoutSaga({type, payload}: ILogoutAction) {
-  const {callback} = payload;
-
+function* logoutSaga({type}: ILogoutAction) {
   yield invoke(
     function* execution() {
       yield call(authApis.logoutApi);
@@ -151,9 +147,7 @@ function* logoutSaga({type, payload}: ILogoutAction) {
       yield put(userActions.saveUserInfoAction(null));
       Navigator.navigateAndSimpleReset(SCREEN_NAME.LOGIN);
     },
-    error => {
-      callback({success: false, message: error.message});
-    },
+    () => {},
     false,
     type,
     () => {},
