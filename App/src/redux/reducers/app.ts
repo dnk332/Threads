@@ -1,34 +1,46 @@
-import {actionTypes} from '@actions';
+import * as actions from '@actionTypes/appActionTypes';
+
+export interface IDeviceInfo {
+  deviceId: string;
+  model: any;
+  systemVersion: string;
+  token: string;
+  systemName: string;
+}
 
 export interface IAppState {
   domain: string;
-  device: object;
+  deviceInfo: IDeviceInfo;
 }
 
-const initialState = {
+const initialState: IAppState = {
   domain: null,
-  device: null,
+  deviceInfo: null,
 };
 
-const {APP} = actionTypes;
+export default function (
+  state: IAppState = initialState,
+  action: actions.AppAction,
+): IAppState {
+  const actionType = actions.AppActionType;
 
-export default (state = initialState, action: any) => {
   switch (action.type) {
-    case APP.SAVE_DOMAIN:
+    case actionType.SET_DOMAIN:
       return {
         ...state,
-        domain: action?.domain,
+        domain: action.payload.params.domain,
       };
-
-    case APP.SAVE_DEVICE_INFO:
+    case actionType.SET_DEVICE_INFO:
       return {
         ...state,
-        device: {
-          ...state.device,
-          ...action?.device,
+        deviceInfo: {
+          ...state.deviceInfo,
+          ...action.payload.params.deviceInfo,
         },
       };
+    case actionType.CLEAR_REDUCER:
+      return initialState;
     default:
       return state;
   }
-};
+}

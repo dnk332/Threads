@@ -5,7 +5,7 @@ import {persistReducer} from 'redux-persist';
 import {actionTypes} from '@actions';
 
 import authReducer, {IAuthState} from './auth';
-import applicationReducer from './app';
+import applicationReducer, {IAppState} from './app';
 import userReducer, {IUserState} from './user';
 
 const {APP} = actionTypes;
@@ -19,7 +19,7 @@ const rootPersistConfig = {
 
 export interface IGlobalState {
   user: IUserState;
-  app: any;
+  app: IAppState;
   auth: IAuthState;
 }
 

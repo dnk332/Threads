@@ -2,6 +2,7 @@ import {
   AppActionType,
   IClearStorageAction,
   ISetAppConnectivityAction,
+  ISetDeviceInfoAction,
   ISetDomainAction,
   IStartAction,
 } from '@actionTypes/appActionTypes';
@@ -20,6 +21,14 @@ export const setDomainAction = (domain: string): ISetDomainAction => ({
   type: AppActionType.SET_DOMAIN,
   payload: {
     params: {domain},
+  },
+});
+export const setDeviceInfoAction = (
+  deviceInfo: object,
+): ISetDeviceInfoAction => ({
+  type: AppActionType.SET_DEVICE_INFO,
+  payload: {
+    params: {deviceInfo},
   },
 });
 export const setAppConnectivityChangeAction = (

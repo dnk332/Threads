@@ -6,7 +6,7 @@ import {Setting} from '@configs';
 import * as TimeAgo from '@hooks/TimeAgo';
 import _ from 'lodash';
 import {AppActionType, IStartAction} from '../actionTypes/appActionTypes';
-import {invoke} from '../sagaHelper/sagas';
+import {invoke} from '../sagaHelper/invokeSaga';
 
 const {APP} = actionTypes;
 

@@ -16,8 +16,11 @@ export interface IStartAction extends ActionBase<{}> {
 export interface IClearStorageAction extends ActionBase<{}> {
   type: typeof AppActionType.CLEAR_REDUCER;
 }
-export interface ISetDomainAction extends ActionBase<{}> {
+export interface ISetDomainAction extends ActionBase<{domain: string}> {
   type: typeof AppActionType.SET_DOMAIN;
+}
+export interface ISetDeviceInfoAction extends ActionBase<{deviceInfo: object}> {
+  type: typeof AppActionType.SET_DEVICE_INFO;
 }
 export interface ISetAppConnectivityAction
   extends ActionBase<{
@@ -29,4 +32,5 @@ export type AppAction =
   | IStartAction
   | IClearStorageAction
   | ISetDomainAction
-  | ISetAppConnectivityAction;
+  | ISetAppConnectivityAction
+  | ISetDeviceInfoAction;

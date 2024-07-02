@@ -9,6 +9,8 @@ const colors = {
   background_secondary: '#101010',
   blue: '#0070FA',
   red: '#F70F0F',
+  green: '#059212',
+  yellow: '#FFDB00',
 
   //common colors
   white: '#ffffff',

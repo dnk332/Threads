@@ -50,6 +50,7 @@ const AddNewAccountView: React.FC<AddNewAccountViewProps> = ({
             placeholder="Password"
             onChangeText={e => (password.current = e)}
             style={styles.textInput}
+            secureTextEntry={true}
           />
           <AppButton
             onPress={() => onRegister(usernameValue, password.current)}

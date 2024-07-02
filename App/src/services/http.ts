@@ -8,15 +8,24 @@ import {store} from '@src/redux/store';
 import {accessTokenSelector, domainSelector} from '@src/redux/selectors';
 import {getParamsString} from '@src/utils/HelperUtil';
 import {popToTop} from '@src/navigation/NavigationService';
+import {deviceInfoSelector} from '@src/redux/selectors/app';
+import {IDeviceInfo} from '@src/redux/reducers/app';
 
-const accessTokenValue = (): string | undefined =>
+// Access token retrieval
+const getAccessToken = (): string | undefined =>
   accessTokenSelector(store.getState());
-const getDomain = (): string | undefined => domainSelector(store.getState());
 
-export const CodeResponse = {
+// Domain retrieval
+const getDomain = (): string | undefined => domainSelector(store.getState());
+const getDevice = (): IDeviceInfo | undefined =>
+  deviceInfoSelector(store.getState());
+
+// Response status codes
+export const ResponseCode = {
   SUCCESS: 200,
 };
 
+// Request properties interface
 interface RequestProps {
   params?: Record<string, any>;
   headers?: Record<string, any>;
@@ -24,36 +33,46 @@ interface RequestProps {
 
 class HTTP {
   private http: AxiosInstance;
-  private exceptionCode: string[];
+  private exceptionCodes: string[];
 
   constructor() {
     this.http = this.setupInterceptors();
-    this.exceptionCode = ['jwt_auth_bad_iss', 'jwt_auth_invalid_token'];
+    this.exceptionCodes = ['jwt_auth_bad_iss', 'jwt_auth_invalid_token'];
   }
 
   private setupInterceptors(): AxiosInstance {
     const api = axios.create({timeout: 300000});
 
+    // Request interceptor
     api.interceptors.request.use(
       (config: InternalAxiosRequestConfig) => {
-        const token = accessTokenValue();
+        const token = getAccessToken();
+        const device = getDevice();
         config.baseURL = config.baseURL || getDomain();
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
+        }
+        if (device) {
+          config.headers['Device-Id'] = device.deviceId;
+          config.headers['Device-Model'] = device.model;
+          config.headers['Device-Version'] = device.systemVersion;
+          config.headers['Device-Token'] = device.token;
+          config.headers.Type = device.systemName;
         }
         return config;
       },
       (error: any) => Promise.reject(error),
     );
 
+    // Response interceptor
     api.interceptors.response.use(
       (response: AxiosResponse) => ({
         ...response,
-        isSuccess: response.status === CodeResponse.SUCCESS,
+        isSuccess: response.status === ResponseCode.SUCCESS,
       }),
       (error: any) => {
         const {code, message} = error.response?.data || {};
-        if (code && this.exceptionCode.includes(code)) {
+        if (code && this.exceptionCodes.includes(code)) {
           popToTop();
         }
         if (message) {
@@ -88,6 +107,12 @@ class HTTP {
         method === 'get' ? config : params,
         config,
       );
+
+      console.log(
+        `==== response ${method.toUpperCase()} ==== `,
+        endPoint,
+        response,
+      );
       const data = response.data;
       return typeof data === 'string'
         ? {message: data, success: true}
@@ -97,6 +122,7 @@ class HTTP {
     }
   }
 
+  // HTTP methods
   get(endPoint: string, props?: RequestProps): Promise<any> {
     return this.request('get', endPoint, props);
   }
