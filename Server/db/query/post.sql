@@ -15,7 +15,7 @@ SELECT *
 FROM Posts
 WHERE id = $1;
 -- Get a list of all posts of one user
--- name: GetListPost :many
+-- name: GetListPostByAuthor :many
 SELECT *
 FROM Posts
 WHERE author_id = $1

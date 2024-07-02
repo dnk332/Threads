@@ -84,7 +84,7 @@ func (q *Queries) GetListAllPost(ctx context.Context, arg GetListAllPostParams) 
 	return items, nil
 }
 
-const getListPost = `-- name: GetListPost :many
+const getListPostByAuthor = `-- name: GetListPostByAuthor :many
 SELECT id, author_id, text_content, created_at, updated_at
 FROM Posts
 WHERE author_id = $1
@@ -92,15 +92,15 @@ ORDER BY created_at LIMIT $2
 OFFSET $3
 `
 
-type GetListPostParams struct {
+type GetListPostByAuthorParams struct {
 	AuthorID int64 `json:"author_id"`
 	Limit    int32 `json:"limit"`
 	Offset   int32 `json:"offset"`
 }
 
 // Get a list of all posts of one user
-func (q *Queries) GetListPost(ctx context.Context, arg GetListPostParams) ([]Post, error) {
-	rows, err := q.db.Query(ctx, getListPost, arg.AuthorID, arg.Limit, arg.Offset)
+func (q *Queries) GetListPostByAuthor(ctx context.Context, arg GetListPostByAuthorParams) ([]Post, error) {
+	rows, err := q.db.Query(ctx, getListPostByAuthor, arg.AuthorID, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}

@@ -30,7 +30,7 @@ type Querier interface {
 	// Get a list of all posts
 	GetListAllPost(ctx context.Context, arg GetListAllPostParams) ([]Post, error)
 	// Get a list of all posts of one user
-	GetListPost(ctx context.Context, arg GetListPostParams) ([]Post, error)
+	GetListPostByAuthor(ctx context.Context, arg GetListPostByAuthorParams) ([]Post, error)
 	// Get a list of all users
 	GetListUser(ctx context.Context, arg GetListUserParams) ([]User, error)
 	// Get a post by ID
