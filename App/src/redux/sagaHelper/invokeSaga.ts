@@ -41,11 +41,6 @@ function* handleSagaError(
 ) {
   const token = yield select(accessTokenSelector);
 
-  if (token) {
-    yield put(logoutAction());
-  }
-  // return;
-
   if (error.code === 'ERR_NETWORK') {
     yield handleError({
       message:
@@ -57,12 +52,11 @@ function* handleSagaError(
     return;
   }
 
-  // if (error.response.status) {
-  //   if (token) {
-  //     yield put(logoutAction());
-  //   }
-  //   return;
-  // }
+  if (error.response.status === 401) {
+    if (token) {
+      yield put(logoutAction());
+    }
+  }
 
   const errorMessage = handleErrorMessage(error);
   const message = Array.isArray(errorMessage.message)

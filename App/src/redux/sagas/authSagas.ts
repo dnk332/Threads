@@ -8,6 +8,7 @@ import {userActions} from '@actions';
 import {accessTokenSelector, refreshTokenSelector} from '../selectors';
 import {refreshAccessTokenApi} from '@src/services/apis/authApis';
 import SCREEN_NAME from '@src/navigation/ScreenName';
+import showAlert from '@appRedux/sagaHelper/handleErrorAlert';
 
 import {
   AuthActionType,
@@ -29,18 +30,14 @@ function* loginSaga({type, payload}: ILoginAction) {
   const {params, callback} = payload;
   yield invoke(
     function* execution() {
-      Navigator.navigateAndSimpleReset(SCREEN_NAME.LOADING_INFO);
-      const response: ResponseLoginApi = yield call(
+      Navigator.navigateTo(SCREEN_NAME.LOADING_INFO);
+      const {data, success}: ResponseLoginApi = yield call(
         authApis.loginApi,
         params.username,
         params.password,
       );
-      const data = response.data;
-      callback({
-        data: data,
-        success: response.success,
-      });
-      if (response.success) {
+      callback({data, success});
+      if (success) {
         yield put(
           authActions.setTokenAction(
             data.access_token,
@@ -53,31 +50,33 @@ function* loginSaga({type, payload}: ILoginAction) {
         Navigator.navigateAndSimpleReset(SCREEN_NAME.ROOT);
       }
     },
-    error => {
-      callback({success: false, message: error.message});
-    },
+    null,
     false,
     type,
-    () => {},
+    function* rollback(error) {
+      showAlert({
+        title: 'Error',
+        message: error.message,
+        buttons: [{text: 'OK'}],
+        cancelable: false,
+      });
+      Navigator.goBack();
+    },
   );
 }
 function* registerSaga({type, payload}: IRegisterAction) {
   const {params, callback} = payload;
   yield invoke(
     function* execution() {
-      const response: ResponseRegisterApi = yield call(
+      const {data, success}: ResponseRegisterApi = yield call(
         authApis.registerApi,
         params.username,
         params.password,
       );
-      const data = response.data;
-      callback({
-        data: data,
-        success: response.success,
-      });
-      if (response.success) {
-        yield put(authActions.setAccountInfoAction(response.data.user));
-        yield put(authActions.setListAccountInfoAction(response.data.user));
+      callback({data, success});
+      if (success) {
+        yield put(authActions.setAccountInfoAction(data.user));
+        yield put(authActions.setListAccountInfoAction(data.user));
       }
     },
     error => {
@@ -96,40 +95,38 @@ function* authCheckSaga({type, payload}: IAuthCheckAction) {
         refreshToken: select(refreshTokenSelector),
         accessToken: select(accessTokenSelector),
       });
-
       if (!refreshToken && !accessToken) {
         callback({success: false, message: 'no token'});
+        yield put(authActions.logoutAction());
         return;
       }
-
       if (accessToken) {
         try {
-          const response: ResponseVerifyTokenApi = yield call(
+          const {data, success}: ResponseVerifyTokenApi = yield call(
             authApis.verifyAccessTokenApi,
             accessToken,
           );
-          if (response.data.code === 'jwt_auth_valid_token') {
-            callback({success: true});
+          if (data.code === 'jwt_auth_valid_token') {
+            callback({success});
             return;
           }
         } catch (error) {
           console.log('verify token fail');
         }
       }
-
       if (refreshToken) {
-        const response: ResponseRefreshTokenApi = yield call(
+        const {data, success}: ResponseRefreshTokenApi = yield call(
           refreshAccessTokenApi,
           refreshToken,
-        ) || {};
-        if (response.data.access_token) {
+        );
+        if (data.access_token) {
           yield put(
             authActions.setTokenAction(
-              response.data.access_token,
-              response.data.access_token_expires_at,
+              data.access_token,
+              data.access_token_expires_at,
             ),
           );
-          callback({success: true});
+          callback({success});
           return;
         }
       }

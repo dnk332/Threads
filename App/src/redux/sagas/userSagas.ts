@@ -20,19 +20,12 @@ function* getUserProfileSaga({type, payload}: IGetUserProfileAction) {
   const {params, callback} = payload;
   yield invoke(
     function* execution() {
-      const response: ResponseGetUserProfileApi = yield call(
+      const {data, success}: ResponseGetUserProfileApi = yield call(
         userApis.getUserProfileApi,
         params.user_id,
       );
-      yield callback({
-        success: true,
-        data: response,
-      });
-      if (response.success) {
-        yield put(
-          userActions.saveUserProfileAction(response.data.user_profile),
-        );
-      }
+      yield callback({data, success});
+      yield put(userActions.saveUserProfileAction(data.user_profile));
     },
     error => {
       callback({success: false, message: error.message});
@@ -48,22 +41,15 @@ function* updateUserProfileSaga({type, payload}: IUpdateUserProfileAction) {
   yield invoke(
     function* execution() {
       const currentAccount = yield select(currentAccountSelector);
-      const response: ResponseUpdateUserProfileApi = yield call(
+      const {data, success}: ResponseUpdateUserProfileApi = yield call(
         userApis.updateUserInfoApi,
         currentAccount.user_id,
         params.name,
         params.email,
         params.bio,
       );
-      yield callback({
-        success: true,
-        data: response,
-      });
-      if (response.success) {
-        yield put(
-          userActions.saveUserProfileAction(response.data.user_profile),
-        );
-      }
+      yield callback({data, success});
+      yield put(userActions.saveUserProfileAction(data.user_profile));
     },
     error => {
       callback({success: false, message: error.message});

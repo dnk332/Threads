@@ -17,7 +17,7 @@ import {
   LoadingInfoScreen,
   UpdateUserInfoScreen,
 } from '@screens/index';
-import {User} from '@src/types/user';
+import {IUser} from '@src/types/user';
 import SCREEN_NAME from './ScreenName';
 
 export interface NavigationStackParamList {
@@ -30,7 +30,7 @@ export interface NavigationStackParamList {
   SPLASH: undefined;
   LOADING_INFO: undefined;
   SETTINGS: undefined;
-  UPDATE_USER_INFO: {currentAccount: User};
+  UPDATE_USER_INFO: {currentAccount: IUser};
   [key: string]:
     | undefined
     | {
@@ -38,7 +38,7 @@ export interface NavigationStackParamList {
         focused?: boolean;
         username?: string;
         waitToLogin?: boolean;
-        currentAccount?: User;
+        currentAccount?: IUser;
       };
 }
 
@@ -89,6 +89,7 @@ function StackScreens() {
           options={{
             headerShown: false,
             presentation: 'modal',
+            gestureEnabled: false,
           }}
           name={SCREEN_NAME.UPDATE_USER_INFO}
           component={UpdateUserInfoScreen}

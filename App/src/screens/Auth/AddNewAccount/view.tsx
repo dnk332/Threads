@@ -16,7 +16,7 @@ interface AddNewAccountViewProps {
   onRegister: (username: string, password: string) => void;
   username?: string;
 }
-
+// TODO: use forwardRef to define loading UI
 const AddNewAccountView: React.FC<AddNewAccountViewProps> = ({
   onRegister,
   username,

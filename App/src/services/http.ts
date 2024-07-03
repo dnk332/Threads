@@ -48,7 +48,6 @@ class HTTP {
       (config: InternalAxiosRequestConfig) => {
         const token = getAccessToken();
         const device = getDevice();
-        console.log('getDomain', getDomain());
         config.baseURL = config.baseURL || getDomain();
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;

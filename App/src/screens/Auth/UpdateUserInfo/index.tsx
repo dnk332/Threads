@@ -6,16 +6,22 @@ import {updateUserProfileAction} from '@src/redux/actions/user';
 import {Callback} from '@src/redux/actionTypes/actionTypeBase';
 import {IUserProfile} from '@src/types/user';
 import {AppDispatch} from '@store';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import SCREEN_NAME from '@src/navigation/ScreenName';
+import {NavigationStackParamList} from '@src/navigation/Stack';
 
 interface IUserProfileSubset
   extends Pick<IUserProfile, 'name' | 'email' | 'bio'> {}
-
-const UpdateUserInfo: React.FC = () => {
+type NewPostScreenProps = NativeStackScreenProps<
+  NavigationStackParamList,
+  typeof SCREEN_NAME.UPDATE_USER_INFO
+>;
+const UpdateUserInfo: React.FC<NewPostScreenProps> = ({}) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const onUpdateUserProfile = ({name, email, bio}: IUserProfileSubset) => {
-    const callback: Callback = res => {
-      if (res.success) {
+    const callback: Callback = ({success}) => {
+      if (success) {
         goBack();
       }
     };

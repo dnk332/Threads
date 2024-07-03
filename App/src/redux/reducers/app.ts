@@ -18,7 +18,7 @@ const initialState: IAppState = {
   deviceInfo: null,
 };
 
-export default function (
+export default function appReducer(
   state: IAppState = initialState,
   action: actions.AppAction,
 ): IAppState {
