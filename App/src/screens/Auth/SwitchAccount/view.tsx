@@ -59,7 +59,7 @@ const SwitchAccountView: React.FC<SwitchAccountViewProps> = ({
       <FlashList
         contentContainerStyle={styles.accountsInfoWrapper}
         style={styles.accountsInfo}
-        keyExtractor={user => user.username.toString()}
+        keyExtractor={(item, index) => 'key' + index}
         data={listAccount}
         renderItem={AccountItem}
         showsVerticalScrollIndicator={false}

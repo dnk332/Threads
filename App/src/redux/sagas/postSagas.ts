@@ -38,6 +38,6 @@ function* watchGetListAllPost() {
   yield takeLatest(PostActionType.GET_LIST_ALL_POST, getListAllPostSaga);
 }
 
-export default function* userSagas() {
+export default function* postSagas() {
   yield all([watchGetListAllPost]);
 }

@@ -5,10 +5,11 @@ import {RouteProp} from '@react-navigation/native';
 import layout from '@themes/layout';
 import {NavigationStackParamList} from '@navigation/Stack';
 import {AppContainer, AppImage} from '@components';
+import SCREEN_NAME from '@src/navigation/ScreenName';
 
 type ImageViewerScreenRouteProp = RouteProp<
   NavigationStackParamList,
-  'IMAGE_VIEWER'
+  typeof SCREEN_NAME.IMAGE_VIEWER
 >;
 
 type ImageViewerProps = {

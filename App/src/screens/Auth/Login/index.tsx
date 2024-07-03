@@ -11,14 +11,10 @@ const Login: React.FC = () => {
   const currentAccount = useSelectorShallow(currentAccountSelector);
 
   const onLogin = () => {
-    if (_.isEmpty(currentAccount)) {
-      onSwitchAccount();
-    } else {
-      Navigator.navigateTo(SCREEN_NAME.ADD_ACCOUNT, {
-        username: currentAccount.username,
-        waitToLogin: true,
-      });
-    }
+    Navigator.navigateTo(SCREEN_NAME.ADD_ACCOUNT, {
+      username: !_.isEmpty(currentAccount) ? currentAccount.username : '',
+      waitToLogin: true,
+    });
   };
 
   const onSwitchAccount = () => {

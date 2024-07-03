@@ -18,13 +18,13 @@ type AddNewAccountProps = {
 };
 
 const AddNewAccount: React.FC<AddNewAccountProps> = ({route}) => {
-  const username = route.params?.username || '';
-  const waitToLogin = route.params?.waitToLogin || false;
-
+  const username = route.params?.username ?? '';
+  const waitToLogin = route.params?.waitToLogin ?? false;
+  console.log('waitToLogin', waitToLogin);
   const dispatch = useDispatch<AppDispatch>();
   const onRegister = (usernameValue: string, passwordValue: string) => {
-    let callback: Callback = res => {
-      if (res.success) {
+    let callback: Callback = ({success}) => {
+      if (success) {
         dispatch(loginAction(usernameValue, passwordValue, callback));
       }
     };

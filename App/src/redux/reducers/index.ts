@@ -5,7 +5,7 @@ import {persistReducer} from 'redux-persist';
 import {actionTypes} from '@actions';
 
 import authReducer, {IAuthState} from './auth';
-import applicationReducer, {IAppState} from './app';
+import appReducer, {IAppState} from './app';
 import userReducer, {IUserState} from './user';
 import postReducer, {IPostState} from './post';
 
@@ -25,17 +25,17 @@ export interface IGlobalState {
   post: IPostState;
 }
 
-const appReducer = combineReducers({
+const combineReducer = combineReducers({
   auth: authReducer,
-  app: applicationReducer,
+  app: appReducer,
   user: userReducer,
   post: postReducer,
 });
 const rootReducer = (state, action) => {
   if (action.type === APP.CLEAR_REDUCER) {
-    return appReducer(undefined, action);
+    return combineReducer(undefined, action);
   }
-  return appReducer(state, action);
+  return combineReducer(state, action);
 };
 
 export default persistReducer(rootPersistConfig, rootReducer);

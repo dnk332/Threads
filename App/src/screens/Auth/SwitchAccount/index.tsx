@@ -9,7 +9,6 @@ import SCREEN_NAME from '@src/navigation/ScreenName';
 
 const SwitchAccount: React.FC = () => {
   const listAccount = useSelectorShallow(listAccountSelector);
-
   const onLogin = (username: string) => {
     Navigator.navigateTo(SCREEN_NAME.ADD_ACCOUNT, {
       username,
