@@ -16,6 +16,7 @@ function* startApplicationSaga({type, payload}: IStartAction) {
     function* execution() {
       TimeAgo.SetUpTime();
       const domain = yield select(domainSelector);
+      console.log('domain', domain);
       yield all([
         yield put({
           type: APP.SAVE_DOMAIN,

@@ -9,8 +9,8 @@ import {
   UserActionType,
 } from '../actionTypes/userActionTypes';
 import {
-  ResponseGetUserInfoApi,
-  ResponseUpdateUserInfoApi,
+  ResponseGetUserProfileApi,
+  ResponseUpdateUserProfileApi,
 } from '@src/services/apiTypes/userApiTypes';
 import {invoke} from '../sagaHelper/invokeSaga';
 
@@ -20,8 +20,8 @@ function* getUserProfileSaga({type, payload}: IGetUserProfileAction) {
   const {params, callback} = payload;
   yield invoke(
     function* execution() {
-      const response: ResponseGetUserInfoApi = yield call(
-        userApis.getUserInfoApi,
+      const response: ResponseGetUserProfileApi = yield call(
+        userApis.getUserProfileApi,
         params.user_id,
       );
       yield callback({
@@ -29,7 +29,9 @@ function* getUserProfileSaga({type, payload}: IGetUserProfileAction) {
         data: response,
       });
       if (response.success) {
-        yield put(userActions.saveUserInfoAction(response.data.user_profile));
+        yield put(
+          userActions.saveUserProfileAction(response.data.user_profile),
+        );
       }
     },
     error => {
@@ -46,7 +48,7 @@ function* updateUserProfileSaga({type, payload}: IUpdateUserProfileAction) {
   yield invoke(
     function* execution() {
       const currentAccount = yield select(currentAccountSelector);
-      const response: ResponseUpdateUserInfoApi = yield call(
+      const response: ResponseUpdateUserProfileApi = yield call(
         userApis.updateUserInfoApi,
         currentAccount.user_id,
         params.name,
@@ -58,7 +60,9 @@ function* updateUserProfileSaga({type, payload}: IUpdateUserProfileAction) {
         data: response,
       });
       if (response.success) {
-        yield put(userActions.saveUserInfoAction(response.data.user_profile));
+        yield put(
+          userActions.saveUserProfileAction(response.data.user_profile),
+        );
       }
     },
     error => {

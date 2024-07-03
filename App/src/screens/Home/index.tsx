@@ -1,21 +1,32 @@
 import React, {useCallback, useEffect} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
 import _ from 'lodash';
 
 import HomeScreenView from './view';
-import {currentAccountSelector} from '@src/redux/selectors';
+import {
+  currentAccountSelector,
+  listAllPostSelector,
+} from '@src/redux/selectors';
 import * as Navigator from '@navigators';
 import SCREEN_NAME from '@src/navigation/ScreenName';
-import {AppDispatch} from '../../redux/store/index';
 import {getUserProfileAction} from '@src/redux/actions/user';
 import {Callback} from '@src/redux/actionTypes/actionTypeBase';
+import useSelectorShallow from '@src/hooks/useSelectorShallowEqual';
+import {useActions} from '@src/hooks/useActions';
+import {getListAllPostAction} from '@src/redux/actions/post';
+
+const SIZE_PAGE = 10;
 
 const HomeScreen: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  let currentAccount = useSelector(currentAccountSelector);
+  const actions = useActions({
+    getUserProfileAction,
+    getListAllPostAction,
+  });
 
-  const getUserInfo = useCallback(() => {
-    if (currentAccount['user_id']) {
+  let currentAccount = useSelectorShallow(currentAccountSelector);
+  let listAllPost = useSelectorShallow(listAllPostSelector);
+
+  const getUserProfile = useCallback(() => {
+    if (currentAccount.user_id) {
       const callback: Callback = res => {
         if (!res.success) {
           Navigator.navigateTo(SCREEN_NAME.UPDATE_USER_INFO, {
@@ -23,15 +34,29 @@ const HomeScreen: React.FC = () => {
           });
         }
       };
-      dispatch(getUserProfileAction(currentAccount.user_id, callback));
+      actions.getUserProfileAction(currentAccount.user_id, callback);
     }
-  }, [currentAccount, dispatch]);
+  }, [actions, currentAccount]);
+
+  const getListPost = useCallback(
+    (limit: number = 1) => {
+      const callback: Callback = response => {
+        console.log('getListPost response', response);
+      };
+      actions.getListAllPostAction(SIZE_PAGE, limit, callback);
+    },
+    [actions],
+  );
 
   useEffect(() => {
     if (!_.isEmpty(currentAccount)) {
-      getUserInfo();
+      getUserProfile();
     }
-  }, [currentAccount, getUserInfo]);
+  }, [currentAccount, getUserProfile]);
+
+  useEffect(() => {
+    getListPost();
+  }, [getListPost]);
 
   return <HomeScreenView />;
 };

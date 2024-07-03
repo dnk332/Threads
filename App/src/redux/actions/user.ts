@@ -7,7 +7,7 @@ import {
 import {Callback} from '@actionTypes/actionTypeBase';
 import {IUserProfile} from '@src/types/user';
 
-export const saveUserInfoAction = (
+export const saveUserProfileAction = (
   user_profile: IUserProfile,
 ): ISetUserProfileAction => ({
   type: UserActionType.SET_PROFILE,

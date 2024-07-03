@@ -1,13 +1,20 @@
-export interface Media {
+export interface IMedia {
   id: number;
   link: any;
   type: string;
 }
-export interface Post {
+export interface IPost {
   textContent: string;
-  mediaContent: Media[];
+  mediaContent: IMedia[];
   time: string;
   liked: number;
   comment: number;
   reported: number;
+}
+
+export interface IPostText {
+  authorId: number;
+  textContent: string;
+  createAt: string;
+  upDateAt: string;
 }
