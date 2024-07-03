@@ -38,6 +38,11 @@ export default function authReducer(
     case actionType.SET_ACCOUNT_INFO:
       return {
         ...state,
+        currentAccount: action.payload.params.accountInfo,
+      };
+    case actionType.SET_LIST_ACCOUNT_INFO:
+      return {
+        ...state,
         listAccount: !_.isArray(state.listAccount)
           ? [action.payload.params.accountInfo]
           : [...state.listAccount, action.payload.params.accountInfo],

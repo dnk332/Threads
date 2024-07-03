@@ -9,6 +9,7 @@ import {
   AuthActionType,
   ISetAccountInfoAction,
   IAuthCheckAction,
+  ISetListAccountInfoAction,
 } from '@actionTypes/authActionTypes';
 
 export const loginAction = (
@@ -54,6 +55,13 @@ export const setAccountInfoAction = (
   accountInfo: IUser,
 ): ISetAccountInfoAction => ({
   type: AuthActionType.SET_ACCOUNT_INFO,
+  payload: {params: {accountInfo}},
+});
+
+export const setListAccountInfoAction = (
+  accountInfo: IUser,
+): ISetListAccountInfoAction => ({
+  type: AuthActionType.SET_LIST_ACCOUNT_INFO,
   payload: {params: {accountInfo}},
 });
 

@@ -1,7 +1,6 @@
 export const authSelector = state => state.auth;
 export const connectSelector = state => state.connect;
 export const userSelector = state => state.user;
-export const domainSelector = state => state.app.domain;
 export const userInfoSelector = state => state.user.user;
 export const settingSelector = state => state.app.setting;
 export const languageSelector = state => state.app.language;
@@ -21,3 +20,5 @@ export const bookingRequestSelector = state => state.booking.request;
 
 export * from './auth';
 export * from './user';
+export * from './post';
+export * from './app';

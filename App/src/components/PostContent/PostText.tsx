@@ -1,4 +1,4 @@
-import React, {Fragment, memo, ReactElement, useRef, useState} from 'react';
+import React, {Fragment, memo, ReactElement, useRef} from 'react';
 import {Pressable, View} from 'react-native';
 
 import {Avatar, AppText} from '@components';
@@ -6,17 +6,15 @@ import layout from '@themes/layout';
 import {colors} from '@themes/color';
 import {AppStyleSheet} from '@themes/responsive';
 import {IUser} from '@localTypes/user';
-import {IPost} from '@localTypes/post';
+import {IPostText} from '@localTypes/post';
 import TimeFromNow from '@hooks/TimeAgo';
 import ActiveBottomSheet from '@src/screens/Home/Components/ActiveBottomSheet';
 import ContentHandelArea from '@src/components/PostContent/ContentHandelArea';
-import MediaContent from '@src/components/PostContent/MediaContent';
-import {imageHeight} from '@constants/deviceSize';
 import SvgComponent from '@svg/index';
 
 interface PostItemProps {
   userData: IUser;
-  postData: IPost;
+  postData: IPostText;
   haveReplies?: boolean;
   lastReplies?: boolean;
   isReplies?: boolean;
@@ -44,14 +42,10 @@ const StatusItem = ({icon, value = 0}: StatusItemProps): ReactElement => {
 const PostItem = ({
   userData,
   postData,
-  haveReplies,
-  lastReplies,
   isReplies,
   isRootPost,
 }: PostItemProps) => {
   const sheetRef = useRef<any>();
-
-  const [contentViewHeight, setContentViewHeight] = useState<number>(0);
 
   return (
     <Fragment>
@@ -70,23 +64,7 @@ const PostItem = ({
             }}
           />
           <View style={styles.contentContainer}>
-            <View
-              style={[
-                styles.lineWrapper,
-                {
-                  height:
-                    postData.mediaContent.length !== 0
-                      ? imageHeight + contentViewHeight + 8
-                      : contentViewHeight,
-                },
-              ]}>
-              {haveReplies && !lastReplies && <View style={[styles.line]} />}
-            </View>
-            <View
-              onLayout={({nativeEvent}) => {
-                const {height} = nativeEvent.layout;
-                setContentViewHeight(height);
-              }}>
+            <View>
               <View
                 style={[
                   layout.row,
@@ -100,7 +78,7 @@ const PostItem = ({
                     fontWeight={600}>
                     {userData.username}
                   </AppText>
-                  <TimeFromNow date={new Date(postData.time)} />
+                  <TimeFromNow date={new Date(postData.createAt)} />
                 </View>
                 <Pressable onPress={() => sheetRef.current?.snapTo(0)}>
                   <SvgComponent name={'THREE_DOT'} />
@@ -110,29 +88,11 @@ const PostItem = ({
             </View>
           </View>
         </View>
-        <View style={styles.overlay}>
-          {postData.mediaContent.length > 0 && (
-            <MediaContent content={postData.mediaContent} />
-          )}
-        </View>
-        <View
-          style={[
-            layout.row,
-            styles.feature,
-            postData.mediaContent.length === 0 && styles.space,
-          ]}>
-          <StatusItem
-            icon={<SvgComponent name={'HEART'} />}
-            value={postData.liked}
-          />
-          <StatusItem
-            icon={<SvgComponent name={'MESSAGE'} />}
-            value={postData.comment}
-          />
-          <StatusItem
-            icon={<SvgComponent name={'REPEAT'} />}
-            value={postData.reported}
-          />
+
+        <View style={[layout.row, styles.feature]}>
+          <StatusItem icon={<SvgComponent name={'HEART'} />} value={10} />
+          <StatusItem icon={<SvgComponent name={'MESSAGE'} />} value={10} />
+          <StatusItem icon={<SvgComponent name={'REPEAT'} />} value={10} />
           <StatusItem icon={<SvgComponent name={'SEND'} />} />
         </View>
       </View>

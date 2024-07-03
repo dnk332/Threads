@@ -8,6 +8,7 @@ export const AuthActionType = {
   SET_TOKEN: 'AUTH/SET_TOKEN',
   SET_REFRESH_TOKEN: 'AUTH/SET_REFRESH_TOKEN',
   SET_ACCOUNT_INFO: 'AUTH/SET_ACCOUNT_INFO',
+  SET_LIST_ACCOUNT_INFO: 'AUTH/SET_LIST_ACCOUNT_INFO',
   AUTH_CHECK: 'AUTH/AUTH_CHECK',
   CURRENT_ACCOUNT_INDEX: 'AUTH/CURRENT_ACCOUNT_INDEX',
   UPDATE_CURRENT_ACCOUNT: 'AUTH/UPDATE_CURRENT_ACCOUNT',
@@ -58,6 +59,13 @@ export interface ISetAccountInfoAction
   type: typeof AuthActionType.SET_ACCOUNT_INFO;
 }
 
+export interface ISetListAccountInfoAction
+  extends ActionBase<{
+    accountInfo: IUser;
+  }> {
+  type: typeof AuthActionType.SET_LIST_ACCOUNT_INFO;
+}
+
 export interface IAuthCheckAction extends ActionBase<{}> {
   type: typeof AuthActionType.AUTH_CHECK;
 }
@@ -69,4 +77,5 @@ export type AuthAction =
   | ISetTokenAction
   | ISetRefreshTokenAction
   | ISetAccountInfoAction
+  | ISetListAccountInfoAction
   | IAuthCheckAction;

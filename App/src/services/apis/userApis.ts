@@ -1,11 +1,11 @@
 import http from '../http';
 import {
-  ResponseGetUserInfoApi,
-  ResponseUpdateUserInfoApi,
+  ResponseGetUserProfileApi,
+  ResponseUpdateUserProfileApi,
 } from '@apiTypes/userApiTypes';
-export const getUserInfoApi = (
+export const getUserProfileApi = (
   user_id: number,
-): Promise<ResponseGetUserInfoApi> => {
+): Promise<ResponseGetUserProfileApi> => {
   return http.get(`/user-profiles/${user_id}`);
 };
 export const updateUserInfoApi = (
@@ -13,7 +13,7 @@ export const updateUserInfoApi = (
   name: string,
   email: string,
   bio: string,
-): Promise<ResponseUpdateUserInfoApi> => {
+): Promise<ResponseUpdateUserProfileApi> => {
   return http.post('/user-profiles', {
     params: {
       user_id,

@@ -34,7 +34,7 @@ func randomUser(t *testing.T) (user db.User, password string) {
 	}
 	return
 }
-func randomSession(t *testing.T, userID int64) db.Session {
+func randomSession(userID int64) db.Session {
 	return db.Session{
 		ID:           uuid.New(),
 		UserID:       userID,
@@ -379,7 +379,7 @@ func TestLoginUserAPI(t *testing.T) {
 
 func TestLogoutUserAPI(t *testing.T) {
 	user, _ := randomUser(t)
-	session := randomSession(t, user.ID)
+	session := randomSession(user.ID)
 	testCases := []struct {
 		name          string
 		setupAuth     func(t *testing.T, request *http.Request, tokenMaker token.Maker)

@@ -8,6 +8,7 @@ import {userActions} from '@actions';
 import {accessTokenSelector, refreshTokenSelector} from '../selectors';
 import {refreshAccessTokenApi} from '@src/services/apis/authApis';
 import SCREEN_NAME from '@src/navigation/ScreenName';
+
 import {
   AuthActionType,
   IAuthCheckAction,
@@ -48,6 +49,7 @@ function* loginSaga({type, payload}: ILoginAction) {
         );
         yield put(authActions.setRefreshTokenAction(data.refresh_token));
         yield put(authActions.setAccountInfoAction(data.user));
+        yield put(authActions.setListAccountInfoAction(data.user));
         Navigator.navigateAndSimpleReset(SCREEN_NAME.ROOT);
       }
     },
@@ -75,6 +77,7 @@ function* registerSaga({type, payload}: IRegisterAction) {
       });
       if (response.success) {
         yield put(authActions.setAccountInfoAction(response.data.user));
+        yield put(authActions.setListAccountInfoAction(response.data.user));
       }
     },
     error => {
@@ -144,7 +147,7 @@ function* logoutSaga({type}: ILogoutAction) {
       yield call(authApis.logoutApi);
       yield put(authActions.setTokenAction(null, null));
       yield put(authActions.setRefreshTokenAction(null));
-      yield put(userActions.saveUserInfoAction(null));
+      yield put(userActions.saveUserProfileAction(null));
       Navigator.navigateAndSimpleReset(SCREEN_NAME.LOGIN);
     },
     () => {},

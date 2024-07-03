@@ -1,5 +1,6 @@
 import {AppActionType} from './appActionTypes';
 import {AuthActionType} from './authActionTypes';
+import {PostActionType} from './postActionTypes';
 import {UserActionType} from './userActionTypes';
 
 export type Callback = ({
@@ -13,9 +14,10 @@ export type Callback = ({
 }) => void;
 
 export interface ActionBase<T> {
-  type: AppActionType | AuthActionType | UserActionType;
+  type: AppActionType | AuthActionType | UserActionType | PostActionType;
   payload?: {
     params?: T;
     callback?: Callback;
+    loadMore?: boolean;
   };
 }

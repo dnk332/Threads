@@ -7,7 +7,7 @@ import axios, {
 import {store} from '@src/redux/store';
 import {accessTokenSelector, domainSelector} from '@src/redux/selectors';
 import {getParamsString} from '@src/utils/HelperUtil';
-import {popToTop} from '@src/navigation/NavigationService';
+import * as Navigator from '@src/navigation/NavigationService';
 import {deviceInfoSelector} from '@src/redux/selectors/app';
 import {IDeviceInfo} from '@src/redux/reducers/app';
 
@@ -48,6 +48,7 @@ class HTTP {
       (config: InternalAxiosRequestConfig) => {
         const token = getAccessToken();
         const device = getDevice();
+        console.log('getDomain', getDomain());
         config.baseURL = config.baseURL || getDomain();
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
@@ -73,7 +74,7 @@ class HTTP {
       (error: any) => {
         const {code, message} = error.response?.data || {};
         if (code && this.exceptionCodes.includes(code)) {
-          popToTop();
+          Navigator.popToTop();
         }
         if (message) {
           error.message = message;
