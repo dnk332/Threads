@@ -13,15 +13,20 @@ import {colors} from '@themes/color';
 import {View} from 'react-native';
 
 interface AddNewAccountViewProps {
-  onRegister: (username: string, password: string) => void;
+  onRegister: (
+    username: string,
+    password: string,
+    setLoadingValue: (value: boolean) => void,
+  ) => void;
   username?: string;
 }
-// TODO: use forwardRef to define loading UI
+
 const AddNewAccountView: React.FC<AddNewAccountViewProps> = ({
   onRegister,
   username,
 }) => {
   const [usernameValue, setUsernameValue] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
   const password = React.useRef('');
 
   useEffect(() => {
@@ -53,11 +58,16 @@ const AddNewAccountView: React.FC<AddNewAccountViewProps> = ({
             secureTextEntry={true}
           />
           <AppButton
-            onPress={() => onRegister(usernameValue, password.current)}
+            onPress={() =>
+              onRegister(usernameValue, password.current, value => {
+                setLoading(value);
+              })
+            }
             text="Log in"
             buttonColor={colors.blue}
             buttonStyle={styles.button}
             borderRadius={100}
+            loading={loading}
           />
         </View>
         <AppImage

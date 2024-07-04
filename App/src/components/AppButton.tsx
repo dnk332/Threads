@@ -11,6 +11,7 @@ import {
 import {AppStyleSheet} from '@themes/responsive';
 import {AppText} from '@components';
 import {colors} from '@themes/color';
+import Lottie from 'lottie-react-native';
 
 export interface AppButtonProps extends PressableProps {
   text: string;
@@ -22,6 +23,7 @@ export interface AppButtonProps extends PressableProps {
   textStyle?: StyleProp<TextStyle>;
   borderRadius?: number;
   onPress?: () => void;
+  loading?: boolean;
 }
 
 const AppButton = ({
@@ -34,6 +36,7 @@ const AppButton = ({
   textStyle,
   borderRadius = 16,
   onPress,
+  loading = false,
 }: AppButtonProps): React.ReactNode => {
   return (
     <Pressable
@@ -45,13 +48,21 @@ const AppButton = ({
       ]}>
       <View>
         <View>{leftIcon}</View>
-        <AppText
-          style={textStyle}
-          color={textColor}
-          fontSize={14}
-          fontWeight={600}>
-          {text}
-        </AppText>
+        {loading ? (
+          <Lottie
+            source={require('@assets/lottie/loading.json')}
+            style={styles.lottieView}
+            autoPlay
+          />
+        ) : (
+          <AppText
+            style={textStyle}
+            color={textColor}
+            fontSize={14}
+            fontWeight={600}>
+            {text}
+          </AppText>
+        )}
       </View>
       {rightIcon}
     </Pressable>
@@ -66,5 +77,10 @@ const styles = AppStyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 16,
+  },
+  lottieView: {
+    width: 35,
+    height: 35,
+    backgroundColor: 'transparent',
   },
 });

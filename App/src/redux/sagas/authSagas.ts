@@ -36,7 +36,6 @@ function* loginSaga({type, payload}: ILoginAction) {
         params.username,
         params.password,
       );
-      callback({data, success});
       if (success) {
         yield put(
           authActions.setTokenAction(
@@ -49,6 +48,7 @@ function* loginSaga({type, payload}: ILoginAction) {
         yield put(authActions.setListAccountInfoAction(data.user));
         Navigator.navigateAndSimpleReset(SCREEN_NAME.ROOT);
       }
+      callback({data, success});
     },
     null,
     false,
@@ -74,10 +74,6 @@ function* registerSaga({type, payload}: IRegisterAction) {
         params.password,
       );
       callback({data, success});
-      if (success) {
-        yield put(authActions.setAccountInfoAction(data.user));
-        yield put(authActions.setListAccountInfoAction(data.user));
-      }
     },
     error => {
       callback({success: false, message: error.message});
