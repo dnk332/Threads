@@ -9,7 +9,7 @@ export type ResponseLoginApi = ApiResponse<{
   refresh_token_expires_at: string;
   user: IUser;
 }>;
-export type ResponseRegisterApi = ApiResponse<{user: IUser}>;
+export type ResponseRegisterApi = ApiResponse<{}>;
 export type ResponseVerifyTokenApi = ApiResponse<{code: string}>;
 export type ResponseRefreshTokenApi = ApiResponse<{
   access_token: string;

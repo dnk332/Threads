@@ -22,14 +22,24 @@ const AddNewAccount: React.FC<AddNewAccountProps> = ({route}) => {
   const waitToLogin = route.params?.waitToLogin ?? false;
   console.log('waitToLogin', waitToLogin);
   const dispatch = useDispatch<AppDispatch>();
-  const onRegister = (usernameValue: string, passwordValue: string) => {
+  const onRegister = (
+    usernameValue: string,
+    passwordValue: string,
+    setLoadingValue: (value: boolean) => void,
+  ) => {
     let callback: Callback = ({success}) => {
       if (success) {
-        dispatch(loginAction(usernameValue, passwordValue, callback));
+        dispatch(loginAction(usernameValue, passwordValue, () => {}));
       }
+      setLoadingValue(false);
     };
+    setLoadingValue(true);
     if (waitToLogin) {
-      dispatch(loginAction(usernameValue, passwordValue, () => {}));
+      dispatch(
+        loginAction(usernameValue, passwordValue, () => {
+          setLoadingValue(false);
+        }),
+      );
     } else {
       dispatch(registerAction(usernameValue, passwordValue, callback));
     }
