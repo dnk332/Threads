@@ -1,6 +1,6 @@
 import {ApiResponse} from './apiTypeBase';
 import {IPostText} from '@src/types/post';
 
-export type ResponseGetListAllPostApi = ApiResponse<{
-  posts: IPostText[] | [];
-}>;
+export interface ResponseGetListAllPostApi extends ApiResponse<IPostText[]> {
+  data: IPostText[] | [];
+}

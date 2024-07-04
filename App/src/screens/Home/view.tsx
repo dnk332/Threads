@@ -12,10 +12,15 @@ import {PostItem} from '@src/components';
 import {dummyPost} from '@src/constants/dummyData';
 import {colors} from '@themes/color';
 import {AppStyleSheet} from '@src/themes/responsive';
+import {IPostText} from '@src/types/post';
+
+type HomeScreenViewProps = {
+  listPost: IPostText[];
+};
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-const HomeScreenView = () => {
+const HomeScreenView: React.FC<HomeScreenViewProps> = ({listPost}) => {
   const scrollPosition = useSharedValue(0);
   const pullDownPosition = useSharedValue(0);
   const isReadyToRefresh = useSharedValue(false);
@@ -74,7 +79,7 @@ const HomeScreenView = () => {
       onPanResponderTerminate: onPanRelease,
     }),
   );
-
+  // TODO: update post text item, need add user data of post's author
   const _renderItem = useCallback(({item}) => {
     const isRepliesPost = item.replies.length > 0;
     if (isRepliesPost) {
