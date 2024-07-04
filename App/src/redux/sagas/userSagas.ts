@@ -25,7 +25,7 @@ function* getUserProfileSaga({type, payload}: IGetUserProfileAction) {
         params.user_id,
       );
       yield callback({data, success});
-      yield put(userActions.saveUserProfileAction(data.user_profile));
+      yield put(userActions.saveUserProfileAction(data));
     },
     error => {
       callback({success: false, message: error.message});
@@ -48,8 +48,9 @@ function* updateUserProfileSaga({type, payload}: IUpdateUserProfileAction) {
         params.email,
         params.bio,
       );
+      console.log('data', data);
       yield callback({data, success});
-      yield put(userActions.saveUserProfileAction(data.user_profile));
+      yield put(userActions.saveUserProfileAction(data));
     },
     error => {
       callback({success: false, message: error.message});

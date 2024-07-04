@@ -2,8 +2,8 @@ import {IPostText} from '@src/types/post';
 import {ActionBase} from './actionTypeBase';
 
 export const PostActionType = {
-  GET_LIST_ALL_POST: 'USER/GET_LIST_ALL_POST',
-  SAVE_LIST_ALL_POST: 'USER/SAVE_LIST_ALL_POST',
+  GET_LIST_ALL_POST: 'POST/GET_LIST_ALL_POST',
+  SAVE_LIST_ALL_POST: 'POST/SAVE_LIST_ALL_POST',
 } as const;
 
 export type PostActionType =
@@ -11,8 +11,8 @@ export type PostActionType =
 
 export interface IGetListAllPostAction
   extends ActionBase<{
-    limit: number;
-    offset: number;
+    pageId: number;
+    pageSize: number;
   }> {
   type: typeof PostActionType.GET_LIST_ALL_POST;
 }

@@ -1,12 +1,12 @@
 import {all, call, takeLatest} from 'redux-saga/effects';
 
 import api from '@src/services/apis';
-import {ResponseGetUserProfileApi} from '@src/services/apiTypes/userApiTypes';
 import {invoke} from '../sagaHelper/invokeSaga';
 import {
   IGetListAllPostAction,
   PostActionType,
 } from '../actionTypes/postActionTypes';
+import {ResponseGetListAllPostApi} from '@src/services/apiTypes/postApiTypes';
 
 const {postApis} = api;
 
@@ -14,16 +14,12 @@ function* getListAllPostSaga({type, payload}: IGetListAllPostAction) {
   const {params, callback} = payload;
   yield invoke(
     function* execution() {
-      const response: ResponseGetUserProfileApi = yield call(
+      const {data, success}: ResponseGetListAllPostApi = yield call(
         postApis.getListAllPostApi,
-        params.limit,
-        params.offset,
+        params.pageId,
+        params.pageSize,
       );
-      console.log('getListAllPostSaga response', response);
-      yield callback({
-        success: true,
-        data: response,
-      });
+      yield callback({success, data});
     },
     error => {
       callback({success: false, message: error.message});
@@ -39,5 +35,5 @@ function* watchGetListAllPost() {
 }
 
 export default function* postSagas() {
-  yield all([watchGetListAllPost]);
+  yield all([watchGetListAllPost()]);
 }

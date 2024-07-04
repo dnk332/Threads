@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import _ from 'lodash';
 import {useDispatch} from 'react-redux';
 
@@ -12,17 +12,21 @@ import SCREEN_NAME from '@src/navigation/ScreenName';
 import {getUserProfileAction} from '@src/redux/actions/user';
 import {Callback} from '@src/redux/actionTypes/actionTypeBase';
 import useSelectorShallow from '@src/hooks/useSelectorShallowEqual';
-import {getListAllPostAction} from '@src/redux/actions/post';
+import {
+  getListAllPostAction,
+  saveListAllPostAction,
+} from '@src/redux/actions/post';
 import {AppDispatch} from '@src/redux/store';
+import {IPostText} from '@src/types/post';
 
-const SIZE_PAGE = 10;
+const pageSize = 10;
 
 const HomeScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-
   let currentAccount = useSelectorShallow(currentAccountSelector);
   let listAllPost = useSelectorShallow(listAllPostSelector);
-  console.log('listAllPost', listAllPost);
+  const [listPost, setListPost] = useState<IPostText[]>([...listAllPost]);
+
   const getUserProfile = useCallback(() => {
     const callback: Callback = ({success}) => {
       if (!success) {
@@ -35,11 +39,18 @@ const HomeScreen: React.FC = () => {
   }, [currentAccount, dispatch]);
 
   const getListPost = useCallback(
-    (limit: number = 1) => {
-      const callback: Callback = response => {
-        console.log('getListPost response', response);
+    (pageId: number = 1) => {
+      const callback: Callback = ({data, success}) => {
+        if (success) {
+          if (pageId > 1) {
+            setListPost(old => [...old, ...data]);
+          } else {
+            setListPost(() => [...data]);
+          }
+          dispatch(saveListAllPostAction(data, false));
+        }
       };
-      dispatch(getListAllPostAction(SIZE_PAGE, limit, callback));
+      dispatch(getListAllPostAction(pageId, pageSize, callback));
     },
     [dispatch],
   );
@@ -54,7 +65,7 @@ const HomeScreen: React.FC = () => {
     getListPost();
   }, [getListPost]);
 
-  return <HomeScreenView />;
+  return <HomeScreenView listPost={listPost} />;
 };
 
 export default HomeScreen;
