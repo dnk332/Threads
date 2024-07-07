@@ -5,15 +5,15 @@ import {Avatar, AppText} from '@components';
 import layout from '@themes/layout';
 import {colors} from '@themes/color';
 import {AppStyleSheet} from '@themes/responsive';
-import {IUser} from '@localTypes/user';
-import {IPostText} from '@localTypes/post';
-import TimeFromNow from '@hooks/TimeAgo';
+import {IAuthor, IPostText} from '@localTypes/post';
+import TimeFromNow from '@src/hooks/hookTime/TimeAgo';
 import ActiveBottomSheet from '@src/screens/Home/Components/ActiveBottomSheet';
 import ContentHandelArea from '@src/components/PostContent/ContentHandelArea';
 import SvgComponent from '@svg/index';
+import _ from 'lodash';
 
 interface PostItemProps {
-  userData: IUser;
+  userData: IAuthor;
   postData: IPostText;
   haveReplies?: boolean;
   lastReplies?: boolean;
@@ -46,7 +46,6 @@ const PostItem = ({
   isRootPost,
 }: PostItemProps) => {
   const sheetRef = useRef<any>();
-
   return (
     <Fragment>
       <View>
@@ -60,7 +59,7 @@ const PostItem = ({
           ]}>
           <Avatar
             source={{
-              uri: userData.avatar,
+              uri: '',
             }}
           />
           <View style={styles.contentContainer}>
@@ -76,9 +75,11 @@ const PostItem = ({
                     style={styles.userName}
                     fontSize={16}
                     fontWeight={600}>
-                    {userData.username}
+                    {userData.name}
                   </AppText>
-                  <TimeFromNow date={new Date(postData.createAt)} />
+                  {!_.isEmpty(postData.createdAt) && (
+                    <TimeFromNow date={new Date(postData.createdAt)} />
+                  )}
                 </View>
                 <Pressable onPress={() => sheetRef.current?.snapTo(0)}>
                   <SvgComponent name={'THREE_DOT'} />

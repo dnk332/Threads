@@ -1,18 +1,19 @@
 import React, {useEffect} from 'react';
 import {View} from 'react-native';
-import {useDispatch} from 'react-redux';
 import BootSplash from 'react-native-bootsplash';
 
 import {AppStyleSheet} from '@src/themes/responsive';
-import * as Navigator from '@navigators';
+import Navigator from '@navigators';
 import {colors} from '@themes/color';
 import {AppImage} from '@src/components';
 import SCREEN_NAME from '@src/navigation/ScreenName';
 import {startAction} from '@src/redux/actions/app';
-import {AppDispatch} from '@src/redux/store';
+import {useActions} from '@src/hooks/useActions';
 
 export default function Splash() {
-  const dispatch: AppDispatch = useDispatch();
+  const actions = useActions({
+    startAction,
+  });
   const HideSplash = async (): Promise<void> => {
     await BootSplash.hide({fade: true});
     return new Promise(resolve => {
@@ -23,17 +24,15 @@ export default function Splash() {
   };
 
   useEffect(() => {
-    dispatch(
-      startAction(async response => {
-        await HideSplash();
-        if (response.success) {
-          Navigator.navigateAndSimpleReset(SCREEN_NAME.ROOT);
-        } else {
-          Navigator.navigateAndSimpleReset(SCREEN_NAME.LOGIN);
-        }
-      }),
-    );
-  }, [dispatch]);
+    actions.startAction(async response => {
+      await HideSplash();
+      if (response.success) {
+        Navigator.navigateAndSimpleReset(SCREEN_NAME.ROOT);
+      } else {
+        Navigator.navigateAndSimpleReset(SCREEN_NAME.LOGIN);
+      }
+    });
+  }, [actions]);
 
   return (
     <View style={[styles.container, {backgroundColor: colors.primary}]}>

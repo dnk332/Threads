@@ -1,7 +1,12 @@
 import {put, select} from 'redux-saga/effects';
 import {loadingActions, authActions} from '@actions';
 import {accessTokenSelector} from '@selectors';
-import {CustomError, handleErrorMessage} from './handleErrorMessage';
+import {
+  CustomError,
+  handleErrorMessage,
+  isNetworkError,
+  isUnauthorizedError,
+} from './handleErrorMessage';
 
 const {
   showLoadingAction,
@@ -41,20 +46,18 @@ function* handleSagaError(
 ) {
   const token = yield select(accessTokenSelector);
 
-  if (error.code === 'ERR_NETWORK') {
+  if (isNetworkError(error)) {
     yield handleError({
-      message:
-        'Something is temporarily wrong with your network connection! Please try again later',
-      response: {
-        status: 502,
-      },
+      message: 'Temporary network issue. Please try again later',
+      response: {status: 502},
     });
     return;
   }
 
-  if (error.response.status === 401) {
+  if (isUnauthorizedError(error)) {
     if (token) {
       yield put(logoutAction());
+      return;
     }
   }
 

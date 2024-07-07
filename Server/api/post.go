@@ -19,6 +19,7 @@ type createPostRequest struct {
 
 // userResponse defines the structure for user responses
 type postResponse struct {
+	ID          int64     `json:"id"`
 	AuthorID    int64     `json:"author_id"`
 	TextContent string    `json:"text_content"`
 	CreatedAt   time.Time `json:"created_at"`
@@ -28,6 +29,7 @@ type postResponse struct {
 // createUserResponse maps a db.User to userResponse
 func createPostResponse(post db.Post) postResponse {
 	return postResponse{
+		ID:          post.ID,
 		AuthorID:    post.AuthorID,
 		TextContent: post.TextContent,
 		CreatedAt:   post.CreatedAt,
@@ -80,6 +82,36 @@ type getListAllPostRequest struct {
 	PageSize int32 `form:"page_size" binding:"required,min=5,max=10"`
 }
 
+type Author struct {
+	UserName    string `json:"user_name"`
+	ProfileName string `json:"name"`
+	Email       string `json:"email"`
+}
+type getListAllPostResponse struct {
+	Id     int64        `json:"id"`
+	Post   postResponse `json:"post"`
+	Author Author       `json:"author"`
+}
+
+func (server *Server) getAuthorInfo(ctx *gin.Context, authorId int64) Author {
+	user, valid := server.validUser(ctx, authorId)
+	if !valid {
+		return Author{}
+	}
+	userProfile, err := server.store.GetUserProfileById(ctx, authorId)
+	if err != nil {
+		return Author{}
+	}
+
+	author := Author{
+		UserName:    user.Username,
+		Email:       userProfile.Email,
+		ProfileName: userProfile.Name,
+	}
+
+	return author
+}
+
 func (server *Server) getListAllPost(ctx *gin.Context) {
 	var req getListAllPostRequest
 	if err := ctx.ShouldBindQuery(&req); err != nil {
@@ -95,10 +127,20 @@ func (server *Server) getListAllPost(ctx *gin.Context) {
 
 	posts, err := server.store.GetListAllPost(ctx, arg)
 	if err != nil {
-		log.Printf("[ERROR] Failed to get list of all posts: %v", err)
 		ctx.JSON(errorResponse(http.StatusInternalServerError, err))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, posts)
+	response := make([]getListAllPostResponse, 0, len(posts))
+
+	for _, post := range posts {
+		author := server.getAuthorInfo(ctx, post.AuthorID)
+		response = append(response, getListAllPostResponse{
+			Id:     post.ID,
+			Post:   createPostResponse(post),
+			Author: author,
+		})
+	}
+
+	ctx.JSON(http.StatusOK, response)
 }

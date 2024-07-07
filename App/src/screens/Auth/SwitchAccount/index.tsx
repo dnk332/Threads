@@ -4,7 +4,7 @@ import SwitchAccountView from '@src/screens/Auth/SwitchAccount/view';
 import {listAccountSelector} from '@src/redux/selectors';
 import useSelectorShallow from '@src/hooks/useSelectorShallowEqual';
 
-import * as Navigator from '@navigators';
+import Navigator from '@navigators';
 import SCREEN_NAME from '@src/navigation/ScreenName';
 
 const SwitchAccount: React.FC = () => {

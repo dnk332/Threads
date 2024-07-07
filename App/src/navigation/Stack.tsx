@@ -6,7 +6,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import BootSplash from 'react-native-bootsplash';
 
 import RootScreen from '../screens/Root';
-import {navigationRef} from '@navigators';
+import Navigator from '@navigators';
 import {
   ImageViewerScreen,
   LoginScreen,
@@ -56,7 +56,7 @@ function StackScreens() {
       onReady={() => {
         BootSplash.hide({fade: true});
       }}
-      ref={navigationRef}>
+      ref={Navigator.navigationRef}>
       <Stack.Navigator
         screenOptions={{
           headerShown: false,

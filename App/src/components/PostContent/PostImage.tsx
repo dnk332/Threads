@@ -5,7 +5,7 @@ import {getImageSize, ISize} from '@hooks/getImageInfo';
 import {AppImage} from '@components';
 import {AppStyleSheet} from '@themes/responsive';
 import {imageHeight, imageWidth} from '@constants/deviceSize';
-import {navigateTo} from '@navigators';
+import Navigator from '@navigators';
 import SCREEN_NAME from '@src/navigation/ScreenName';
 
 export interface PostImageProps {
@@ -40,7 +40,9 @@ const PostImage = ({link}: PostImageProps) => {
 
   return (
     <Pressable
-      onPress={() => navigateTo(SCREEN_NAME.IMAGE_VIEWER, {imageLink: link})}>
+      onPress={() =>
+        Navigator.navigateTo(SCREEN_NAME.IMAGE_VIEWER, {imageLink: link})
+      }>
       <AppImage
         style={[
           styles.image,

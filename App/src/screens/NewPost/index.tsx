@@ -7,6 +7,12 @@ import {
 
 import NewPostScreenView from './view';
 import {BottomTabsStackParamList} from '@src/screens/Root';
+import {useActions} from '@src/hooks/useActions';
+import {createPostAction} from '@src/redux/actions/post';
+import useSelectorShallow from '@src/hooks/useSelectorShallowEqual';
+import {currentAccountSelector} from '@src/redux/selectors';
+import {Callback} from '@src/redux/actionTypes/actionTypeBase';
+import Navigator from '@navigators';
 
 type DetailsScreenRouteProp = RouteProp<BottomTabsStackParamList, 'NEW_POST'>;
 
@@ -16,7 +22,19 @@ export type NewPostScreenProps = {
 };
 
 const NewPostScreen = () => {
-  return <NewPostScreenView />;
+  const userInfo = useSelectorShallow(currentAccountSelector);
+  const actions = useActions({
+    createPostAction,
+  });
+  const createPost = (textContent: string) => {
+    const callback: Callback = ({success}) => {
+      if (success) {
+        Navigator.goBack();
+      }
+    };
+    actions.createPostAction(userInfo.user_id, textContent, callback);
+  };
+  return <NewPostScreenView createPost={createPost} />;
 };
 
 export default NewPostScreen;

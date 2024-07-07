@@ -25,7 +25,8 @@ OFFSET $3;
 -- name: GetListAllPost :many
 SELECT *
 FROM Posts
-ORDER BY created_at LIMIT $1
+ORDER BY created_at DESC
+LIMIT $1
 OFFSET $2;
 -- Delete a post by ID
 -- name: DeletePost :exec

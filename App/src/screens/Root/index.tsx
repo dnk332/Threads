@@ -9,7 +9,7 @@ import {
   SettingsScreen,
 } from '@screens/index';
 import {colors} from '@themes/color';
-import {navigateTo} from '@navigation/NavigationService';
+import Navigator from '@navigators';
 import SvgComponent from '@svg/index';
 import {SVG_NAME} from '@svg/svgList';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -102,7 +102,7 @@ const RootScreen = () => {
         listeners={() => ({
           tabPress: e => {
             e.preventDefault();
-            navigateTo(SCREEN_NAME.NEW_POST_MODAL, {focused: true});
+            Navigator.navigateTo(SCREEN_NAME.NEW_POST_MODAL, {focused: true});
           },
         })}
       />
