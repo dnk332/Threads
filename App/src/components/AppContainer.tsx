@@ -14,7 +14,7 @@ import Animated from 'react-native-reanimated';
 import {AppStyleSheet} from '@themes/responsive';
 import useStatusBarHeight from '@hooks/getStatusBarHeight';
 import SvgComponent from '@svg/index';
-import {goBack} from '@navigators';
+import Navigator from '@navigators';
 import {AppText} from '@components';
 
 interface AppContainerProps {
@@ -110,7 +110,7 @@ const AppContainer = ({
             {haveBackButton && (
               <Pressable
                 style={[layout.row, layout.alignItemsCenter, styles.button]}
-                onPress={() => goBack()}>
+                onPress={() => Navigator.goBack()}>
                 {backButton ?? <DefaultBackButton />}
               </Pressable>
             )}

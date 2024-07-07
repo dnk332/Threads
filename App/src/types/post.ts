@@ -12,9 +12,22 @@ export interface IPost {
   reported: number;
 }
 
+export interface IAuthor {
+  userName: string;
+  name: string;
+  email: string;
+}
+
 export interface IPostText {
+  id: number;
   authorId: number;
   textContent: string;
-  createAt: string;
-  upDateAt: string;
+  createdAt: string;
+  updatedAt: string;
 }
+
+export type IPostType = {
+  id: number;
+  post: IPostText;
+  author: IAuthor;
+};

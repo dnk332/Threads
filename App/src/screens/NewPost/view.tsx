@@ -15,7 +15,11 @@ import {colors} from '@themes/color';
 import SvgComponent from '@svg/index';
 import HandelKeyboard from '@utils/KeyboardInfo';
 
-const NewPostScreenView = () => {
+interface NewPostScreenProps {
+  createPost: (textContent: string) => void;
+}
+
+const NewPostScreenView: React.FC<NewPostScreenProps> = ({createPost}) => {
   const inputAccessoryViewID = 'postThreadInput';
   const {heightKB} = HandelKeyboard();
   const [contentViewHeight, setContentViewHeight] = useState<number>(0);
@@ -135,11 +139,17 @@ const NewPostScreenView = () => {
           <Pressable>
             <AppText fontSize={13}>Anyone can reply & quote</AppText>
           </Pressable>
-          <Pressable style={styles.submitBtn}>
-            <AppText fontSize={13} fontWeight={600}>
-              Post
-            </AppText>
-          </Pressable>
+          {thread.length > 0 ? (
+            <Pressable
+              onPress={() => createPost(thread)}
+              style={[styles.fragment, styles.submitBtn]}>
+              <AppText fontSize={13} fontWeight={600}>
+                Post
+              </AppText>
+            </Pressable>
+          ) : (
+            <View style={styles.fragment} />
+          )}
         </View>
       </InputAccessoryView>
     </AppContainer>
@@ -180,10 +190,11 @@ const styles = AppStyleSheet.create({
     marginLeft: 10,
   },
   submitBtn: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
     borderRadius: 16,
     backgroundColor: colors.dark_gray,
+    justifyContent: 'center',
+    textAlign: 'center',
+    alignItems: 'center',
   },
   tagImg: {width: 20, height: 20, marginTop: 8},
   replyItem: {
@@ -216,5 +227,9 @@ const styles = AppStyleSheet.create({
     height: 30,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  fragment: {
+    width: 80,
+    height: 35,
   },
 });

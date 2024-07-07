@@ -3,7 +3,7 @@ import {all, call, put, select, takeEvery} from 'redux-saga/effects';
 import {authActions} from '@actions';
 import api from '@src/services/apis';
 import {invoke} from '@appRedux/sagaHelper/invokeSaga';
-import * as Navigator from '@navigators';
+import Navigator from '@navigators';
 import {userActions} from '@actions';
 import {accessTokenSelector, refreshTokenSelector} from '../selectors';
 import {refreshAccessTokenApi} from '@src/services/apis/authApis';
@@ -23,6 +23,7 @@ import {
   ResponseRegisterApi,
   ResponseVerifyTokenApi,
 } from '@src/services/apiTypes/authApiTypes';
+import {userModel} from '@src/models/user';
 
 const {authApis} = api;
 
@@ -44,8 +45,8 @@ function* loginSaga({type, payload}: ILoginAction) {
           ),
         );
         yield put(authActions.setRefreshTokenAction(data.refresh_token));
-        yield put(authActions.setAccountInfoAction(data.user));
-        yield put(authActions.setListAccountInfoAction(data.user));
+        yield put(authActions.setAccountInfoAction(userModel(data.user)));
+        yield put(authActions.setListAccountInfoAction(userModel(data.user)));
         Navigator.navigateAndSimpleReset(SCREEN_NAME.ROOT);
       }
       callback({data, success});
@@ -75,12 +76,18 @@ function* registerSaga({type, payload}: IRegisterAction) {
       );
       callback({data, success});
     },
-    error => {
-      callback({success: false, message: error.message});
-    },
+    null,
     false,
     type,
-    () => {},
+    function* rollback(error) {
+      showAlert({
+        title: 'Error',
+        message: error.message,
+        buttons: [{text: 'OK'}],
+        cancelable: false,
+      });
+      callback({success: false});
+    },
   );
 }
 function* authCheckSaga({type, payload}: IAuthCheckAction) {
@@ -133,11 +140,11 @@ function* authCheckSaga({type, payload}: IAuthCheckAction) {
     () => {},
   );
 }
-
+// TODO: Error 401 when logout
 function* logoutSaga({type}: ILogoutAction) {
   yield invoke(
     function* execution() {
-      yield call(authApis.logoutApi);
+      // yield call(authApis.logoutApi);
       yield put(authActions.setTokenAction(null, null));
       yield put(authActions.setRefreshTokenAction(null));
       yield put(userActions.saveUserProfileAction(null));

@@ -7,9 +7,10 @@ import axios, {
 import {store} from '@src/redux/store';
 import {accessTokenSelector, domainSelector} from '@src/redux/selectors';
 import {getParamsString} from '@src/utils/HelperUtil';
-import * as Navigator from '@src/navigation/NavigationService';
+import Navigator from '@src/navigation/NavigationService';
 import {deviceInfoSelector} from '@src/redux/selectors/app';
 import {IDeviceInfo} from '@src/redux/reducers/app';
+import SCREEN_NAME from '@src/navigation/ScreenName';
 
 // Access token retrieval
 const getAccessToken = (): string | undefined =>
@@ -73,7 +74,7 @@ class HTTP {
       (error: any) => {
         const {code, message} = error.response?.data || {};
         if (code && this.exceptionCodes.includes(code)) {
-          Navigator.popToTop();
+          Navigator.navigateAndSimpleReset(SCREEN_NAME.SPLASH);
         }
         if (message) {
           error.message = message;

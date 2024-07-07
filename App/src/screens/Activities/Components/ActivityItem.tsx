@@ -4,7 +4,7 @@ import {Pressable, View} from 'react-native';
 import layout from '@themes/layout';
 import {colors} from '@themes/color';
 import {AppStyleSheet} from '@themes/responsive';
-import TimeFromNow from '@hooks/TimeAgo';
+import TimeFromNow from '@src/hooks/hookTime/TimeAgo';
 import {AppText, Avatar, AppButton} from '@src/components';
 
 const ActivityItem = () => {

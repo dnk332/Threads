@@ -3,7 +3,7 @@ import {all, put, select, takeEvery} from 'redux-saga/effects';
 import {appActions, authActions} from '@actions';
 import {domainSelector} from '@selectors';
 import {Setting} from '@configs';
-import * as TimeAgo from '@hooks/TimeAgo';
+import * as TimeAgo from '@hooks/hookTime/SetUpTime';
 import _ from 'lodash';
 import {AppActionType, IStartAction} from '../actionTypes/appActionTypes';
 import {invoke} from '../sagaHelper/invokeSaga';

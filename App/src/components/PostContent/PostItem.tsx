@@ -7,7 +7,7 @@ import {colors} from '@themes/color';
 import {AppStyleSheet} from '@themes/responsive';
 import {IUser} from '@localTypes/user';
 import {IPost} from '@localTypes/post';
-import TimeFromNow from '@hooks/TimeAgo';
+import TimeFromNow from '@src/hooks/hookTime/TimeAgo';
 import ActiveBottomSheet from '@src/screens/Home/Components/ActiveBottomSheet';
 import ContentHandelArea from '@src/components/PostContent/ContentHandelArea';
 import MediaContent from '@src/components/PostContent/MediaContent';

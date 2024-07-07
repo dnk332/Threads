@@ -5,14 +5,13 @@ import {
 } from '@react-navigation/native';
 import {NavigationStackParamList, ScreenNameKeys} from './Stack';
 
-export const navigationRef =
-  createNavigationContainerRef<NavigationStackParamList>();
+const navigationRef = createNavigationContainerRef<NavigationStackParamList>();
 
 type NavigationParams = {
   [K in ScreenNameKeys]: NavigationStackParamList[K];
 };
 
-export const navigateTo = <T extends ScreenNameKeys>(
+const navigateTo = <T extends ScreenNameKeys>(
   routeName: T,
   params?: NavigationParams[T],
 ) => {
@@ -21,7 +20,7 @@ export const navigateTo = <T extends ScreenNameKeys>(
   }
 };
 
-export const navigatePush = <T extends ScreenNameKeys>(
+const navigatePush = <T extends ScreenNameKeys>(
   name: T,
   params?: NavigationParams[T],
 ) => {
@@ -30,7 +29,7 @@ export const navigatePush = <T extends ScreenNameKeys>(
   }
 };
 
-export const navigateAndReset = (routes: ScreenNameKeys[] = [], index = 0) => {
+const navigateAndReset = (routes: ScreenNameKeys[] = [], index = 0) => {
   if (navigationRef.isReady()) {
     navigationRef.dispatch(
       CommonActions.reset({
@@ -41,7 +40,7 @@ export const navigateAndReset = (routes: ScreenNameKeys[] = [], index = 0) => {
   }
 };
 
-export const navigateAndSimpleReset = <T extends ScreenNameKeys>(
+const navigateAndSimpleReset = <T extends ScreenNameKeys>(
   name: T,
   index = 0,
 ) => {
@@ -55,7 +54,7 @@ export const navigateAndSimpleReset = <T extends ScreenNameKeys>(
   }
 };
 
-export const navigateReplace = <T extends ScreenNameKeys>(
+const navigateReplace = <T extends ScreenNameKeys>(
   name: T,
   params?: NavigationParams[T],
 ) => {
@@ -64,14 +63,27 @@ export const navigateReplace = <T extends ScreenNameKeys>(
   }
 };
 
-export const goBack = () => {
+const goBack = () => {
   if (navigationRef.isReady()) {
     navigationRef.goBack();
   }
 };
 
-export const popToTop = () => {
+const popToTop = () => {
   if (navigationRef.isReady()) {
     navigationRef.dispatch(StackActions.popToTop());
   }
 };
+
+const Navigator = {
+  navigateTo,
+  navigatePush,
+  navigateAndReset,
+  navigateAndSimpleReset,
+  navigateReplace,
+  goBack,
+  popToTop,
+  navigationRef,
+};
+
+export default Navigator;

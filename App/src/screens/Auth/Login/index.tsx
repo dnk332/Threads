@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 
 import LoginView from '@src/screens/Auth/Login/view';
-import * as Navigator from '@navigators';
+import Navigator from '@navigators';
 import {currentAccountSelector} from '@src/redux/selectors';
 import useSelectorShallow from '@src/hooks/useSelectorShallowEqual';
 import SCREEN_NAME from '@src/navigation/ScreenName';

@@ -1,8 +1,8 @@
 import * as actions from '@actionTypes/postActionTypes';
-import {IPostText} from '@src/types/post';
+import {IPostType} from '@src/types/post';
 
 export interface IPostState {
-  listAllPost: IPostText[];
+  listAllPost: IPostType[];
 }
 
 const initialState: IPostState = {
@@ -17,14 +17,15 @@ export default function postReducer(
   switch (action.type) {
     case actionType.SAVE_LIST_ALL_POST:
       if (action.payload.loadMore) {
+        console.log('load more');
         return {
           ...state,
-          listPlace: [...state.listAllPost, ...action.payload.params.posts],
+          listAllPost: [...state.listAllPost, ...action.payload.params.posts],
         };
       } else {
         return {
           ...state,
-          listPlace: action.payload.params.posts,
+          listAllPost: action.payload.params.posts,
         };
       }
 

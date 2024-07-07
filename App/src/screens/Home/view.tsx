@@ -1,4 +1,4 @@
-import React, {Fragment, useCallback, useRef, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {SafeAreaView, View, PanResponder} from 'react-native';
 import Lottie from 'lottie-react-native';
 import Animated, {
@@ -8,23 +8,30 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import {PostItem} from '@src/components';
-import {dummyPost} from '@src/constants/dummyData';
+// import {PostItem} from '@src/components';
+// import {dummyPost} from '@src/constants/dummyData';
 import {colors} from '@themes/color';
 import {AppStyleSheet} from '@src/themes/responsive';
-import {IPostText} from '@src/types/post';
+import {IPostType} from '@src/types/post';
+import PostText from '@src/components/PostContent/PostText';
 
 type HomeScreenViewProps = {
-  listPost: IPostText[];
+  listPost: IPostType[];
+  loadMore: () => void;
+  onRefresh: () => void;
 };
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-const HomeScreenView: React.FC<HomeScreenViewProps> = ({listPost}) => {
+const HomeScreenView: React.FC<HomeScreenViewProps> = ({
+  listPost,
+  loadMore,
+  onRefresh,
+}) => {
   const scrollPosition = useSharedValue(0);
   const pullDownPosition = useSharedValue(0);
   const isReadyToRefresh = useSharedValue(false);
-  const [refreshing, setRefreshing] = useState(false);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: event => {
@@ -40,12 +47,13 @@ const HomeScreenView: React.FC<HomeScreenViewProps> = ({listPost}) => {
     transform: [{translateY: pullDownPosition.value}],
   }));
 
-  const onRefresh = (done: () => void) => {
+  const onRefreshList = (done: () => void) => {
     setRefreshing(true);
+    onRefresh();
     setTimeout(() => {
       setRefreshing(false);
       done();
-    }, 2000);
+    }, 1000);
   };
 
   const onPanRelease = () => {
@@ -57,7 +65,7 @@ const HomeScreenView: React.FC<HomeScreenViewProps> = ({listPost}) => {
       const onRefreshComplete = () => {
         pullDownPosition.value = withTiming(0, {duration: 180});
       };
-      onRefresh(onRefreshComplete);
+      onRefreshList(onRefreshComplete);
     }
   };
 
@@ -67,7 +75,9 @@ const HomeScreenView: React.FC<HomeScreenViewProps> = ({listPost}) => {
         return scrollPosition.value <= 0 && gestureState.dy > 0;
       },
       onPanResponderMove: (_, gestureState) => {
-        if (Math.abs(gestureState.dx) > Math.abs(gestureState.dy)) return;
+        if (Math.abs(gestureState.dx) > Math.abs(gestureState.dy)) {
+          return;
+        }
         const maxDistance = 150;
         pullDownPosition.value = Math.max(
           Math.min(maxDistance, gestureState.dy),
@@ -80,36 +90,37 @@ const HomeScreenView: React.FC<HomeScreenViewProps> = ({listPost}) => {
     }),
   );
   // TODO: update post text item, need add user data of post's author
-  const _renderItem = useCallback(({item}) => {
-    const isRepliesPost = item.replies.length > 0;
-    if (isRepliesPost) {
-      return (
-        <Fragment>
-          <PostItem
-            postData={item.rootPost.post}
-            userData={item.rootPost.userData}
-            haveReplies={true}
-            isRootPost={true}
-          />
-          {item.replies.map((replies, index) => (
-            <PostItem
-              key={index}
-              postData={replies.post}
-              userData={replies.userData}
-              haveReplies={index !== item.replies.length - 1}
-              isReplies={true}
-            />
-          ))}
-        </Fragment>
-      );
-    } else {
-      return (
-        <PostItem
-          postData={item.rootPost.post}
-          userData={item.rootPost.userData}
-        />
-      );
-    }
+  const _renderItem = useCallback(({item}: {item: IPostType}) => {
+    return <PostText userData={item.author} postData={item.post} />;
+    // const isRepliesPost = item.replies.length > 0;
+    // if (isRepliesPost) {
+    //   return (
+    //     <Fragment>
+    //       <PostItem
+    //         postData={item.rootPost.post}
+    //         userData={item.rootPost.userData}
+    //         haveReplies={true}
+    //         isRootPost={true}
+    //       />
+    //       {item.replies.map((replies, index) => (
+    //         <PostItem
+    //           key={index}
+    //           postData={replies.post}
+    //           userData={replies.userData}
+    //           haveReplies={index !== item.replies.length - 1}
+    //           isReplies={true}
+    //         />
+    //       ))}
+    //     </Fragment>
+    //   );
+    // } else {
+    //   return (
+    //     <PostItem
+    //       postData={item.rootPost.post}
+    //       userData={item.rootPost.userData}
+    //     />
+    //   );
+    // }
   }, []);
 
   return (
@@ -132,13 +143,14 @@ const HomeScreenView: React.FC<HomeScreenViewProps> = ({listPost}) => {
           {...panResponderRef.current.panHandlers}>
           <Animated.FlatList
             onScroll={scrollHandler}
-            data={dummyPost}
+            data={listPost}
             keyExtractor={item => item.id.toString()}
             renderItem={_renderItem}
             showsVerticalScrollIndicator={false}
             ItemSeparatorComponent={ItemSeparator}
             onEndReachedThreshold={16}
             nestedScrollEnabled
+            onEndReached={loadMore}
           />
         </Animated.View>
       </View>

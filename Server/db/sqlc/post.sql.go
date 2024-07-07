@@ -48,7 +48,8 @@ func (q *Queries) DeletePost(ctx context.Context, id int64) error {
 const getListAllPost = `-- name: GetListAllPost :many
 SELECT id, author_id, text_content, created_at, updated_at
 FROM Posts
-ORDER BY created_at LIMIT $1
+ORDER BY created_at DESC
+LIMIT $1
 OFFSET $2
 `
 

@@ -13,6 +13,7 @@ import {
   ResponseUpdateUserProfileApi,
 } from '@src/services/apiTypes/userApiTypes';
 import {invoke} from '../sagaHelper/invokeSaga';
+import {userProfileModel} from '@src/models/user';
 
 const {userApis} = api;
 
@@ -25,7 +26,7 @@ function* getUserProfileSaga({type, payload}: IGetUserProfileAction) {
         params.user_id,
       );
       yield callback({data, success});
-      yield put(userActions.saveUserProfileAction(data));
+      yield put(userActions.saveUserProfileAction(userProfileModel(data)));
     },
     error => {
       callback({success: false, message: error.message});
@@ -50,7 +51,7 @@ function* updateUserProfileSaga({type, payload}: IUpdateUserProfileAction) {
       );
       console.log('data', data);
       yield callback({data, success});
-      yield put(userActions.saveUserProfileAction(data));
+      yield put(userActions.saveUserProfileAction(userProfileModel(data)));
     },
     error => {
       callback({success: false, message: error.message});
