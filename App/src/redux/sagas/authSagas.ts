@@ -109,7 +109,7 @@ function* authCheckSaga({type, payload}: IAuthCheckAction) {
             authApis.verifyAccessTokenApi,
             accessToken,
           );
-          if (data.code === 'jwt_auth_valid_token') {
+          if (data.message === 'jwt_auth_valid_token') {
             callback({success});
             return;
           }

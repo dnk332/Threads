@@ -10,7 +10,7 @@ export type ResponseLoginApi = ApiResponse<{
   user: IUser;
 }>;
 export type ResponseRegisterApi = ApiResponse<{}>;
-export type ResponseVerifyTokenApi = ApiResponse<{code: string}>;
+export type ResponseVerifyTokenApi = ApiResponse<{message: string}>;
 export type ResponseRefreshTokenApi = ApiResponse<{
   access_token: string;
   access_token_expires_at: string;
