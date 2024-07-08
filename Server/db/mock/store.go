@@ -167,6 +167,36 @@ func (mr *MockStoreMockRecorder) DeleteUserProfile(arg0, arg1 interface{}) *gomo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteUserProfile", reflect.TypeOf((*MockStore)(nil).DeleteUserProfile), arg0, arg1)
 }
 
+// GetAllLikesOfPost mocks base method.
+func (m *MockStore) GetAllLikesOfPost(arg0 context.Context, arg1 db.GetAllLikesOfPostParams) ([]db.Like, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAllLikesOfPost", arg0, arg1)
+	ret0, _ := ret[0].([]db.Like)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAllLikesOfPost indicates an expected call of GetAllLikesOfPost.
+func (mr *MockStoreMockRecorder) GetAllLikesOfPost(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllLikesOfPost", reflect.TypeOf((*MockStore)(nil).GetAllLikesOfPost), arg0, arg1)
+}
+
+// GetAllLikesOfUser mocks base method.
+func (m *MockStore) GetAllLikesOfUser(arg0 context.Context, arg1 db.GetAllLikesOfUserParams) ([]db.Like, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAllLikesOfUser", arg0, arg1)
+	ret0, _ := ret[0].([]db.Like)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAllLikesOfUser indicates an expected call of GetAllLikesOfUser.
+func (mr *MockStoreMockRecorder) GetAllLikesOfUser(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllLikesOfUser", reflect.TypeOf((*MockStore)(nil).GetAllLikesOfUser), arg0, arg1)
+}
+
 // GetListAllPost mocks base method.
 func (m *MockStore) GetListAllPost(arg0 context.Context, arg1 db.GetListAllPostParams) ([]db.Post, error) {
 	m.ctrl.T.Helper()
@@ -315,6 +345,65 @@ func (m *MockStore) GetUserProfileById(arg0 context.Context, arg1 int64) (db.Use
 func (mr *MockStoreMockRecorder) GetUserProfileById(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserProfileById", reflect.TypeOf((*MockStore)(nil).GetUserProfileById), arg0, arg1)
+}
+
+// LikePost mocks base method.
+func (m *MockStore) LikePost(arg0 context.Context, arg1 db.LikePostParams) (db.Like, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "LikePost", arg0, arg1)
+	ret0, _ := ret[0].(db.Like)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// LikePost indicates an expected call of LikePost.
+func (mr *MockStoreMockRecorder) LikePost(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LikePost", reflect.TypeOf((*MockStore)(nil).LikePost), arg0, arg1)
+}
+
+// SearchPostByTextContent mocks base method.
+func (m *MockStore) SearchPostByTextContent(arg0 context.Context, arg1 db.SearchPostByTextContentParams) ([]db.Post, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SearchPostByTextContent", arg0, arg1)
+	ret0, _ := ret[0].([]db.Post)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SearchPostByTextContent indicates an expected call of SearchPostByTextContent.
+func (mr *MockStoreMockRecorder) SearchPostByTextContent(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchPostByTextContent", reflect.TypeOf((*MockStore)(nil).SearchPostByTextContent), arg0, arg1)
+}
+
+// SearchUserByUsername mocks base method.
+func (m *MockStore) SearchUserByUsername(arg0 context.Context, arg1 db.SearchUserByUsernameParams) ([]db.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SearchUserByUsername", arg0, arg1)
+	ret0, _ := ret[0].([]db.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SearchUserByUsername indicates an expected call of SearchUserByUsername.
+func (mr *MockStoreMockRecorder) SearchUserByUsername(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchUserByUsername", reflect.TypeOf((*MockStore)(nil).SearchUserByUsername), arg0, arg1)
+}
+
+// UnlikePost mocks base method.
+func (m *MockStore) UnlikePost(arg0 context.Context, arg1 db.UnlikePostParams) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UnlikePost", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UnlikePost indicates an expected call of UnlikePost.
+func (mr *MockStoreMockRecorder) UnlikePost(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UnlikePost", reflect.TypeOf((*MockStore)(nil).UnlikePost), arg0, arg1)
 }
 
 // UpdatePost mocks base method.

@@ -27,6 +27,10 @@ type Querier interface {
 	DeleteUser(ctx context.Context, id int64) error
 	// Delete a user profile by ID
 	DeleteUserProfile(ctx context.Context, userID int64) error
+	// Get all likes of post
+	GetAllLikesOfPost(ctx context.Context, arg GetAllLikesOfPostParams) ([]Like, error)
+	// Get all likes of user
+	GetAllLikesOfUser(ctx context.Context, arg GetAllLikesOfUserParams) ([]Like, error)
 	// Get a list of all posts
 	GetListAllPost(ctx context.Context, arg GetListAllPostParams) ([]Post, error)
 	// Get a list of all posts of one user
@@ -47,6 +51,14 @@ type Querier interface {
 	GetUserForUpdate(ctx context.Context, id int64) (User, error)
 	// Get a user profile by ID
 	GetUserProfileById(ctx context.Context, userID int64) (UserProfile, error)
+	// Like a post
+	LikePost(ctx context.Context, arg LikePostParams) (Like, error)
+	// Search posts by text content
+	SearchPostByTextContent(ctx context.Context, arg SearchPostByTextContentParams) ([]Post, error)
+	// Search user by username
+	SearchUserByUsername(ctx context.Context, arg SearchUserByUsernameParams) ([]User, error)
+	// Unlike a post
+	UnlikePost(ctx context.Context, arg UnlikePostParams) error
 	// Update a post
 	UpdatePost(ctx context.Context, arg UpdatePostParams) (Post, error)
 	// Update a user's information

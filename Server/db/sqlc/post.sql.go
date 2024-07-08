@@ -146,6 +146,48 @@ func (q *Queries) GetPostById(ctx context.Context, id int64) (Post, error) {
 	return i, err
 }
 
+const searchPostByTextContent = `-- name: SearchPostByTextContent :many
+SELECT id, author_id, text_content, created_at, updated_at
+FROM Posts
+WHERE text_content ILIKE $1
+ORDER BY updated_at DESC
+LIMIT $2
+OFFSET $3
+`
+
+type SearchPostByTextContentParams struct {
+	TextContent string `json:"text_content"`
+	Limit       int32  `json:"limit"`
+	Offset      int32  `json:"offset"`
+}
+
+// Search posts by text content
+func (q *Queries) SearchPostByTextContent(ctx context.Context, arg SearchPostByTextContentParams) ([]Post, error) {
+	rows, err := q.db.Query(ctx, searchPostByTextContent, arg.TextContent, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Post{}
+	for rows.Next() {
+		var i Post
+		if err := rows.Scan(
+			&i.ID,
+			&i.AuthorID,
+			&i.TextContent,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updatePost = `-- name: UpdatePost :one
 UPDATE Posts
 SET text_content = $2,

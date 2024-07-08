@@ -15,49 +15,48 @@ import (
 
 	mockdb "github.com/briandnk/Threads/db/mock"
 	db "github.com/briandnk/Threads/db/sqlc"
-	"github.com/briandnk/Threads/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 )
 
-func requireBodyMatchPost(t *testing.T, body *bytes.Buffer, post db.Post) {
+func requireBodyMatchLike(t *testing.T, body *bytes.Buffer, like db.Like) {
 	data, err := io.ReadAll(body)
 	require.NoError(t, err)
 
-	var gotPost db.Post
-	err = json.Unmarshal(data, &gotPost)
+	var gotLike db.Like
+	err = json.Unmarshal(data, &gotLike)
 
 	require.NoError(t, err)
-	require.Equal(t, post.ID, gotPost.ID)
-	require.Equal(t, post.AuthorID, gotPost.AuthorID)
-	require.Equal(t, post.TextContent, gotPost.TextContent)
-	require.WithinDuration(t, post.CreatedAt, gotPost.CreatedAt, time.Second)
-	require.WithinDuration(t, post.UpdatedAt, gotPost.UpdatedAt, time.Second)
+	require.Equal(t, like.ID, gotLike.ID)
+	require.Equal(t, like.AuthorID, gotLike.AuthorID)
+	require.Equal(t, like.PostID, gotLike.PostID)
+	require.WithinDuration(t, like.CreatedAt, gotLike.CreatedAt, time.Second)
 }
 
-func requireBodyMatchPosts(t *testing.T, body *bytes.Buffer, expectedPosts []getListAllPostResponse) {
+func requireBodyMatchLikes(t *testing.T, body *bytes.Buffer, expectedLikes []getListAllLikeResponse) {
 	data, err := io.ReadAll(body)
 	require.NoError(t, err)
 
-	var gotPosts []getListAllPostResponse
-	err = json.Unmarshal(data, &gotPosts)
+	var gotLikes []getListAllLikeResponse
+	err = json.Unmarshal(data, &gotLikes)
 	require.NoError(t, err)
-	require.Equal(t, expectedPosts, gotPosts)
+	require.Equal(t, expectedLikes, gotLikes)
 }
 
-func randomPost(user db.User) (post db.Post) {
-	post = db.Post{
-		ID:          utils.RandomInt(1, 1000),
-		AuthorID:    user.ID,
-		TextContent: utils.RandomString(60),
+func randomLike(author db.User, post db.Post) (like db.Like) {
+	like = db.Like{
+		AuthorID:  author.ID,
+		PostID:    post.ID,
+		CreatedAt: time.Now(),
 	}
 	return
 }
 
-func TestCreatePostAPI(t *testing.T) {
+func TestLikePostAPI(t *testing.T) {
 	user, _ := randomUser(t)
 	post := randomPost(user)
+	like := randomLike(user, post)
 
 	testCases := []struct {
 		name          string
@@ -69,66 +68,79 @@ func TestCreatePostAPI(t *testing.T) {
 		{
 			name: "OK",
 			body: gin.H{
-				"text_content": post.TextContent,
+				"post_id": post.ID,
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
 			},
 			buildStubs: func(store *mockdb.MockStore) {
-				arg := db.CreatePostParams{
-					AuthorID:    post.AuthorID,
-					TextContent: post.TextContent,
+				arg := db.LikePostParams{
+					PostID:   post.ID,
+					AuthorID: user.ID,
 				}
 				store.EXPECT().
-					CreatePost(gomock.Any(), gomock.Eq(arg)).
+					LikePost(gomock.Any(), gomock.Eq(arg)).
 					Times(1).
-					Return(post, nil)
+					Return(like, nil)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusOK, recorder.Code)
-				requireBodyMatchPost(t, recorder.Body, post)
+				requireBodyMatchLike(t, recorder.Body, like)
 			},
 		},
 		{
-			name: "InvalidTextContent",
+			name: "NoAuthorization",
 			body: gin.H{
-				"text_content": "",
+				"post_id": post.ID,
+			},
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+			},
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					LikePost(gomock.Any(), gomock.Any()).
+					Times(0)
+			},
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusUnauthorized, recorder.Code)
+			},
+		},
+		{
+			name: "InvalidPostId",
+			body: gin.H{
+				"post_id": 0,
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
-					GetUserById(gomock.Any(), gomock.Any()).
+					LikePost(gomock.Any(), gomock.Any()).
 					Times(0)
-				store.EXPECT().
-					CreateUserProfile(gomock.Any(), gomock.Any()).
-					Times(0)
-
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusBadRequest, recorder.Code)
 			},
 		},
 		{
-			name: "NoAuthorization",
+			name: "InternalError",
 			body: gin.H{
-				"text_content": post.TextContent,
+				"post_id": post.ID,
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
 			},
 			buildStubs: func(store *mockdb.MockStore) {
+				arg := db.LikePostParams{
+					AuthorID: user.ID,
+					PostID:   post.ID,
+				}
 				store.EXPECT().
-					GetUserById(gomock.Any(), gomock.Any()).
-					Times(0)
-
-				store.EXPECT().
-					CreateUserProfile(gomock.Any(), gomock.Any()).
-					Times(0)
-
+					LikePost(gomock.Any(), gomock.Eq(arg)).
+					Times(1).
+					Return(db.Like{}, sql.ErrConnDone)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusUnauthorized, recorder.Code)
+				require.Equal(t, http.StatusInternalServerError, recorder.Code)
 			},
 		},
 	}
@@ -150,7 +162,7 @@ func TestCreatePostAPI(t *testing.T) {
 			data, err := json.Marshal(tc.body)
 			require.NoError(t, err)
 
-			url := "/posts"
+			url := "/post/like"
 			request, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(data))
 			require.NoError(t, err)
 
@@ -161,7 +173,7 @@ func TestCreatePostAPI(t *testing.T) {
 	}
 }
 
-func TestGetListAllPostAPI(t *testing.T) {
+func TestUnlikePostAPI(t *testing.T) {
 	user, _ := randomUser(t)
 	userProfile := randomUserProfile(user)
 

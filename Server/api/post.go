@@ -1,7 +1,6 @@
 package api
 
 import (
-	"errors"
 	"log"
 	"net/http"
 	"time"
@@ -13,7 +12,6 @@ import (
 
 // createUserRequest defines the structure for user creation requests
 type createPostRequest struct {
-	AuthorID    int64  `json:"author_id" binding:"required,min=1"`
 	TextContent string `json:"text_content" binding:"required"`
 }
 
@@ -46,22 +44,11 @@ func (server *Server) createPost(ctx *gin.Context) {
 		return
 	}
 
-	// Check is user id is valid or not
-	user, valid := server.validUser(ctx, req.AuthorID)
-	if !valid {
-		return
-	}
-
 	// Check is user is authenticated or not
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
-	if user.ID != authPayload.UserID {
-		ctx.JSON(errorResponse(http.StatusUnauthorized, errors.New("need authenticated user")))
-		log.Printf("[ERROR] User is not authenticated")
-		return
-	}
 
 	arg := db.CreatePostParams{
-		AuthorID:    req.AuthorID,
+		AuthorID:    authPayload.UserID,
 		TextContent: req.TextContent,
 	}
 

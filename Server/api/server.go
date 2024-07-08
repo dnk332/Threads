@@ -52,6 +52,8 @@ func (server *Server) setupRouter() {
 
 		authRoutes.POST("/posts", server.createPost)
 		authRoutes.GET("/posts", server.getListAllPost)
+
+		authRoutes.POST("/post/like", server.likePost)
 	}
 
 	server.router = router

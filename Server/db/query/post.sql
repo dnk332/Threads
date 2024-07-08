@@ -33,3 +33,11 @@ OFFSET $2;
 DELETE
 FROM Posts
 WHERE id = $1;
+-- Search posts by text content
+-- name: SearchPostByTextContent :many
+SELECT *
+FROM Posts
+WHERE text_content ILIKE $1
+ORDER BY updated_at DESC
+LIMIT $2
+OFFSET $3;
