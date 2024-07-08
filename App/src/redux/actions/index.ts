@@ -4,6 +4,7 @@ import * as loadingActions from './loading';
 import * as userActions from './user';
 import * as appActions from './app';
 import * as postActions from './post';
+import * as likeActions from './like';
 
 export {
   actionTypes,
@@ -12,4 +13,5 @@ export {
   loadingActions,
   userActions,
   postActions,
+  likeActions,
 };

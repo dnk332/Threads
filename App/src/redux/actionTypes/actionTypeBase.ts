@@ -1,5 +1,6 @@
 import {AppActionType} from './appActionTypes';
 import {AuthActionType} from './authActionTypes';
+import {LikeActionType} from './likeActionTypes';
 import {PostActionType} from './postActionTypes';
 import {UserActionType} from './userActionTypes';
 
@@ -14,7 +15,12 @@ export type Callback = ({
 }) => void;
 
 export interface ActionBase<T> {
-  type: AppActionType | AuthActionType | UserActionType | PostActionType;
+  type:
+    | AppActionType
+    | AuthActionType
+    | UserActionType
+    | PostActionType
+    | LikeActionType;
   payload?: {
     params?: T;
     callback?: Callback;
