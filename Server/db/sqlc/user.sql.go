@@ -152,6 +152,49 @@ func (q *Queries) GetUserForUpdate(ctx context.Context, id int64) (User, error) 
 	return i, err
 }
 
+const searchUserByUsername = `-- name: SearchUserByUsername :many
+SELECT id, username, hashed_password, created_at, password_changed_at, is_frozen
+FROM Users
+WHERE username ILIKE $1 
+ORDER BY created_at DESC
+LIMIT $2
+OFFSET $3
+`
+
+type SearchUserByUsernameParams struct {
+	Username string `json:"username"`
+	Limit    int32  `json:"limit"`
+	Offset   int32  `json:"offset"`
+}
+
+// Search user by username
+func (q *Queries) SearchUserByUsername(ctx context.Context, arg SearchUserByUsernameParams) ([]User, error) {
+	rows, err := q.db.Query(ctx, searchUserByUsername, arg.Username, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []User{}
+	for rows.Next() {
+		var i User
+		if err := rows.Scan(
+			&i.ID,
+			&i.Username,
+			&i.HashedPassword,
+			&i.CreatedAt,
+			&i.PasswordChangedAt,
+			&i.IsFrozen,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateUser = `-- name: UpdateUser :one
 UPDATE Users
 SET username        = COALESCE($2, username),

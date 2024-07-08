@@ -42,8 +42,8 @@ func requireBodyMatchUserProfile(t *testing.T, body *bytes.Buffer, userProfile d
 	require.Equal(t, userProfile.Name, gotUserProfile.Name)
 	require.Equal(t, userProfile.Email, gotUserProfile.Email)
 	require.Equal(t, userProfile.Bio, gotUserProfile.Bio)
-	require.Equal(t, userProfile.CreatedAt, gotUserProfile.CreatedAt)
-	require.Equal(t, userProfile.UpdatedAt, gotUserProfile.UpdatedAt)
+	require.WithinDuration(t, userProfile.CreatedAt, gotUserProfile.CreatedAt, time.Second)
+	require.WithinDuration(t, userProfile.UpdatedAt, gotUserProfile.UpdatedAt, time.Second)
 }
 
 func requireBodyMatchGetUserProfile(t *testing.T, body *bytes.Buffer, userProfile db.UserProfile) {

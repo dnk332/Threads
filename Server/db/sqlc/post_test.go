@@ -9,12 +9,17 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func CreateRandomPost(t *testing.T) Post {
+func CreateRandomPost(t *testing.T, textContent ...string) Post {
 	author := createRandomUser(t)
+
+	content := utils.RandomString(60)
+	if len(textContent) != 0 {
+		content = textContent[0]
+	}
 
 	arg := CreatePostParams{
 		AuthorID:    author.ID,
-		TextContent: utils.RandomString(60),
+		TextContent: content,
 	}
 
 	post, err := testStore.CreatePost(context.Background(), arg)
@@ -144,5 +149,21 @@ func TestGetListPostByAuthor(t *testing.T) {
 	posts, err := testStore.GetListPostByAuthor(context.Background(), arg1)
 	require.NoError(t, err)
 	require.Len(t, posts, limit)
+
+}
+
+func TestSearchPostByTextContent(t *testing.T) {
+	content := utils.RandomString(60)
+	for i := 0; i < 10; i++ {
+		CreateRandomPost(t, content)
+	}
+	arg := SearchPostByTextContentParams{
+		TextContent: content,
+		Limit:       5,
+		Offset:      0,
+	}
+	posts, err := testStore.SearchPostByTextContent(context.Background(), arg)
+	require.NoError(t, err)
+	require.Len(t, posts, 5)
 
 }

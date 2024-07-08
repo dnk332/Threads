@@ -36,3 +36,11 @@ WHERE id = $1;
 SELECT *
 FROM Users
 WHERE username = $1;
+-- Search user by username
+-- name: SearchUserByUsername :many
+SELECT *
+FROM Users
+WHERE username ILIKE $1 
+ORDER BY created_at DESC
+LIMIT $2
+OFFSET $3;
