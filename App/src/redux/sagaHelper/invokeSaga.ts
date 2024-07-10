@@ -1,12 +1,13 @@
 import {put, select} from 'redux-saga/effects';
 import {authActions, loadingActions} from '@actions';
-import {accessTokenSelector} from '@selectors';
+import {refreshTokenSelector} from '@selectors';
 import {
   CustomError,
   handleErrorMessage,
   isNetworkError,
   isUnauthorizedError,
 } from './handleErrorMessage';
+import {Callback} from '@actionTypes/actionTypeBase';
 
 const {
   showLoadingAction,
@@ -44,8 +45,8 @@ function* handleSagaError(
   handleError: ((error: CustomError) => any) | null,
   errorCallback: (error: CustomError) => any,
 ) {
-  const token = yield select(accessTokenSelector);
-  console.log('error', error);
+  const refreshToken = yield select(refreshTokenSelector);
+  console.log('>>>>handleSagaError>>>>', error);
   if (isNetworkError(error) && typeof handleError === 'function') {
     yield handleError({
       message: 'Temporary network issue. Please try again later',
@@ -55,8 +56,14 @@ function* handleSagaError(
   }
 
   if (isUnauthorizedError(error)) {
-    if (token) {
-      yield put(logoutAction());
+    if (refreshToken) {
+      let callback: Callback = ({success}) => {
+        if (!success) {
+          put(authActions.logoutAction());
+          return;
+        }
+      };
+      yield put(authActions.refreshTokenAction(callback));
       return;
     }
   }
