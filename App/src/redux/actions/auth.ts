@@ -1,15 +1,16 @@
 import {IUser} from '@src/types/user';
 import {Callback} from '@actionTypes/actionTypeBase';
 import {
+  AuthActionType,
+  IAuthCheckAction,
   ILoginAction,
   ILogoutAction,
+  IRefreshTokenAction,
   IRegisterAction,
-  ISetTokenAction,
-  ISetRefreshTokenAction,
-  AuthActionType,
   ISetAccountInfoAction,
-  IAuthCheckAction,
   ISetListAccountInfoAction,
+  ISetRefreshTokenAction,
+  ISetTokenAction,
 } from '@actionTypes/authActionTypes';
 
 export const loginAction = (
@@ -67,5 +68,12 @@ export const setListAccountInfoAction = (
 
 export const authCheckAction = (callback: Callback): IAuthCheckAction => ({
   type: AuthActionType.AUTH_CHECK,
+  payload: {callback},
+});
+
+export const refreshTokenAction = (
+  callback: Callback,
+): IRefreshTokenAction => ({
+  type: AuthActionType.REFRESH_TOKEN,
   payload: {callback},
 });

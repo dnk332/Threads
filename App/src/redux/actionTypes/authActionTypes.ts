@@ -12,6 +12,7 @@ export const AuthActionType = {
   AUTH_CHECK: 'AUTH/AUTH_CHECK',
   CURRENT_ACCOUNT_INDEX: 'AUTH/CURRENT_ACCOUNT_INDEX',
   UPDATE_CURRENT_ACCOUNT: 'AUTH/UPDATE_CURRENT_ACCOUNT',
+  REFRESH_TOKEN: 'AUTH/REFRESH_TOKEN',
 } as const;
 
 export type AuthActionType =
@@ -70,6 +71,10 @@ export interface IAuthCheckAction extends ActionBase<{}> {
   type: typeof AuthActionType.AUTH_CHECK;
 }
 
+export interface IRefreshTokenAction extends ActionBase<{}> {
+  type: typeof AuthActionType.REFRESH_TOKEN;
+}
+
 export type AuthAction =
   | ILoginAction
   | ILogoutAction
@@ -78,4 +83,5 @@ export type AuthAction =
   | ISetRefreshTokenAction
   | ISetAccountInfoAction
   | ISetListAccountInfoAction
-  | IAuthCheckAction;
+  | IAuthCheckAction
+  | IRefreshTokenAction;
