@@ -11,6 +11,10 @@ import (
 )
 
 type Querier interface {
+	// Check like status of user
+	CheckLikeStatusOfUser(ctx context.Context, arg CheckLikeStatusOfUserParams) (bool, error)
+	// Count like of post
+	CountLikeOfPost(ctx context.Context, postID int64) (int64, error)
 	// Create a post
 	CreatePost(ctx context.Context, arg CreatePostParams) (Post, error)
 	// Create a new session

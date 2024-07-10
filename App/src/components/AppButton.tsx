@@ -37,7 +37,7 @@ const AppButton = ({
   borderRadius = 16,
   onPress,
   loading = false,
-}: AppButtonProps): React.ReactNode => {
+}: AppButtonProps) => {
   return (
     <Pressable
       onPress={onPress}

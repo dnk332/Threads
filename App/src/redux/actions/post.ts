@@ -4,7 +4,7 @@ import {
   IGetListAllPostAction,
   ISaveListAllPostAction,
   PostActionType,
-} from '../actionTypes/postActionTypes';
+} from '@actionTypes/postActionTypes';
 import {IPostType} from '@src/types/post';
 
 export const getListAllPostAction = (

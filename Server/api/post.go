@@ -69,34 +69,11 @@ type getListAllPostRequest struct {
 	PageSize int32 `form:"page_size" binding:"required,min=5,max=10"`
 }
 
-type Author struct {
-	UserName    string `json:"user_name"`
-	ProfileName string `json:"name"`
-	Email       string `json:"email"`
-}
 type getListAllPostResponse struct {
-	Id     int64        `json:"id"`
-	Post   postResponse `json:"post"`
-	Author Author       `json:"author"`
-}
-
-func (server *Server) getAuthorInfo(ctx *gin.Context, authorId int64) Author {
-	user, valid := server.validUser(ctx, authorId)
-	if !valid {
-		return Author{}
-	}
-	userProfile, err := server.store.GetUserProfileById(ctx, authorId)
-	if err != nil {
-		return Author{}
-	}
-
-	author := Author{
-		UserName:    user.Username,
-		Email:       userProfile.Email,
-		ProfileName: userProfile.Name,
-	}
-
-	return author
+	Id          int64        `json:"id"`
+	Post        postResponse `json:"post"`
+	Author      Author       `json:"author"`
+	Interaction Interaction  `json:"interaction"`
 }
 
 func (server *Server) getListAllPost(ctx *gin.Context) {
@@ -122,10 +99,13 @@ func (server *Server) getListAllPost(ctx *gin.Context) {
 
 	for _, post := range posts {
 		author := server.getAuthorInfo(ctx, post.AuthorID)
+		interaction := server.getInteractionOfPost(ctx, post.ID)
+
 		response = append(response, getListAllPostResponse{
-			Id:     post.ID,
-			Post:   createPostResponse(post),
-			Author: author,
+			Id:          post.ID,
+			Post:        createPostResponse(post),
+			Author:      author,
+			Interaction: interaction,
 		})
 	}
 

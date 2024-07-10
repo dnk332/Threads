@@ -5,7 +5,7 @@ import {invoke} from '../sagaHelper/invokeSaga';
 import {
   IToggleLikePostAction,
   LikeActionType,
-} from '../actionTypes/likeActionTypes';
+} from '@actionTypes/likeActionTypes';
 import {
   ResponseLikePostApi,
   ResponseUnlikePostApi,
@@ -23,7 +23,7 @@ function* toggleLikePostSaga({type, payload}: IToggleLikePostAction) {
           action === 'like' ? likeApis.likePostApi : likeApis.unlikePostApi,
           postId,
         );
-      yield callback({success, data});
+      callback({success, data});
     },
     error => {
       callback({success: false, message: error.message});

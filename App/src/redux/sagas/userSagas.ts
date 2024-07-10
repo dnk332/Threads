@@ -2,12 +2,12 @@ import {all, call, put, select, takeLatest} from 'redux-saga/effects';
 
 import {userActions} from '@actions';
 import api from '@src/services/apis';
-import {currentAccountSelector} from '../selectors';
+import {currentAccountSelector} from '@selectors';
 import {
   IGetUserProfileAction,
   IUpdateUserProfileAction,
   UserActionType,
-} from '../actionTypes/userActionTypes';
+} from '@actionTypes/userActionTypes';
 import {
   ResponseGetUserProfileApi,
   ResponseUpdateUserProfileApi,
@@ -25,7 +25,7 @@ function* getUserProfileSaga({type, payload}: IGetUserProfileAction) {
         userApis.getUserProfileApi,
         params.user_id,
       );
-      yield callback({data, success});
+      callback({data, success});
       yield put(userActions.saveUserProfileAction(userProfileModel(data)));
     },
     error => {
@@ -50,7 +50,7 @@ function* updateUserProfileSaga({type, payload}: IUpdateUserProfileAction) {
         params.bio,
       );
       console.log('data', data);
-      yield callback({data, success});
+      callback({data, success});
       yield put(userActions.saveUserProfileAction(userProfileModel(data)));
     },
     error => {

@@ -1,8 +1,8 @@
-import {Callback} from '../actionTypes/actionTypeBase';
+import {Callback} from '@actionTypes/actionTypeBase';
 import {
   IToggleLikePostAction,
   LikeActionType,
-} from '../actionTypes/likeActionTypes';
+} from '@actionTypes/likeActionTypes';
 
 export const toggleLikePostAction = (
   action: 'like' | 'unlike',

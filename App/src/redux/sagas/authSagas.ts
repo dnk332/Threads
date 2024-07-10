@@ -5,7 +5,7 @@ import api from '@src/services/apis';
 import {invoke} from '@appRedux/sagaHelper/invokeSaga';
 import Navigator from '@navigators';
 import {userActions} from '@actions';
-import {accessTokenSelector, refreshTokenSelector} from '../selectors';
+import {accessTokenSelector, refreshTokenSelector} from '@selectors';
 import {refreshAccessTokenApi} from '@src/services/apis/authApis';
 import SCREEN_NAME from '@src/navigation/ScreenName';
 import showAlert from '@appRedux/sagaHelper/handleErrorAlert';
@@ -16,7 +16,7 @@ import {
   ILoginAction,
   ILogoutAction,
   IRegisterAction,
-} from '../actionTypes/authActionTypes';
+} from '@actionTypes/authActionTypes';
 import {
   ResponseLoginApi,
   ResponseRefreshTokenApi,

@@ -6,7 +6,7 @@ import {
   AppContainer,
   AppImage,
   AppInput,
-  DissmissKeyboardView,
+  AwareScrollView,
 } from '@components';
 import {AppStyleSheet} from '@themes/responsive';
 import {colors} from '@themes/color';
@@ -37,7 +37,9 @@ const AddNewAccountView: React.FC<AddNewAccountViewProps> = ({
 
   return (
     <AppContainer style={styles.container}>
-      <DissmissKeyboardView style={styles.content}>
+      <AwareScrollView
+        containerStyle={styles.content}
+        keyboardShouldPersistTaps={true}>
         <AppImage
           containerStyle={styles.igImage}
           source={require('@assets/image/instagram-logo.png')}
@@ -74,7 +76,7 @@ const AddNewAccountView: React.FC<AddNewAccountViewProps> = ({
           containerStyle={styles.metaImage}
           source={require('@assets/image/meta-logo.png')}
         />
-      </DissmissKeyboardView>
+      </AwareScrollView>
     </AppContainer>
   );
 };

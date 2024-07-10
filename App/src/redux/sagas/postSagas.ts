@@ -6,7 +6,7 @@ import {
   ICreatePostAction,
   IGetListAllPostAction,
   PostActionType,
-} from '../actionTypes/postActionTypes';
+} from '@actionTypes/postActionTypes';
 import {
   ResponseCreatePostApi,
   ResponseGetListAllPostApi,
@@ -23,7 +23,7 @@ function* getListAllPostSaga({type, payload}: IGetListAllPostAction) {
         params.pageId,
         params.pageSize,
       );
-      yield callback({success, data});
+      callback({success, data});
     },
     error => {
       callback({success: false, message: error.message});
@@ -43,7 +43,7 @@ function* createPostSaga({type, payload}: ICreatePostAction) {
         params.author_id,
         params.text_content,
       );
-      yield callback({success, data});
+      callback({success, data});
     },
     error => {
       callback({success: false, message: error.message});
@@ -53,9 +53,11 @@ function* createPostSaga({type, payload}: ICreatePostAction) {
     () => {},
   );
 }
+
 function* watchGetListAllPost() {
   yield takeLatest(PostActionType.GET_LIST_ALL_POST, getListAllPostSaga);
 }
+
 function* watchCreatePost() {
   yield takeLatest(PostActionType.CREATE_POST, createPostSaga);
 }

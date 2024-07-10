@@ -1,4 +1,5 @@
 import axios, {
+  AxiosError,
   AxiosInstance,
   AxiosRequestConfig,
   AxiosResponse,
@@ -6,11 +7,11 @@ import axios, {
 } from 'axios';
 import {store} from '@src/redux/store';
 import {accessTokenSelector, domainSelector} from '@src/redux/selectors';
-import {getParamsString} from '@src/utils/HelperUtil';
 import Navigator from '@src/navigation/NavigationService';
 import {deviceInfoSelector} from '@src/redux/selectors/app';
 import {IDeviceInfo} from '@src/redux/reducers/app';
 import SCREEN_NAME from '@src/navigation/ScreenName';
+import {CustomError} from '@appRedux/sagaHelper/handleErrorMessage'; // Access token retrieval
 
 // Access token retrieval
 const getAccessToken = (): string | undefined =>
@@ -67,10 +68,7 @@ class HTTP {
 
     // Response interceptor
     api.interceptors.response.use(
-      (response: AxiosResponse) => ({
-        ...response,
-        isSuccess: response.status === ResponseCode.SUCCESS,
-      }),
+      (response: AxiosResponse) => response,
       (error: any) => {
         const {code, message} = error.response?.data || {};
         if (code && this.exceptionCodes.includes(code)) {
@@ -98,16 +96,18 @@ class HTTP {
       ' + params: ',
       params,
     );
+
+    // @ts-ignore
     try {
       const config: AxiosRequestConfig = {headers: headers || {}};
-      if (method === 'get' && params) {
-        endPoint += `/${getParamsString(params)}`;
+      let response: AxiosResponse;
+
+      if (method === 'get' || method === 'delete') {
+        config.params = params;
+        response = await this.http[method](endPoint, config);
+      } else {
+        response = await this.http[method](endPoint, params, config);
       }
-      const response = await this.http[method](
-        endPoint,
-        method === 'get' ? config : params,
-        config,
-      );
 
       console.log(
         `==== response ${method.toUpperCase()} ==== `,
@@ -115,11 +115,21 @@ class HTTP {
         response,
       );
       const data = response.data;
+
       return typeof data === 'string'
         ? {message: data, success: true}
         : {data, success: true};
-    } catch (error) {
-      return Promise.reject(error);
+    } catch (error: any) {
+      console.log(`xxxx error ${method.toUpperCase()} xxxx `, endPoint, error);
+      let err: CustomError = {
+        code: (error as AxiosError).code,
+        message: (error as AxiosError).message,
+        response: {
+          data: (error as AxiosError).response?.data,
+          status: (error as AxiosError).response?.status,
+        },
+      };
+      return Promise.reject(err);
     }
   }
 

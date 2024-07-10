@@ -69,7 +69,7 @@ type unlikePostResponse struct {
 // unlikePost handles the post unlike process
 func (server *Server) unlikePost(ctx *gin.Context) {
 	var req unlikePostRequest
-	if err := ctx.ShouldBindQuery(&req); err != nil {
+	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(errorBindJSONResponse(http.StatusBadRequest, err))
 		log.Printf("[ERROR] Failed to parse request URI: %v", err)
 		return
@@ -180,4 +180,21 @@ func (server *Server) getAllLikeOfPost(ctx *gin.Context) {
 		})
 	}
 	ctx.JSON(http.StatusOK, response)
+}
+func (server *Server) countLikeOfPost(ctx *gin.Context, postId int64) (countLikes int64) {
+	countLikes, err := server.store.CountLikeOfPost(ctx, postId)
+	if err != nil {
+		ctx.JSON(errorResponse(http.StatusBadRequest, err))
+		return
+	}
+	return
+}
+
+func (server *Server) checkLikeStatusOfUser(ctx *gin.Context, params db.CheckLikeStatusOfUserParams) (likeStatus bool) {
+	likeStatus, err := server.store.CheckLikeStatusOfUser(ctx, params)
+	if err != nil {
+		ctx.JSON(errorResponse(http.StatusBadRequest, err))
+		return
+	}
+	return
 }
