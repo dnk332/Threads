@@ -5,6 +5,7 @@ export function postTextModel(post: any): IPostText & Record<string, any> {
   const transformed = transformObjectKeysToCamelCase(post);
   return transformed as IPostText & Record<string, any>;
 }
+
 export function mediaModel(media: any): IMedia & Record<string, any> {
   const transformed = transformObjectKeysToCamelCase(media);
   return transformed as IMedia & Record<string, any>;
@@ -35,6 +36,7 @@ export function postListModel(posts: any[]): IPostType[] {
     const transformed = transformObjectKeysToCamelCase(postValue);
     transformed.post = postTextModel(postValue.post);
     transformed.author = authorModel(postValue.author);
+    transformed.interaction = authorModel(postValue.interaction);
     return transformed as IPostType & Record<string, any>;
   });
 }

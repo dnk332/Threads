@@ -207,6 +207,10 @@ func TestGetListAllPostAPI(t *testing.T) {
 						Times(1).
 						Return(user, nil)
 					store.EXPECT().
+						CountLikeOfPost(gomock.Any(), posts[i].ID).
+						Times(1).
+						Return(int64(0), nil)
+					store.EXPECT().
 						GetUserProfileById(gomock.Any(), user.ID).
 						Times(1).
 						Return(userProfile, nil)
@@ -218,14 +222,18 @@ func TestGetListAllPostAPI(t *testing.T) {
 				var expectedResponse []getListAllPostResponse
 				for _, post := range posts {
 					author := Author{
+						ID:          user.ID,
 						UserName:    user.Username,
 						Email:       userProfile.Email,
 						ProfileName: userProfile.Name,
 					}
+					interaction := Interaction{}
+
 					expectedResponse = append(expectedResponse, getListAllPostResponse{
-						Id:     post.ID,
-						Post:   createPostResponse(post),
-						Author: author,
+						Id:          post.ID,
+						Post:        createPostResponse(post),
+						Author:      author,
+						Interaction: interaction,
 					})
 				}
 

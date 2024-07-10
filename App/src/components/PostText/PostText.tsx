@@ -1,50 +1,64 @@
 import React, {Fragment, memo, ReactElement, useRef} from 'react';
 import {Pressable, View} from 'react-native';
+import _ from 'lodash';
 
-import {Avatar, AppText} from '@components';
+import {AppText, Avatar} from '@components';
 import layout from '@themes/layout';
 import {colors} from '@themes/color';
 import {AppStyleSheet} from '@themes/responsive';
-import {IAuthor, IPostText} from '@localTypes/post';
-import TimeFromNow from '@src/hooks/hookTime/TimeAgo';
-import ActiveBottomSheet from '@src/screens/Home/Components/ActiveBottomSheet';
+import TimeFromNow from '@hooks/hookTime/TimeAgo';
+import ActiveBottomSheet from '@screens/Home/Components/ActiveBottomSheet';
 import ContentHandelArea from '@src/components/PostContent/ContentHandelArea';
 import SvgComponent from '@svg/index';
-import _ from 'lodash';
 
-interface PostItemProps {
+import {IAuthor, IInteraction, IPostText} from '@src/types/post';
+
+interface PostTextViewProps {
   userData: IAuthor;
   postData: IPostText;
+  interaction: IInteraction;
   haveReplies?: boolean;
   lastReplies?: boolean;
   isReplies?: boolean;
   isRootPost?: boolean;
+  handleLike?: () => void;
+  likeStatus?: boolean;
 }
 
 interface StatusItemProps {
   icon: ReactElement;
   value?: number;
+  onPress?: () => void;
 }
 
-const StatusItem = ({icon, value = 0}: StatusItemProps): ReactElement => {
+const StatusItem = ({
+  icon,
+  value = 0,
+  onPress,
+}: StatusItemProps): ReactElement => {
   return (
-    <View style={[layout.row, layout.alignItemsCenter, styles.status]}>
+    <Pressable
+      onPress={onPress}
+      style={[layout.row, layout.alignItemsCenter, styles.status]}>
       <View style={styles.statusIcon}>{icon}</View>
       {value !== 0 && (
         <AppText fontSize={12} color={colors.text_secondary}>
           {value}
         </AppText>
       )}
-    </View>
+    </Pressable>
   );
 };
 
-const PostItem = ({
+const PostText = ({
   userData,
   postData,
   isReplies,
   isRootPost,
-}: PostItemProps) => {
+  handleLike,
+  interaction,
+  likeStatus,
+}: PostTextViewProps) => {
   const sheetRef = useRef<any>();
   return (
     <Fragment>
@@ -91,7 +105,11 @@ const PostItem = ({
         </View>
 
         <View style={[layout.row, styles.feature]}>
-          <StatusItem icon={<SvgComponent name={'HEART'} />} value={10} />
+          <StatusItem
+            onPress={handleLike}
+            icon={<SvgComponent name={likeStatus ? 'HEART_FILL' : 'HEART'} />}
+            value={interaction.countLikes}
+          />
           <StatusItem icon={<SvgComponent name={'MESSAGE'} />} value={10} />
           <StatusItem icon={<SvgComponent name={'REPEAT'} />} value={10} />
           <StatusItem icon={<SvgComponent name={'SEND'} />} />
@@ -102,7 +120,7 @@ const PostItem = ({
   );
 };
 
-export default memo(PostItem);
+export default memo(PostText);
 
 const styles = AppStyleSheet.create({
   container: {

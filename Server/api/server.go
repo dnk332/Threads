@@ -53,7 +53,8 @@ func (server *Server) setupRouter() {
 		authRoutes.POST("/posts", server.createPost)
 		authRoutes.GET("/posts", server.getListAllPost)
 
-		authRoutes.POST("/post/like", server.likePost)
+		authRoutes.POST("/posts/like", server.likePost)
+		authRoutes.POST("/posts/unlike", server.unlikePost)
 	}
 
 	server.router = router

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import _ from 'lodash';
 import {useIsFocused} from '@react-navigation/native';
 
@@ -31,6 +31,10 @@ const HomeScreen: React.FC = () => {
   let currentAccount = useSelectorShallow(currentAccountSelector);
   let listAllPost = useSelectorShallow(listAllPostSelector);
 
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const isLoading = useRef<boolean>(false);
+
   const getUserProfile = useCallback(() => {
     const callback: Callback = ({success}) => {
       if (!success) {
@@ -55,6 +59,8 @@ const HomeScreen: React.FC = () => {
           const convertData = postListModel(data);
           actions.saveListAllPostAction(convertData, pageId > 1);
         }
+        isLoading.current = false;
+        setLoading(false);
       };
       actions.getListAllPostAction(pageId, SIZE_PAGE, callback);
     },
@@ -62,12 +68,22 @@ const HomeScreen: React.FC = () => {
   );
 
   const loadMore = () => {
+    if (isLoading.current === true) {
+      return;
+    }
     const pageNumber = Math.round(listAllPost.length / SIZE_PAGE);
     if (listAllPost.length === pageNumber * SIZE_PAGE) {
+      isLoading.current = true;
+      setLoading(true);
       getListPost(pageNumber + 1);
     }
   };
   const onRefresh = useCallback(() => {
+    if (isLoading.current === true) {
+      return;
+    }
+    setLoading(true);
+    isLoading.current = true;
     getListPost(1);
   }, [getListPost]);
 
@@ -88,6 +104,7 @@ const HomeScreen: React.FC = () => {
       listPost={listAllPost}
       loadMore={loadMore}
       onRefresh={onRefresh}
+      loading={loading}
     />
   );
 };

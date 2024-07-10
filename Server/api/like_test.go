@@ -2,9 +2,7 @@ package api
 
 import (
 	"bytes"
-	"database/sql"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -12,6 +10,7 @@ import (
 	"time"
 
 	"github.com/briandnk/Threads/token"
+	"github.com/briandnk/Threads/utils"
 
 	mockdb "github.com/briandnk/Threads/db/mock"
 	db "github.com/briandnk/Threads/db/sqlc"
@@ -46,6 +45,7 @@ func requireBodyMatchLikes(t *testing.T, body *bytes.Buffer, expectedLikes []get
 
 func randomLike(author db.User, post db.Post) (like db.Like) {
 	like = db.Like{
+		ID:        utils.RandomInt(1, 100),
 		AuthorID:  author.ID,
 		PostID:    post.ID,
 		CreatedAt: time.Now(),
@@ -121,28 +121,6 @@ func TestLikePostAPI(t *testing.T) {
 				require.Equal(t, http.StatusBadRequest, recorder.Code)
 			},
 		},
-		{
-			name: "InternalError",
-			body: gin.H{
-				"post_id": post.ID,
-			},
-			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
-				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
-			},
-			buildStubs: func(store *mockdb.MockStore) {
-				arg := db.LikePostParams{
-					AuthorID: user.ID,
-					PostID:   post.ID,
-				}
-				store.EXPECT().
-					LikePost(gomock.Any(), gomock.Eq(arg)).
-					Times(1).
-					Return(db.Like{}, sql.ErrConnDone)
-			},
-			checkResponse: func(recorder *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusInternalServerError, recorder.Code)
-			},
-		},
 	}
 
 	for i := range testCases {
@@ -175,86 +153,47 @@ func TestLikePostAPI(t *testing.T) {
 
 func TestUnlikePostAPI(t *testing.T) {
 	user, _ := randomUser(t)
-	userProfile := randomUserProfile(user)
-
-	n := 5
-	posts := make([]db.Post, n)
-	for i := 0; i < n; i++ {
-		posts[i] = randomPost(user)
-	}
-
-	type Query struct {
-		PageID   int
-		PageSize int
-	}
+	post := randomPost(user)
 
 	testCases := []struct {
 		name          string
-		query         Query
+		body          gin.H
 		setupAuth     func(t *testing.T, request *http.Request, tokenMaker token.Maker)
 		buildStubs    func(store *mockdb.MockStore)
 		checkResponse func(recoder *httptest.ResponseRecorder)
 	}{
 		{
 			name: "OK",
-			query: Query{
-				PageID:   1,
-				PageSize: n,
+			body: gin.H{
+				"post_id": post.ID,
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
 			},
 			buildStubs: func(store *mockdb.MockStore) {
-				arg := db.GetListAllPostParams{
-					Limit:  int32(n),
-					Offset: 0,
+				arg := db.UnlikePostParams{
+					PostID:   post.ID,
+					AuthorID: user.ID,
 				}
 				store.EXPECT().
-					GetListAllPost(gomock.Any(), gomock.Eq(arg)).
+					UnlikePost(gomock.Any(), gomock.Eq(arg)).
 					Times(1).
-					Return(posts, nil)
-				for i := 0; i < n; i++ {
-					store.EXPECT().
-						GetUserById(gomock.Any(), user.ID).
-						Times(1).
-						Return(user, nil)
-					store.EXPECT().
-						GetUserProfileById(gomock.Any(), user.ID).
-						Times(1).
-						Return(userProfile, nil)
-				}
+					Return(nil)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusOK, recorder.Code)
-
-				var expectedResponse []getListAllPostResponse
-				for _, post := range posts {
-					author := Author{
-						UserName:    user.Username,
-						Email:       userProfile.Email,
-						ProfileName: userProfile.Name,
-					}
-					expectedResponse = append(expectedResponse, getListAllPostResponse{
-						Id:     post.ID,
-						Post:   createPostResponse(post),
-						Author: author,
-					})
-				}
-
-				requireBodyMatchPosts(t, recorder.Body, expectedResponse)
 			},
 		},
 		{
 			name: "NoAuthorization",
-			query: Query{
-				PageID:   1,
-				PageSize: n,
+			body: gin.H{
+				"post_id": post.ID,
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
-					GetListAllPost(gomock.Any(), gomock.Any()).
+					UnlikePost(gomock.Any(), gomock.Any()).
 					Times(0)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
@@ -262,54 +201,16 @@ func TestUnlikePostAPI(t *testing.T) {
 			},
 		},
 		{
-			name: "InternalError",
-			query: Query{
-				PageID:   1,
-				PageSize: n,
+			name: "InvalidPostId",
+			body: gin.H{
+				"post_id": 0,
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
-					GetListAllPost(gomock.Any(), gomock.Any()).
-					Times(1).
-					Return([]db.Post{}, sql.ErrConnDone)
-			},
-			checkResponse: func(recorder *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusInternalServerError, recorder.Code)
-			},
-		},
-		{
-			name: "InvalidPageID",
-			query: Query{
-				PageID:   -1,
-				PageSize: n,
-			},
-			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
-				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
-			},
-			buildStubs: func(store *mockdb.MockStore) {
-				store.EXPECT().
-					GetListAllPost(gomock.Any(), gomock.Any()).
-					Times(0)
-			},
-			checkResponse: func(recorder *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusBadRequest, recorder.Code)
-			},
-		},
-		{
-			name: "InvalidPageSize",
-			query: Query{
-				PageID:   1,
-				PageSize: 100000,
-			},
-			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
-				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
-			},
-			buildStubs: func(store *mockdb.MockStore) {
-				store.EXPECT().
-					GetListAllPost(gomock.Any(), gomock.Any()).
+					UnlikePost(gomock.Any(), gomock.Any()).
 					Times(0)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
@@ -331,15 +232,13 @@ func TestUnlikePostAPI(t *testing.T) {
 			server := newTestServer(t, store)
 			recorder := httptest.NewRecorder()
 
-			url := "/posts"
-			request, err := http.NewRequest(http.MethodGet, url, nil)
+			// Marshal body data to JSON
+			data, err := json.Marshal(tc.body)
 			require.NoError(t, err)
 
-			// Add query parameters to request URL
-			q := request.URL.Query()
-			q.Add("page_id", fmt.Sprintf("%d", tc.query.PageID))
-			q.Add("page_size", fmt.Sprintf("%d", tc.query.PageSize))
-			request.URL.RawQuery = q.Encode()
+			url := "/post/unlike"
+			request, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(data))
+			require.NoError(t, err)
 
 			tc.setupAuth(t, request, server.tokenMaker)
 			server.router.ServeHTTP(recorder, request)

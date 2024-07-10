@@ -103,3 +103,29 @@ func TestGetAllLikesOfUser(t *testing.T) {
 	require.NoError(t, err)
 	require.Len(t, listLikes, n)
 }
+func TestCountLikeOfPost(t *testing.T) {
+	post := CreateRandomPost(t)
+
+	n := 5
+	users := make([]User, n)
+	for i := 0; i < n; i++ {
+		users[i] = createRandomUser(t)
+		LikePost(t, post, users[i])
+	}
+
+	like_count, err := testStore.CountLikeOfPost(context.Background(), post.ID)
+	require.NoError(t, err)
+	require.EqualValues(t, like_count, n)
+}
+
+func TestCheckLikeStatusOfUser(t *testing.T) {
+	post := CreateRandomPost(t)
+	user := createRandomUser(t)
+	LikePost(t, post, user)
+	likeStatus, err := testStore.CheckLikeStatusOfUser(context.Background(), CheckLikeStatusOfUserParams{
+		PostID:   post.ID,
+		AuthorID: user.ID,
+	})
+	require.NoError(t, err)
+	require.True(t, likeStatus)
+}

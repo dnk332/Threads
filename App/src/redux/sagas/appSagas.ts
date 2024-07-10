@@ -5,7 +5,7 @@ import {domainSelector} from '@selectors';
 import {Setting} from '@configs';
 import * as TimeAgo from '@hooks/hookTime/SetUpTime';
 import _ from 'lodash';
-import {AppActionType, IStartAction} from '../actionTypes/appActionTypes';
+import {AppActionType, IStartAction} from '@actionTypes/appActionTypes';
 import {invoke} from '../sagaHelper/invokeSaga';
 
 function* startApplicationSaga({type, payload}: IStartAction) {

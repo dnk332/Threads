@@ -9,12 +9,45 @@ import (
 	"context"
 )
 
+const checkLikeStatusOfUser = `-- name: CheckLikeStatusOfUser :one
+SELECT EXISTS (SELECT 1
+               FROM Likes
+               WHERE post_id = $1
+                 AND author_id = $2) AS has_liked
+`
+
+type CheckLikeStatusOfUserParams struct {
+	PostID   int64 `json:"post_id"`
+	AuthorID int64 `json:"author_id"`
+}
+
+// Check like status of user
+func (q *Queries) CheckLikeStatusOfUser(ctx context.Context, arg CheckLikeStatusOfUserParams) (bool, error) {
+	row := q.db.QueryRow(ctx, checkLikeStatusOfUser, arg.PostID, arg.AuthorID)
+	var has_liked bool
+	err := row.Scan(&has_liked)
+	return has_liked, err
+}
+
+const countLikeOfPost = `-- name: CountLikeOfPost :one
+SELECT COUNT(*) AS like_count
+FROM Likes
+WHERE post_id = $1
+`
+
+// Count like of post
+func (q *Queries) CountLikeOfPost(ctx context.Context, postID int64) (int64, error) {
+	row := q.db.QueryRow(ctx, countLikeOfPost, postID)
+	var like_count int64
+	err := row.Scan(&like_count)
+	return like_count, err
+}
+
 const getAllLikesOfPost = `-- name: GetAllLikesOfPost :many
 SELECT id, post_id, author_id, created_at
 FROM Likes
 WHERE post_id = $1
-ORDER BY created_at DESC
-LIMIT $2
+ORDER BY created_at DESC LIMIT $2
 OFFSET $3
 `
 
@@ -54,8 +87,7 @@ const getAllLikesOfUser = `-- name: GetAllLikesOfUser :many
 SELECT id, post_id, author_id, created_at
 FROM Likes
 WHERE author_id = $1
-ORDER BY created_at DESC
-LIMIT $2
+ORDER BY created_at DESC LIMIT $2
 OFFSET $3
 `
 
@@ -115,8 +147,10 @@ func (q *Queries) LikePost(ctx context.Context, arg LikePostParams) (Like, error
 }
 
 const unlikePost = `-- name: UnlikePost :exec
-DELETE FROM Likes 
-WHERE post_id = $1 AND author_id = $2
+DELETE
+FROM Likes
+WHERE post_id = $1
+  AND author_id = $2
 `
 
 type UnlikePostParams struct {

@@ -3,6 +3,7 @@ export interface IMedia {
   link: any;
   type: string;
 }
+
 export interface IPost {
   textContent: string;
   mediaContent: IMedia[];
@@ -30,4 +31,10 @@ export type IPostType = {
   id: number;
   post: IPostText;
   author: IAuthor;
+  interaction: IInteraction;
+};
+
+export type IInteraction = {
+  countLikes: number;
+  likeStatus: boolean;
 };

@@ -1,5 +1,10 @@
-import React, {useCallback, useRef, useState} from 'react';
-import {SafeAreaView, View, PanResponder} from 'react-native';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
+import {
+  ActivityIndicator,
+  PanResponder,
+  SafeAreaView,
+  View,
+} from 'react-native';
 import Lottie from 'lottie-react-native';
 import Animated, {
   useAnimatedScrollHandler,
@@ -7,18 +12,16 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-
-// import {PostItem} from '@src/components';
-// import {dummyPost} from '@src/constants/dummyData';
 import {colors} from '@themes/color';
 import {AppStyleSheet} from '@src/themes/responsive';
 import {IPostType} from '@src/types/post';
-import PostText from '@src/components/PostContent/PostText';
+import {AppText, PostText} from '@src/components';
 
 type HomeScreenViewProps = {
   listPost: IPostType[];
   loadMore: () => void;
   onRefresh: () => void;
+  loading: boolean;
 };
 
 const ItemSeparator = () => <View style={styles.separator} />;
@@ -27,6 +30,7 @@ const HomeScreenView: React.FC<HomeScreenViewProps> = ({
   listPost,
   loadMore,
   onRefresh,
+  loading,
 }) => {
   const scrollPosition = useSharedValue(0);
   const pullDownPosition = useSharedValue(0);
@@ -89,9 +93,15 @@ const HomeScreenView: React.FC<HomeScreenViewProps> = ({
       onPanResponderTerminate: onPanRelease,
     }),
   );
-  // TODO: update post text item, need add user data of post's author
+
   const _renderItem = useCallback(({item}: {item: IPostType}) => {
-    return <PostText userData={item.author} postData={item.post} />;
+    return (
+      <PostText
+        userData={item.author}
+        postData={item.post}
+        interaction={item.interaction}
+      />
+    );
     // const isRepliesPost = item.replies.length > 0;
     // if (isRepliesPost) {
     //   return (
@@ -123,6 +133,17 @@ const HomeScreenView: React.FC<HomeScreenViewProps> = ({
     // }
   }, []);
 
+  const renderFooterList = useMemo(() => {
+    if (loading) {
+      return <ActivityIndicator color={colors.white} />;
+    }
+    if (listPost.length === 0) {
+      return <AppText>Empty</AppText>;
+    }
+
+    return <View />;
+  }, [listPost.length, loading]);
+
   return (
     <SafeAreaView style={styles.container}>
       <View
@@ -148,9 +169,12 @@ const HomeScreenView: React.FC<HomeScreenViewProps> = ({
             renderItem={_renderItem}
             showsVerticalScrollIndicator={false}
             ItemSeparatorComponent={ItemSeparator}
-            onEndReachedThreshold={16}
+            onEndReachedThreshold={0.3}
             nestedScrollEnabled
             onEndReached={loadMore}
+            ListFooterComponent={
+              <View style={styles.bottom}>{renderFooterList}</View>
+            }
           />
         </Animated.View>
       </View>
@@ -185,4 +209,5 @@ const styles = AppStyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  bottom: {alignItems: 'center', marginVertical: 10},
 });
