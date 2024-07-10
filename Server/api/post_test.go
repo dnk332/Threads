@@ -214,6 +214,14 @@ func TestGetListAllPostAPI(t *testing.T) {
 						GetUserProfileById(gomock.Any(), user.ID).
 						Times(1).
 						Return(userProfile, nil)
+
+					arg1 := db.CheckLikeStatusOfUserParams{
+						PostID:   posts[i].ID,
+						AuthorID: user.ID,
+					}
+					store.EXPECT().
+						CheckLikeStatusOfUser(gomock.Any(), gomock.Eq(arg1)).
+						Times(1)
 				}
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
