@@ -50,14 +50,14 @@ jobs:
             echo "Waiting for PostgreSQL..."
             sleep 5
           done
-#      - name: Set up app.env
-#        run: |
-#            echo "DB_DRIVER=${{ secrets.DB_DRIVER }}" > Server/app.env
-#            echo "DB_SOURCE=${{ secrets.DB_SOURCE }}" >> Server/app.env
-#            echo "SERVER_ADDRESS=${{ secrets.SERVER_ADDRESS }}" >> Server/app.env
-#            echo "TOKEN_SYMMETRIC_KEY=${{ secrets.TOKEN_SYMMETRIC_KEY }}" >> Server/app.env
-#            echo "ACCESS_TOKEN_DURATION=${{ secrets.ACCESS_TOKEN_DURATION }}" >> Server/app.env
-#            echo "REFRESH_TOKEN_DURATION=${{ secrets.REFRESH_TOKEN_DURATION }}" >> Server/app.env
+      - name: Set up app.env
+        run: |
+            echo "DB_DRIVER=${{ secrets.DB_DRIVER }}" > Server/app.env
+            echo "DB_SOURCE=${{ secrets.DB_SOURCE }}" >> Server/app.env
+            echo "SERVER_ADDRESS=${{ secrets.SERVER_ADDRESS }}" >> Server/app.env
+            echo "TOKEN_SYMMETRIC_KEY=${{ secrets.TOKEN_SYMMETRIC_KEY }}" >> Server/app.env
+            echo "ACCESS_TOKEN_DURATION=${{ secrets.ACCESS_TOKEN_DURATION }}" >> Server/app.env
+            echo "REFRESH_TOKEN_DURATION=${{ secrets.REFRESH_TOKEN_DURATION }}" >> Server/app.env
       - name: Run migrations
       - name: Run migrations
         run: |
@@ -67,10 +67,10 @@ jobs:
         run: |
           cd Server
           make test
-#    env:
-#      DB_DRIVER: ${{ secrets.DB_DRIVER }}
-#      DB_SOURCE: ${{ secrets.DB_SOURCE }}
-#      SERVER_ADDRESS: ${{ secrets.SERVER_ADDRESS }}
-#      TOKEN_SYMMETRIC_KEY: ${{ secrets.TOKEN_SYMMETRIC_KEY }}
-#      ACCESS_TOKEN_DURATION: ${{ secrets.ACCESS_TOKEN_DURATION }}
-#      REFRESH_TOKEN_DURATION: ${{ secrets.REFRESH_TOKEN_DURATION }}
+    env:
+      DB_DRIVER: ${{ secrets.DB_DRIVER }}
+      DB_SOURCE: ${{ secrets.DB_SOURCE }}
+      SERVER_ADDRESS: ${{ secrets.SERVER_ADDRESS }}
+      TOKEN_SYMMETRIC_KEY: ${{ secrets.TOKEN_SYMMETRIC_KEY }}
+      ACCESS_TOKEN_DURATION: ${{ secrets.ACCESS_TOKEN_DURATION }}
+      REFRESH_TOKEN_DURATION: ${{ secrets.REFRESH_TOKEN_DURATION }}
