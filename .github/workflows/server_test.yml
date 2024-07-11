@@ -52,20 +52,10 @@ jobs:
           done
       - name: Set up app.env with secrets
         run: echo "${{ secrets.APP_ENV_CONTENT }}" > Server/app.env
-      - name: Verify app.env contents
-        run: |
-          cat Server/app.env  # Check if app.env is correctly populated
       - name: Run migrations
         run: |
           cd Server
           make migrateup
-      - name: Debug environment
-        run: |
-          echo "Current directory: $(pwd)"
-          echo "Contents of Server directory:"
-          ls -l Server/
-          echo "Environment variables:"
-          env
       - name: Test
         run: |
           cd Server
