@@ -1,21 +1,22 @@
-import {StyleSheet, View} from 'react-native';
 import React from 'react';
-import AppContainer from '@components/AppContainer';
-import {layout} from '@themes/index';
-import AppImage from '@components/AppImage';
+import {StyleSheet, View} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
-import {NavigationStackParamList} from '@navigation/Stack';
 
-type DetailsScreenRouteProp = RouteProp<
+import layout from '@themes/layout';
+import {NavigationStackParamList} from '@navigation/Stack';
+import {AppContainer, AppImage} from '@components';
+import SCREEN_NAME from '@src/navigation/ScreenName';
+
+type ImageViewerScreenRouteProp = RouteProp<
   NavigationStackParamList,
-  'IMAGE_VIEWER'
+  typeof SCREEN_NAME.IMAGE_VIEWER
 >;
 
 type ImageViewerProps = {
-  route: DetailsScreenRouteProp;
+  route: ImageViewerScreenRouteProp;
 };
 
-const ImageViewer = ({route}: ImageViewerProps) => {
+const ImageViewerScreen = ({route}: ImageViewerProps) => {
   const {imageLink} = route.params;
   return (
     <AppContainer haveBackButton={true}>
@@ -30,7 +31,7 @@ const ImageViewer = ({route}: ImageViewerProps) => {
   );
 };
 
-export default ImageViewer;
+export default ImageViewerScreen;
 
 const styles = StyleSheet.create({
   image: {

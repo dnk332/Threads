@@ -1,6 +1,7 @@
 #import "AppDelegate.h"
 
 #import <React/RCTBundleURLProvider.h>
+#import "RNBootSplash.h"
 
 @implementation AppDelegate
 
@@ -11,6 +12,7 @@
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
 
+  
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
@@ -26,6 +28,14 @@
 #else
   return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 #endif
+}
+
+- (UIView *)createRootViewWithBridge:(RCTBridge *)bridge
+                          moduleName:(NSString *)moduleName
+                           initProps:(NSDictionary *)initProps {
+  UIView *rootView = [super createRootViewWithBridge:bridge moduleName:moduleName initProps:initProps];
+  [RNBootSplash initWithStoryboard:@"BootSplash" rootView:rootView];
+  return rootView;
 }
 
 @end

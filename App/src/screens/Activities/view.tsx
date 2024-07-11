@@ -1,14 +1,13 @@
 import React, {useCallback} from 'react';
-import AppContainer from '@components/AppContainer';
-
-import {FlashList} from '@shopify/flash-list';
 import {View} from 'react-native';
-import colors from '@themes/color';
+import {FlashList} from '@shopify/flash-list';
+
+import {colors} from '@themes/color';
 import {AppStyleSheet} from '@themes/responsive';
-import AppText from '@components/AppText';
-import {layout} from '@themes/index';
+import layout from '@themes/layout';
 import ActivityItem from './Components/ActivityItem';
 import ActivityFilterList from './Components/ActivityFilterList';
+import {AppText, AppContainer} from '@components';
 
 const ActivitiesScreenView = () => {
   const _renderItem = useCallback(({}) => {
@@ -30,7 +29,7 @@ const ActivitiesScreenView = () => {
           renderItem={_renderItem}
           showsVerticalScrollIndicator={false}
           estimatedItemSize={10}
-          onEndReachedThreshold={0.5}
+          onEndReachedThreshold={16}
         />
       </View>
     </AppContainer>

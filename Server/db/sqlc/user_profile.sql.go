@@ -47,24 +47,24 @@ func (q *Queries) CreateUserProfile(ctx context.Context, arg CreateUserProfilePa
 
 const deleteUserProfile = `-- name: DeleteUserProfile :exec
 DELETE FROM User_Profiles
-WHERE id = $1
+WHERE user_id = $1
 `
 
 // Delete a user profile by ID
-func (q *Queries) DeleteUserProfile(ctx context.Context, id int64) error {
-	_, err := q.db.Exec(ctx, deleteUserProfile, id)
+func (q *Queries) DeleteUserProfile(ctx context.Context, userID int64) error {
+	_, err := q.db.Exec(ctx, deleteUserProfile, userID)
 	return err
 }
 
 const getUserProfileById = `-- name: GetUserProfileById :one
 SELECT id, user_id, name, email, bio, created_at, updated_at
 FROM User_Profiles
-WHERE id = $1
+WHERE user_id = $1
 `
 
 // Get a user profile by ID
-func (q *Queries) GetUserProfileById(ctx context.Context, id int64) (UserProfile, error) {
-	row := q.db.QueryRow(ctx, getUserProfileById, id)
+func (q *Queries) GetUserProfileById(ctx context.Context, userID int64) (UserProfile, error) {
+	row := q.db.QueryRow(ctx, getUserProfileById, userID)
 	var i UserProfile
 	err := row.Scan(
 		&i.ID,

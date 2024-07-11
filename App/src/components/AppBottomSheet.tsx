@@ -1,9 +1,9 @@
+import React, {forwardRef, useImperativeHandle, useMemo, useRef} from 'react';
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetProps,
 } from '@gorhom/bottom-sheet';
 import {Portal} from '@gorhom/portal';
-import React, {forwardRef, useImperativeHandle, useMemo, useRef} from 'react';
 interface AppBottomSheetProps extends BottomSheetProps {
   snapPoints: (`${number}%` | number)[];
   children: React.ReactNode;

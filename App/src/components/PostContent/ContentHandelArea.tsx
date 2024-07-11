@@ -1,7 +1,8 @@
 import React from 'react';
-import TextContent from './TextContent';
 import {View} from 'react-native';
-import {layout} from '@themes/index';
+
+import TextContent from '@src/components/PostContent/TextContent';
+import layout from '@themes/layout';
 import {AppStyleSheet} from '@themes/responsive';
 
 interface ContentHandelAreaProps {

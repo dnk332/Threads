@@ -1,6 +1,6 @@
 import React from 'react';
 import {SVG_NAME} from '@svg/svgList';
-import colors from '@themes/color';
+import {colors} from '@themes/color';
 
 interface SvgComponentProps {
   name: keyof typeof SVG_NAME;
@@ -25,4 +25,4 @@ function SvgComponent({
   return <SvgIcon size={size} color={color} />;
 }
 
-export {SvgComponent};
+export default SvgComponent;

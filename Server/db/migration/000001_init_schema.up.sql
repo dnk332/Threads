@@ -9,7 +9,7 @@ CREATE TABLE "users" (
 );
 CREATE TABLE "user_profiles" (
     "id" bigserial PRIMARY KEY,
-    "user_id" bigserial NOT NULL,
+    "user_id" bigserial UNIQUE NOT NULL,
     "name" varchar NOT NULL,
     "email" varchar UNIQUE NOT NULL,
     "bio" varchar NOT NULL DEFAULT '',
@@ -49,6 +49,7 @@ CREATE TABLE "reposts" (
     "root_post_id" bigserial NOT NULL,
     "reposts_id" bigserial NOT NULL
 );
+-- noinspection SqlNoDataSourceInspection
 CREATE TABLE "followings" (
     "id" bigserial PRIMARY KEY,
     "following_id" bigserial NOT NULL,

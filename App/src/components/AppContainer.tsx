@@ -1,3 +1,4 @@
+import React, {Fragment, useMemo} from 'react';
 import {
   Pressable,
   StatusBar,
@@ -5,15 +6,16 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import React, {Fragment, useMemo} from 'react';
 import {Edge, SafeAreaView} from 'react-native-safe-area-context';
-import {colors, layout} from '@themes/index';
+
+import layout from '@themes/layout';
+import {colors} from '@themes/color';
 import Animated from 'react-native-reanimated';
 import {AppStyleSheet} from '@themes/responsive';
 import useStatusBarHeight from '@hooks/getStatusBarHeight';
-import {SvgComponent} from '@assets/svg';
-import {goBack} from '@navigation/NavigationService';
-import AppText from './AppText';
+import SvgComponent from '@svg/index';
+import Navigator from '@navigators';
+import {AppText} from '@components';
 
 interface AppContainerProps {
   children: React.ReactNode;
@@ -29,6 +31,7 @@ interface AppContainerProps {
   backButton?: React.ReactNode;
   haveTitle?: boolean;
   title?: string;
+  headerLine?: boolean;
 }
 const DefaultBackButton = () => (
   <Fragment>
@@ -52,6 +55,7 @@ const AppContainer = ({
   backButton,
   haveTitle = false,
   title = 'Threads',
+  headerLine = false,
 }: AppContainerProps) => {
   const statusbarHeight = useStatusBarHeight();
 
@@ -83,7 +87,7 @@ const AppContainer = ({
         style={[
           styles.container,
           {
-            backgroundColor: colors.background,
+            backgroundColor: colors.primary,
           },
           containerStyle,
         ]}>
@@ -97,16 +101,16 @@ const AppContainer = ({
           style={[
             styles.container,
             {
-              backgroundColor: colors.background,
+              backgroundColor: colors.primary,
               marginTop: statusbarHeight,
             },
             style,
           ]}>
-          <View style={styles.header}>
+          <View style={[styles.header, headerLine && styles.headerLine]}>
             {haveBackButton && (
               <Pressable
                 style={[layout.row, layout.alignItemsCenter, styles.button]}
-                onPress={() => goBack()}>
+                onPress={() => Navigator.goBack()}>
                 {backButton ?? <DefaultBackButton />}
               </Pressable>
             )}
@@ -139,9 +143,13 @@ const styles = AppStyleSheet.create({
     marginLeft: 4,
   },
   header: {
-    backgroundColor: colors.background,
+    backgroundColor: colors.primary,
     paddingHorizontal: 16,
+    paddingVertical: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
+  headerLine: {borderBottomColor: colors.border, borderBottomWidth: 1},
   button: {
     alignSelf: 'flex-start',
     padding: 4,

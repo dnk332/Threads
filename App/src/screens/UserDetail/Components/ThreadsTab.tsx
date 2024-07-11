@@ -1,11 +1,10 @@
-import {View} from 'react-native';
 import React, {Fragment, memo, useCallback} from 'react';
-import {PostItem} from '@components/index';
-// import {AppStyleSheet} from '@themes/responsive';
-// import colors from '@themes/color';
-import {dummyPost} from '@constants/dummyData';
-import {layout} from '@themes/index';
+import {View} from 'react-native';
 import {Tabs} from 'react-native-collapsible-tab-view';
+
+import {PostItem} from '@components';
+import {dummyPost} from '@constants/dummyData';
+import layout from '@themes/layout';
 
 const ThreadsTab = () => {
   const _renderItem = useCallback(({item}) => {

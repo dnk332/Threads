@@ -15,6 +15,7 @@
 		1A666B4180564AFAB6546BB9 /* RedditSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0A94D511EE1046FA81C75EDE /* RedditSans-Bold.ttf */; };
 		3C8531D92916482F99B36165 /* RedditSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AE8FDB009AD642349B0970BB /* RedditSans-Regular.ttf */; };
 		420879EA31324361AD5B11BC /* RedditSans-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DBBC6F3C96854EBC9F6CC071 /* RedditSans-ExtraBold.ttf */; };
+		4B3AAC1270104274B70021F6 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEC61615BB1547B2842F08C5 /* BootSplash.storyboard */; };
 		5F765F012BF3147C00471B33 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F765EED2BF3147B00471B33 /* AntDesign.ttf */; };
 		5F765F022BF3147C00471B33 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F765EEE2BF3147B00471B33 /* Entypo.ttf */; };
 		5F765F032BF3147C00471B33 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F765EEF2BF3147B00471B33 /* EvilIcons.ttf */; };
@@ -57,7 +58,7 @@
 		00E356EE1AD99517003FC87E /* ThreadsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ThreadsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* ThreadsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ThreadsTests.m; sourceTree = "<group>"; };
-		0A94D511EE1046FA81C75EDE /* RedditSans-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "RedditSans-Bold.ttf"; path = "../src/assets/font/RedditSans-Bold.ttf"; sourceTree = "<group>"; };
+		0A94D511EE1046FA81C75EDE /* RedditSans-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "RedditSans-Bold.ttf"; path = "../src/assets/font/RedditSans-Bold.ttf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Threads.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Threads.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Threads/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = Threads/AppDelegate.mm; sourceTree = "<group>"; };
@@ -65,9 +66,9 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Threads/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Threads/main.m; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-Threads-ThreadsTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Threads-ThreadsTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		38AFBC7831A6479587C7ECFF /* RedditSans-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "RedditSans-Medium.ttf"; path = "../src/assets/font/RedditSans-Medium.ttf"; sourceTree = "<group>"; };
+		38AFBC7831A6479587C7ECFF /* RedditSans-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "RedditSans-Medium.ttf"; path = "../src/assets/font/RedditSans-Medium.ttf"; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-Threads.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Threads.debug.xcconfig"; path = "Target Support Files/Pods-Threads/Pods-Threads.debug.xcconfig"; sourceTree = "<group>"; };
-		5467983868DF4A5884E6AE43 /* RedditSans-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "RedditSans-ExtraLight.ttf"; path = "../src/assets/font/RedditSans-ExtraLight.ttf"; sourceTree = "<group>"; };
+		5467983868DF4A5884E6AE43 /* RedditSans-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "RedditSans-ExtraLight.ttf"; path = "../src/assets/font/RedditSans-ExtraLight.ttf"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-Threads.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Threads.release.xcconfig"; path = "Target Support Files/Pods-Threads/Pods-Threads.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-Threads-ThreadsTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Threads-ThreadsTests.debug.xcconfig"; path = "Target Support Files/Pods-Threads-ThreadsTests/Pods-Threads-ThreadsTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-Threads.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Threads.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -90,13 +91,14 @@
 		5F765EFD2BF3147B00471B33 /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
 		5F765EFE2BF3147B00471B33 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
 		5F765EFF2BF3147B00471B33 /* Zocial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Zocial.ttf; sourceTree = "<group>"; };
-		6A54965565934E51A1B06D7E /* RedditSans-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "RedditSans-Black.ttf"; path = "../src/assets/font/RedditSans-Black.ttf"; sourceTree = "<group>"; };
-		6F0F474856E64A3CABFDC5AE /* RedditSans-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "RedditSans-Light.ttf"; path = "../src/assets/font/RedditSans-Light.ttf"; sourceTree = "<group>"; };
-		76B0CC2A0CAA4AF782532075 /* RedditSans-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "RedditSans-SemiBold.ttf"; path = "../src/assets/font/RedditSans-SemiBold.ttf"; sourceTree = "<group>"; };
+		6A54965565934E51A1B06D7E /* RedditSans-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "RedditSans-Black.ttf"; path = "../src/assets/font/RedditSans-Black.ttf"; sourceTree = "<group>"; };
+		6F0F474856E64A3CABFDC5AE /* RedditSans-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "RedditSans-Light.ttf"; path = "../src/assets/font/RedditSans-Light.ttf"; sourceTree = "<group>"; };
+		76B0CC2A0CAA4AF782532075 /* RedditSans-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "RedditSans-SemiBold.ttf"; path = "../src/assets/font/RedditSans-SemiBold.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Threads/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-Threads-ThreadsTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Threads-ThreadsTests.release.xcconfig"; path = "Target Support Files/Pods-Threads-ThreadsTests/Pods-Threads-ThreadsTests.release.xcconfig"; sourceTree = "<group>"; };
-		AE8FDB009AD642349B0970BB /* RedditSans-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "RedditSans-Regular.ttf"; path = "../src/assets/font/RedditSans-Regular.ttf"; sourceTree = "<group>"; };
-		DBBC6F3C96854EBC9F6CC071 /* RedditSans-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "RedditSans-ExtraBold.ttf"; path = "../src/assets/font/RedditSans-ExtraBold.ttf"; sourceTree = "<group>"; };
+		AE8FDB009AD642349B0970BB /* RedditSans-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "RedditSans-Regular.ttf"; path = "../src/assets/font/RedditSans-Regular.ttf"; sourceTree = "<group>"; };
+		CEC61615BB1547B2842F08C5 /* BootSplash.storyboard */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = BootSplash.storyboard; path = Threads/BootSplash.storyboard; sourceTree = "<group>"; };
+		DBBC6F3C96854EBC9F6CC071 /* RedditSans-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "RedditSans-ExtraBold.ttf"; path = "../src/assets/font/RedditSans-ExtraBold.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -147,6 +149,7 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				CEC61615BB1547B2842F08C5 /* BootSplash.storyboard */,
 			);
 			name = Threads;
 			sourceTree = "<group>";
@@ -164,7 +167,6 @@
 				76B0CC2A0CAA4AF782532075 /* RedditSans-SemiBold.ttf */,
 			);
 			name = Resources;
-			path = "";
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -369,6 +371,7 @@
 				EB0003F38365446EB0C5293B /* RedditSans-Medium.ttf in Resources */,
 				3C8531D92916482F99B36165 /* RedditSans-Regular.ttf in Resources */,
 				C4F81532653C479C9DA759C3 /* RedditSans-SemiBold.ttf in Resources */,
+				4B3AAC1270104274B70021F6 /* BootSplash.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -539,6 +542,8 @@
 			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-Threads-ThreadsTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				DEVELOPMENT_TEAM = 56A2WXMM2H;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -566,7 +571,9 @@
 			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-Threads-ThreadsTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 56A2WXMM2H;
 				INFOPLIST_FILE = ThreadsTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -592,6 +599,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 56A2WXMM2H;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Threads/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -619,6 +627,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 56A2WXMM2H;
 				INFOPLIST_FILE = Threads/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

@@ -3,22 +3,33 @@ import {
   createNavigationContainerRef,
   StackActions,
 } from '@react-navigation/native';
+import {NavigationStackParamList, ScreenNameKeys} from './Stack';
 
-export const navigationRef = createNavigationContainerRef();
+const navigationRef = createNavigationContainerRef<NavigationStackParamList>();
 
-export function navigateTo(routeName: string, params?: object) {
+type NavigationParams = {
+  [K in ScreenNameKeys]: NavigationStackParamList[K];
+};
+
+const navigateTo = <T extends ScreenNameKeys>(
+  routeName: T,
+  params?: NavigationParams[T],
+) => {
   if (navigationRef.isReady()) {
     navigationRef.dispatch(CommonActions.navigate(routeName, params));
   }
-}
+};
 
-export const navigatePush = (name, params) => {
+const navigatePush = <T extends ScreenNameKeys>(
+  name: T,
+  params?: NavigationParams[T],
+) => {
   if (navigationRef.isReady()) {
     navigationRef.dispatch(StackActions.push(name, params));
   }
 };
 
-export const navigateAndReset = (routes = [], index = 0) => {
+const navigateAndReset = (routes: ScreenNameKeys[] = [], index = 0) => {
   if (navigationRef.isReady()) {
     navigationRef.dispatch(
       CommonActions.reset({
@@ -29,7 +40,10 @@ export const navigateAndReset = (routes = [], index = 0) => {
   }
 };
 
-export const navigateAndSimpleReset = (name, index = 0) => {
+const navigateAndSimpleReset = <T extends ScreenNameKeys>(
+  name: T,
+  index = 0,
+) => {
   if (navigationRef.isReady()) {
     navigationRef.dispatch(
       CommonActions.reset({
@@ -40,16 +54,36 @@ export const navigateAndSimpleReset = (name, index = 0) => {
   }
 };
 
-export function navigateReplace(name, param) {
+const navigateReplace = <T extends ScreenNameKeys>(
+  name: T,
+  params?: NavigationParams[T],
+) => {
   if (navigationRef.isReady()) {
-    navigationRef.dispatch(
-      StackActions.replace(name, {
-        param,
-      }),
-    );
+    navigationRef.dispatch(StackActions.replace(name, params));
   }
-}
-
-export const goBack = () => {
-  navigationRef.goBack();
 };
+
+const goBack = () => {
+  if (navigationRef.isReady()) {
+    navigationRef.goBack();
+  }
+};
+
+const popToTop = () => {
+  if (navigationRef.isReady()) {
+    navigationRef.dispatch(StackActions.popToTop());
+  }
+};
+
+const Navigator = {
+  navigateTo,
+  navigatePush,
+  navigateAndReset,
+  navigateAndSimpleReset,
+  navigateReplace,
+  goBack,
+  popToTop,
+  navigationRef,
+};
+
+export default Navigator;

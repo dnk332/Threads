@@ -1,16 +1,19 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import HomeScreen from '@screens/Home';
-import UserDetail from '@screens/UserDetail';
-import Activities from '@screens/Activities';
-import SearchScreen from '@screens/Search';
-
-import {colors} from '@themes/index';
-
-import {navigateTo} from '@navigation/NavigationService';
-import {SvgComponent} from '@assets/svg';
-import {SVG_NAME} from '@assets/svg/svgList';
+import {
+  UserDetailScreen,
+  ActivitiesScreen,
+  SearchScreen,
+  HomeScreen,
+  SettingsScreen,
+} from '@screens/index';
+import {colors} from '@themes/color';
+import Navigator from '@navigators';
+import SvgComponent from '@svg/index';
+import {SVG_NAME} from '@svg/svgList';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import SCREEN_NAME from '@src/navigation/ScreenName';
 
 export type BottomTabsStackParamList = {
   HOME: undefined;
@@ -18,6 +21,10 @@ export type BottomTabsStackParamList = {
   NEW_POST: undefined;
   ACTIVITIES: undefined;
   USER_DETAIL: undefined;
+
+  //SettingsStack
+  SETTING_STACK: undefined;
+  SETTINGS: undefined;
 };
 
 interface IconHandleProps {
@@ -41,19 +48,19 @@ const IconHandle = ({
     />
   );
 };
+const screenOptions = {
+  tabBarHideOnKeyboard: true,
+  tabBarStyle: {
+    backgroundColor: colors.primary,
+    borderTopWidth: 0,
+  },
+  headerShown: false,
+  tabBarShowLabel: false,
+};
 
-export default function RootScreen() {
+const RootScreen = () => {
   return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarHideOnKeyboard: true,
-        tabBarStyle: {
-          backgroundColor: colors.primary,
-          borderTopWidth: 0,
-        },
-        headerShown: false,
-        tabBarShowLabel: false,
-      }}>
+    <Tab.Navigator screenOptions={screenOptions}>
       <Tab.Screen
         name={'HOME'}
         component={HomeScreen}
@@ -82,7 +89,7 @@ export default function RootScreen() {
       />
       <Tab.Screen
         name={'NEW_POST'}
-        component={UserDetail}
+        component={UserDetailScreen}
         options={{
           tabBarIcon: ({focused}) => {
             return IconHandle({
@@ -95,13 +102,13 @@ export default function RootScreen() {
         listeners={() => ({
           tabPress: e => {
             e.preventDefault();
-            navigateTo('NEW_POST_MODAL', {focused: true});
+            Navigator.navigateTo(SCREEN_NAME.NEW_POST_MODAL, {focused: true});
           },
         })}
       />
       <Tab.Screen
         name={'ACTIVITIES'}
-        component={Activities}
+        component={ActivitiesScreen}
         options={{
           tabBarIcon: ({focused}) => {
             return IconHandle({
@@ -114,8 +121,8 @@ export default function RootScreen() {
         }}
       />
       <Tab.Screen
-        name={'USER_DETAIL'}
-        component={UserDetail}
+        name={'SETTING_STACK'}
+        component={SettingsStackScreen}
         options={{
           tabBarIcon: ({focused}) => {
             return IconHandle({
@@ -128,4 +135,16 @@ export default function RootScreen() {
       />
     </Tab.Navigator>
   );
+};
+
+const SettingsStack = createNativeStackNavigator();
+function SettingsStackScreen() {
+  return (
+    <SettingsStack.Navigator screenOptions={screenOptions}>
+      <SettingsStack.Screen name="USER_DETAIL" component={UserDetailScreen} />
+      <SettingsStack.Screen name="SETTINGS" component={SettingsScreen} />
+    </SettingsStack.Navigator>
+  );
 }
+
+export default RootScreen;

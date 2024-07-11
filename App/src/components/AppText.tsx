@@ -1,9 +1,10 @@
-import {colors} from '@themes/index';
-import {AppFonts, FontSizes} from '@themes/fonts';
-import {ResponsiveFont} from '@themes/responsive';
 import React, {memo} from 'react';
 import {StyleProp, StyleSheet, Text, TextProps, TextStyle} from 'react-native';
 import ParsedText, {ParsedTextProps} from 'react-native-parsed-text';
+
+import {colors} from '@themes/color';
+import {AppFonts, FontSizes} from '@themes/fonts';
+import {ResponsiveFont} from '@themes/responsive';
 
 export interface AppTextProps extends TextProps, ParsedTextProps {
   children: React.ReactNode;

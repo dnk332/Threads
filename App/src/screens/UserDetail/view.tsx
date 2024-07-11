@@ -1,33 +1,41 @@
 import React, {useCallback, useRef, useState} from 'react';
-import AppContainer from '@components/AppContainer';
-import AppText from '@components/AppText';
-import {SvgComponent} from '@assets/svg';
 import {Pressable, View} from 'react-native';
-import {colors, layout, layoutValue} from '@themes/index';
-import {AppStyleSheet} from '@themes/responsive';
-import Avatar from '@components/Avatar';
-import AppButton from '@components/AppButton';
-import ThreadsTab from './Components/ThreadsTab';
-import RepliesTab from './Components/RepliesTab';
-
 import {
   CollapsibleRef,
   TabBarProps,
   Tabs,
-  useCurrentTabScrollY,
 } from 'react-native-collapsible-tab-view';
 import Animated, {
-  Extrapolation,
-  interpolate,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {width as DeviceWidth} from '@utils/DeviceInfo';
 
-const UserDetailView = () => {
+import layout from '@themes/layout';
+
+import {colors} from '@themes/color';
+import {AppStyleSheet} from '@themes/responsive';
+import {AppText, AppContainer} from '@components';
+
+import ThreadsTab from '@screens/UserDetail/Components/ThreadsTab';
+import RepliesTab from '@screens/UserDetail/Components/RepliesTab';
+
+import {width as DeviceWidth} from '@utils/DeviceInfo';
+import Header from './Components/Header';
+import {IUser, IUserProfile} from '@src/types/user';
+
+interface UserDetailScreenViewProps {
+  currentUser: IUserProfile;
+  currentAccount: IUser;
+}
+
+const UserDetailScreenView = ({
+  currentUser,
+  currentAccount,
+}: UserDetailScreenViewProps) => {
   const refMap = useRef<CollapsibleRef>();
-  const headerHeight = useRef<number>(234);
+  const headerRef = useRef<number>(234);
+
   const focusedTabValue = useSharedValue<string>('Threads');
   const [currentTab, setCurrentTab] = useState<string>('Threads');
 
@@ -89,132 +97,6 @@ const UserDetailView = () => {
     [focusedTabValue, indicatorShareValueStyle, currentTab],
   );
 
-  const Header = () => {
-    const scrollY = useCurrentTabScrollY();
-
-    const headerStyleAnimated = useAnimatedStyle(() => {
-      return {
-        opacity: scrollY.value < 1 ? withTiming(1) : withTiming(0),
-      };
-    });
-
-    const contentStyleAnimated = useAnimatedStyle(() => {
-      return {
-        opacity: interpolate(
-          scrollY.value,
-          [headerHeight.current / 5, headerHeight.current / 4],
-          [1, 0],
-          Extrapolation.EXTEND,
-        ),
-      };
-    });
-
-    const infoStyleAnimated = useAnimatedStyle(() => {
-      return {
-        opacity: interpolate(
-          scrollY.value,
-          [headerHeight.current / 4, headerHeight.current / 2],
-          [1, 0],
-          Extrapolation.EXTEND,
-        ),
-      };
-    });
-
-    const buttonStyleAnimated = useAnimatedStyle(() => {
-      return {
-        opacity: interpolate(
-          scrollY.value,
-          [headerHeight.current / 2, headerHeight.current / 1.2],
-          [1, 0],
-          Extrapolation.EXTEND,
-        ),
-      };
-    });
-
-    return (
-      <View
-        onLayout={({nativeEvent}) => {
-          const {height} = nativeEvent.layout;
-          headerHeight.current = height;
-        }}
-        style={[styles.headerContainer]}>
-        <Animated.View
-          style={[
-            layout.row,
-            layout.alignItemsCenter,
-            layout.justifyContentBetween,
-            headerStyleAnimated,
-          ]}>
-          <Pressable>
-            <SvgComponent name="GLOBE" />
-          </Pressable>
-          <View
-            style={[layout.row, layout.alignItemsCenter, styles.leftHeaderBtn]}>
-            <Pressable>
-              <SvgComponent name="INSTAGRAM" />
-            </Pressable>
-            <Pressable>
-              <SvgComponent name="LINE_2" />
-            </Pressable>
-          </View>
-        </Animated.View>
-        <View
-          style={[
-            layout.row,
-            layout.justifyContentCenter,
-            layout.justifyContentBetween,
-            styles.headerContent,
-            ,
-          ]}>
-          <View style={styles.headerContentContainer}>
-            <Animated.View style={contentStyleAnimated}>
-              <AppText fontSize={24} fontWeight={700}>
-                Brian
-              </AppText>
-              <View style={layoutValue(8).marginVertical}>
-                <AppText>brian_dn</AppText>
-              </View>
-            </Animated.View>
-            <Animated.View style={infoStyleAnimated}>
-              <AppText>
-                Passionate about art, photography, and all things creative 🎨✨
-              </AppText>
-              <AppText style={layoutValue(8).marginTop}>12 followers</AppText>
-            </Animated.View>
-          </View>
-          <Animated.View style={contentStyleAnimated}>
-            <Avatar
-              source={{
-                uri: 'https://images.pexels.com/photos/61100/pexels-photo-61100.jpeg',
-              }}
-              imgStyle={styles.avatar}
-            />
-          </Animated.View>
-        </View>
-        <Animated.View
-          style={[
-            layout.row,
-            layout.justifyContentBetween,
-            layout.alignItemsCenter,
-            layoutValue(16).gap,
-            layoutValue(16).marginTop,
-            buttonStyleAnimated,
-          ]}>
-          <AppButton
-            textStyle={styles.profileTextBtn}
-            buttonStyle={[layout.fill, styles.profileBtn]}
-            text="Edit profile"
-          />
-          <AppButton
-            textStyle={styles.profileTextBtn}
-            buttonStyle={[layout.fill, styles.profileBtn]}
-            text="Share profile"
-          />
-        </Animated.View>
-      </View>
-    );
-  };
-
   return (
     <AppContainer>
       <Tabs.Container
@@ -224,8 +106,14 @@ const UserDetailView = () => {
         }}
         snapThreshold={1}
         ref={refMap}
-        renderHeader={() => <Header />}
-        headerHeight={headerHeight.current}
+        renderHeader={() => (
+          <Header
+            ref={headerRef}
+            currentUser={currentUser}
+            currentAccount={currentAccount}
+          />
+        )}
+        headerHeight={headerRef.current}
         tabBarHeight={40}
         renderTabBar={TabBar}>
         <Tabs.Tab label={'Threads'} name="Threads">
@@ -239,7 +127,7 @@ const UserDetailView = () => {
   );
 };
 
-export default UserDetailView;
+export default UserDetailScreenView;
 
 const styles = AppStyleSheet.create({
   headerContainer: {

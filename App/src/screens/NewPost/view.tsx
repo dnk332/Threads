@@ -1,7 +1,4 @@
 import React, {useState} from 'react';
-import {AppContainer, AppInput, AppText, Avatar} from '@components/index';
-import {AppStyleSheet} from '@themes/responsive';
-
 import {
   InputAccessoryView,
   KeyboardAvoidingView,
@@ -10,11 +7,19 @@ import {
   ScrollView,
   View,
 } from 'react-native';
-import {colors, layout} from '@themes/index';
-import {SvgComponent} from '@assets/svg';
+
+import {AppContainer, AppText, AppInput, Avatar} from '@components';
+import {AppStyleSheet} from '@themes/responsive';
+import layout from '@themes/layout';
+import {colors} from '@themes/color';
+import SvgComponent from '@svg/index';
 import HandelKeyboard from '@utils/KeyboardInfo';
 
-const NewPostView = () => {
+interface NewPostScreenProps {
+  createPost: (textContent: string) => void;
+}
+
+const NewPostScreenView: React.FC<NewPostScreenProps> = ({createPost}) => {
   const inputAccessoryViewID = 'postThreadInput';
   const {heightKB} = HandelKeyboard();
   const [contentViewHeight, setContentViewHeight] = useState<number>(0);
@@ -134,18 +139,24 @@ const NewPostView = () => {
           <Pressable>
             <AppText fontSize={13}>Anyone can reply & quote</AppText>
           </Pressable>
-          <Pressable style={styles.submitBtn}>
-            <AppText fontSize={13} fontWeight={600}>
-              Post
-            </AppText>
-          </Pressable>
+          {thread.length > 0 ? (
+            <Pressable
+              onPress={() => createPost(thread)}
+              style={[styles.fragment, styles.submitBtn]}>
+              <AppText fontSize={13} fontWeight={600}>
+                Post
+              </AppText>
+            </Pressable>
+          ) : (
+            <View style={styles.fragment} />
+          )}
         </View>
       </InputAccessoryView>
     </AppContainer>
   );
 };
 
-export default NewPostView;
+export default NewPostScreenView;
 
 const styles = AppStyleSheet.create({
   container: {marginTop: 0, paddingTop: 16},
@@ -179,10 +190,11 @@ const styles = AppStyleSheet.create({
     marginLeft: 10,
   },
   submitBtn: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
     borderRadius: 16,
     backgroundColor: colors.dark_gray,
+    justifyContent: 'center',
+    textAlign: 'center',
+    alignItems: 'center',
   },
   tagImg: {width: 20, height: 20, marginTop: 8},
   replyItem: {
@@ -215,5 +227,9 @@ const styles = AppStyleSheet.create({
     height: 30,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  fragment: {
+    width: 80,
+    height: 35,
   },
 });

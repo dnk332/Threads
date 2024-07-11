@@ -1,11 +1,11 @@
 import React, {useCallback} from 'react';
-import {Media} from '@local_types/post';
-
-import {AppStyleSheet} from '@themes/responsive';
-
-import PostImage from '@components/PostContent/PostImage';
 import {FlashList} from '@shopify/flash-list';
 import {View} from 'react-native';
+
+import {Media} from '@localTypes/post';
+import {AppStyleSheet} from '@themes/responsive';
+// import {PostImage} from '@components';
+import {PostImage} from '@src/components/PostContent';
 
 interface MediaContentProps {
   content: Media[];
@@ -37,6 +37,7 @@ const MediaContent = ({content = []}: MediaContentProps) => {
       estimatedItemSize={3}
       ItemSeparatorComponent={ItemSeparator}
       ListHeaderComponent={Spacer}
+      nestedScrollEnabled
     />
   );
 };

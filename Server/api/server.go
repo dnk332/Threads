@@ -36,7 +36,26 @@ func NewServer(config utils.Config, store db.Store) (*Server, error) {
 func (server *Server) setupRouter() {
 	router := gin.Default()
 
+	// Routes that do not require authentication
 	router.POST("/users", server.createUser)
+	router.POST("/users/login", server.loginUser)
+	router.GET("/users/:id", server.getUser)
+	router.POST("/tokens/verify", server.VerifyToken)
+	router.POST("/tokens/refresh", server.refreshAccessToken)
+
+	// Routes that require authentication
+	authRoutes := router.Group("/").Use(authMiddleware(server.tokenMaker))
+	{
+		authRoutes.POST("/user-profiles", server.createUserProfile)
+		authRoutes.GET("/user-profiles/:user_id", server.getUserProfile)
+		authRoutes.GET("/users/logout", server.logoutUser)
+
+		authRoutes.POST("/posts", server.createPost)
+		authRoutes.GET("/posts", server.getListAllPost)
+
+		authRoutes.POST("/posts/like", server.likePost)
+		authRoutes.POST("/posts/unlike", server.unlikePost)
+	}
 
 	server.router = router
 }
@@ -44,8 +63,4 @@ func (server *Server) setupRouter() {
 // Start runs the HTTP server on a specific address.
 func (server *Server) Start(address string) error {
 	return server.router.Run(address)
-}
-
-func errorResponse(err error) gin.H {
-	return gin.H{"error": err.Error()}
 }

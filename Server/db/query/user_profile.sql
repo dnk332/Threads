@@ -14,8 +14,8 @@ RETURNING *;
 -- name: GetUserProfileById :one
 SELECT *
 FROM User_Profiles
-WHERE id = $1;
+WHERE user_id = $1;
 -- Delete a user profile by ID
 -- name: DeleteUserProfile :exec
 DELETE FROM User_Profiles
-WHERE id = $1;
+WHERE user_id = $1;

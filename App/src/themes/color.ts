@@ -2,10 +2,15 @@
 
 const colors = {
   // core colors
-  primary: '#000000',
+  primary: '#0D0D0D',
   secondary: '#ffffff',
   background: '#000000',
   transparent: 'transparent',
+  background_secondary: '#101010',
+  blue: '#0070FA',
+  red: '#F70F0F',
+  green: '#059212',
+  yellow: '#FFDB00',
 
   //common colors
   white: '#ffffff',
@@ -13,19 +18,19 @@ const colors = {
   shadow: '#757575',
   dark_gray: '#1F1F1F',
   bottom_sheet_background: '#171717',
-
   // text colors
   text: '#ffffff',
   text_secondary: '#616161',
   tag_text: '#4192EF',
   placeholder: '#4F555A',
+  text_gray: '#757575',
 
   // border colors
   border: '#3F3F3F',
   border_dark: '#1A1A1A',
 };
 
-export default colors;
+export {colors};
 // export const LightTheme: ExtendedTheme = {
 //   dark: false,
 //   colors: {

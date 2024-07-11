@@ -1,5 +1,5 @@
 import React from 'react';
-import AppText from '@components/AppText';
+import {AppText} from '@components';
 
 interface TextContentProps {
   content: string;

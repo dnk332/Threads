@@ -1,8 +1,9 @@
-import {ScrollView, View} from 'react-native';
 import React from 'react';
-import AppText from '@components/AppText';
+import {ScrollView, View} from 'react-native';
+
 import {AppStyleSheet} from '@themes/responsive';
-import colors from '@themes/color';
+import {colors} from '@themes/color';
+import {AppText} from '@src/components';
 
 const activityFilter = [
   {id: 1, title: 'All'},
