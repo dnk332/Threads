@@ -70,5 +70,5 @@ jobs:
         run: |
           cd Server
           make test
-env:
-  APP_ENV_CONTENT: ${{ secrets.APP_ENV_CONTENT }}
+    env:
+      APP_ENV_CONTENT: ${{ secrets.APP_ENV_CONTENT }}
