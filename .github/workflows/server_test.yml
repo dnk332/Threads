@@ -50,6 +50,9 @@ jobs:
             echo "Waiting for PostgreSQL..."
             sleep 5
           done
+      - name: Set up app.env
+        run: |
+          echo "$APP_ENV_CONTENT" > Server/app.env
       - name: Run migrations
         run: |
           cd Server
