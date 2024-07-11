@@ -59,7 +59,6 @@ jobs:
             echo "ACCESS_TOKEN_DURATION=${{ secrets.ACCESS_TOKEN_DURATION }}" >> Server/app.env
             echo "REFRESH_TOKEN_DURATION=${{ secrets.REFRESH_TOKEN_DURATION }}" >> Server/app.env
       - name: Run migrations
-      - name: Run migrations
         run: |
           cd Server
           make migrateup
