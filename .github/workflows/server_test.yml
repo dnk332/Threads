@@ -62,6 +62,14 @@ jobs:
         run: |
           cd Server
           make migrateup
+
+      - name: Debug environment
+        run: |
+          echo "Current directory: $(pwd)"
+          echo "Contents of Server directory:"
+          ls -l Server/
+          echo "Environment variables:"
+          env
       - name: Test
         run: |
           cd Server
