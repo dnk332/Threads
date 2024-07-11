@@ -62,7 +62,6 @@ jobs:
         run: |
           cd Server
           make migrateup
-
       - name: Debug environment
         run: |
           echo "Current directory: $(pwd)"
