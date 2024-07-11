@@ -9,3 +9,5 @@ func (server *Server) uploadImage(ctx *gin.Context) {
 func (server *Server) deleteImage(ctx *gin.Context) {
 	// TODO
 }
+
+// fuck this shittt
