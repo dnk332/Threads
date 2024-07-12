@@ -24,7 +24,7 @@ type likePostResponse struct {
 }
 
 // likePost handles the post like process
-func (server *Server) likePost(ctx *gin.Context) {
+func (s *Server) likePost(ctx *gin.Context) {
 	var req likePostRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		log.Printf("[ERROR] Failed to parse request body: %v", err)
@@ -40,7 +40,7 @@ func (server *Server) likePost(ctx *gin.Context) {
 	}
 
 	// Create like
-	like, err := server.store.LikePost(ctx, arg)
+	like, err := s.store.LikePost(ctx, arg)
 	if err != nil {
 		log.Printf("[ERROR] Failed to like like: %v", err)
 		ctx.JSON(errorResponse(http.StatusInternalServerError, err))
@@ -67,7 +67,7 @@ type unlikePostResponse struct {
 }
 
 // unlikePost handles the post unlike process
-func (server *Server) unlikePost(ctx *gin.Context) {
+func (s *Server) unlikePost(ctx *gin.Context) {
 	var req unlikePostRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(errorBindJSONResponse(http.StatusBadRequest, err))
@@ -82,7 +82,7 @@ func (server *Server) unlikePost(ctx *gin.Context) {
 		AuthorID: authPayload.UserID,
 	}
 
-	err := server.store.UnlikePost(ctx, arg)
+	err := s.store.UnlikePost(ctx, arg)
 	if err != nil {
 		ctx.JSON(errorResponse(http.StatusInternalServerError, err))
 		return
@@ -110,7 +110,7 @@ type getListAllLikeResponse struct {
 }
 
 // getAllLikeOfUser handles the get all like of user process
-func (server *Server) getAllLikeOfUser(ctx *gin.Context) {
+func (s *Server) getAllLikeOfUser(ctx *gin.Context) {
 	var req getAllLikeOfUserRequest
 	if err := ctx.ShouldBindQuery(&req); err != nil {
 		ctx.JSON(errorBindJSONResponse(http.StatusBadRequest, err))
@@ -124,7 +124,7 @@ func (server *Server) getAllLikeOfUser(ctx *gin.Context) {
 		Offset:   (req.PageID - 1) * req.PageSize,
 	}
 
-	likes, err := server.store.GetAllLikesOfUser(ctx, arg)
+	likes, err := s.store.GetAllLikesOfUser(ctx, arg)
 	if err != nil {
 		ctx.JSON(errorResponse(http.StatusInternalServerError, err))
 		return
@@ -150,7 +150,7 @@ type getAllLikeOfPostRequest struct {
 }
 
 // getAllLikeOfPostResponse defines the structure for get all like of post responses
-func (server *Server) getAllLikeOfPost(ctx *gin.Context) {
+func (s *Server) getAllLikeOfPost(ctx *gin.Context) {
 	var req getAllLikeOfPostRequest
 	if err := ctx.ShouldBindQuery(&req); err != nil {
 		ctx.JSON(errorBindJSONResponse(http.StatusBadRequest, err))
@@ -164,7 +164,7 @@ func (server *Server) getAllLikeOfPost(ctx *gin.Context) {
 		Offset: (req.PageID - 1) * req.PageSize,
 	}
 
-	likes, err := server.store.GetAllLikesOfPost(ctx, arg)
+	likes, err := s.store.GetAllLikesOfPost(ctx, arg)
 	if err != nil {
 		ctx.JSON(errorResponse(http.StatusInternalServerError, err))
 		return
@@ -181,8 +181,8 @@ func (server *Server) getAllLikeOfPost(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, response)
 }
-func (server *Server) countLikeOfPost(ctx *gin.Context, postId int64) (countLikes int64) {
-	countLikes, err := server.store.CountLikeOfPost(ctx, postId)
+func (s *Server) countLikeOfPost(ctx *gin.Context, postId int64) (countLikes int64) {
+	countLikes, err := s.store.CountLikeOfPost(ctx, postId)
 	if err != nil {
 		ctx.JSON(errorResponse(http.StatusBadRequest, err))
 		return
@@ -190,8 +190,8 @@ func (server *Server) countLikeOfPost(ctx *gin.Context, postId int64) (countLike
 	return
 }
 
-func (server *Server) checkLikeStatusOfUser(ctx *gin.Context, params db.CheckLikeStatusOfUserParams) (likeStatus bool) {
-	likeStatus, err := server.store.CheckLikeStatusOfUser(ctx, params)
+func (s *Server) checkLikeStatusOfUser(ctx *gin.Context, params db.CheckLikeStatusOfUserParams) (likeStatus bool) {
+	likeStatus, err := s.store.CheckLikeStatusOfUser(ctx, params)
 	if err != nil {
 		ctx.JSON(errorResponse(http.StatusBadRequest, err))
 		return

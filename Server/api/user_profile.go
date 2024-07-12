@@ -43,7 +43,7 @@ func createUserProfileRes(userProfile db.UserProfile) createUserProfileResponse 
 }
 
 // createUserProfile handles the user profile creation process
-func (server *Server) createUserProfile(ctx *gin.Context) {
+func (s *Server) createUserProfile(ctx *gin.Context) {
 	var req createUserProfileRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(errorBindJSONResponse(http.StatusBadRequest, err))
@@ -52,7 +52,7 @@ func (server *Server) createUserProfile(ctx *gin.Context) {
 	}
 
 	// Check is user id is valid or not
-	user, valid := server.validUser(ctx, req.UserId)
+	user, valid := s.validUser(ctx, req.UserId)
 	if !valid {
 		return
 	}
@@ -74,7 +74,7 @@ func (server *Server) createUserProfile(ctx *gin.Context) {
 	}
 
 	// Create user profile
-	userProfile, err := server.store.CreateUserProfile(ctx, arg)
+	userProfile, err := s.store.CreateUserProfile(ctx, arg)
 	if err != nil {
 		if db.ErrorCode(err) == db.UniqueViolation {
 			ctx.JSON(errorResponse(http.StatusConflict, errors.New("email already in use")))
@@ -119,7 +119,7 @@ func getUserProfileRes(userProfile db.UserProfile) getUserProfileResponse {
 }
 
 // getUserProfile handles the user profile retrieval process
-func (server *Server) getUserProfile(ctx *gin.Context) {
+func (s *Server) getUserProfile(ctx *gin.Context) {
 	var req getUserProfileRequest
 	if err := ctx.ShouldBindUri(&req); err != nil {
 		ctx.JSON(errorBindJSONResponse(http.StatusBadRequest, err))
@@ -128,7 +128,7 @@ func (server *Server) getUserProfile(ctx *gin.Context) {
 	}
 
 	// Check is user id is valid or not
-	user, valid := server.validUser(ctx, req.UserID)
+	user, valid := s.validUser(ctx, req.UserID)
 	if !valid {
 		return
 	}
@@ -142,7 +142,7 @@ func (server *Server) getUserProfile(ctx *gin.Context) {
 	}
 
 	// Get user profile
-	userProfile, err := server.store.GetUserProfileById(ctx, req.UserID)
+	userProfile, err := s.store.GetUserProfileById(ctx, req.UserID)
 	if err != nil {
 		ctx.JSON(errorResponse(http.StatusNotFound, errors.New("user profile not found")))
 		log.Printf("[ERROR] Failed to get user profile: %v", err)

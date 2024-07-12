@@ -11,12 +11,12 @@ type Author struct {
 	Email       string `json:"email"`
 }
 
-func (server *Server) getAuthorInfo(ctx *gin.Context, authorId int64) Author {
-	user, valid := server.validUser(ctx, authorId)
+func (s *Server) getAuthorInfo(ctx *gin.Context, authorId int64) Author {
+	user, valid := s.validUser(ctx, authorId)
 	if !valid {
 		return Author{}
 	}
-	userProfile, err := server.store.GetUserProfileById(ctx, authorId)
+	userProfile, err := s.store.GetUserProfileById(ctx, authorId)
 	if err != nil {
 		return Author{}
 	}
