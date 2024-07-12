@@ -1,157 +1,118 @@
-# Simple Bank
+# Threads Clone
 
-This repository contains the codes of the [Backend Master Class](https://bit.ly/backendmaster) course by [TECH SCHOOL](https://bit.ly/m/techschool).
+This project is a clone version of the Threads app by Meta, built with Golang for the backend, React Native for the
+mobile frontend, and integrating with PostgreSQL for database storage and AWS S3 for file storage.
 
-![Backend master class](backend-master.png)
+# Features
 
-You can also find it on Udemy at [this link](https://bit.ly/backendudemy).
+## Backend (Golang/Gin):
 
-And don't hesitate to [join Tech School's Discord group](https://bit.ly/techschooldc) to chat directly with me and other students.
+RESTful API endpoints for user authentication, posts, comments, etc.
+Integration with PostgreSQL for database operations.
+Integration with AWS S3 for storing media files.
+Error handling and middleware setup.
 
-## Setup local development
+## Frontend (React Native/Redux Saga):
 
-### Install tools
+Mobile app for iOS and Android platforms.
+User authentication flows.
+Displaying posts, comments, and media content.
+Redux Saga for managing side effects and asynchronous actions.
 
-- [Docker desktop](https://www.docker.com/products/docker-desktop)
-- [TablePlus](https://tableplus.com/)
-- [Golang](https://golang.org/)
-- [Homebrew](https://brew.sh/)
-- [Migrate](https://github.com/golang-migrate/migrate/tree/master/cmd/migrate)
+# Prerequisites
 
-    ```bash
-    brew install golang-migrate
-    ```
+Before you begin, ensure you have met the following requirements:
 
-- [DB Docs](https://dbdocs.io/docs)
+- Golang installed on your machine.
+- Node.js and npm installed for React Native development.
+- PostgreSQL database set up and configured.
+- AWS S3 bucket created for media storage.
 
-    ```bash
-    npm install -g dbdocs
-    dbdocs login
-    ```
+## Installation
 
-- [DBML CLI](https://www.dbml.org/cli/#installation)
+Clone the repository:
 
-    ```bash
-    npm install -g @dbml/cli
-    dbml2sql --version
-    ```
+- git clone https://github.com/dnk332/Threads.git
+- cd Threads
 
-- [Sqlc](https://github.com/kyleconroy/sqlc#installation)
+## Backend dependencies
 
-    ```bash
-    brew install sqlc
-    ```
+go mod tidy
 
-- [Gomock](https://github.com/golang/mock)
+## Frontend dependencies (inside React Native project folder)
 
-    ``` bash
-    go install github.com/golang/mock/mockgen@v1.6.0
-    ```
+#### yarn
 
-### Setup infrastructure
+# Set up environment variables:
 
-- Create the bank-network
+Create a .env file based on .env.example for backend configurations.
 
-    ``` bash
-    make network
-    ```
+DB_DRIVER=
 
-- Start postgres container:
+DB_SOURCE=
 
-    ```bash
-    make postgres
-    ```
+SERVER_ADDRESS=
 
-- Create simple_bank database:
+TOKEN_SYMMETRIC_KEY=
 
-    ```bash
-    make createdb
-    ```
+ACCESS_TOKEN_DURATION=
 
-- Run db migration up all versions:
+REFRESH_TOKEN_DURATION=
 
-    ```bash
-    make migrateup
-    ```
+AWS_ACCESS_KEY_ID=
 
-- Run db migration up 1 version:
+AWS_SECRET_ACCESS_KEY=
 
-    ```bash
-    make migrateup1
-    ```
+AWS_REGION=
 
-- Run db migration down all versions:
+AWS_BUCKET_NAME=
 
-    ```bash
-    make migratedown
-    ```
+Configure AWS credentials and S3 bucket details in the .env file.
 
-- Run db migration down 1 version:
+Initialize PostgreSQL database:
 
-    ```bash
-    make migratedown1
-    ```
+#### 1 - make postgres
 
-### Documentation
+#### 2 - make createdb
 
-- Generate DB documentation:
+#### 3 - make migrateup
 
-    ```bash
-    make db_docs
-    ```
+#### 4 - make sqlc
 
-- Access the DB documentation at [this address](https://dbdocs.io/techschool.guru/simple_bank). Password: `secret`
+#### 5 - make mock
 
-### How to generate code
+Create a database and run migrations specified in your project.
 
-- Generate schema SQL file with DBML:
+- Start the backend server:
 
-    ```bash
-    make db_schema
-    ```
+#### make server
 
-- Generate SQL CRUD with sqlc:
+- Start the React Native development server:
 
-    ```bash
-    make sqlc
-    ```
+#### yarn start
 
-- Generate DB mock with gomock:
+# For iOS
 
-    ```bash
-    make mock
-    ```
+yarn ios
 
-- Create a new db migration:
+# For Android
 
-    ```bash
-    make new_migration name=<migration_name>
-    ```
+yarn ios
 
-### How to run
+## Usage
 
-- Run server:
+Access the mobile app through the iOS or Android simulator.
 
-    ```bash
-    make server
-    ```
+Use the provided API endpoints to interact with user data, posts, comments, and media.
 
-- Run test:
+## Contributing
 
-    ```bash
-    make test
-    ```
+Fork the repository.
 
-## Deploy to kubernetes cluster
+1 - Create a new branch (git checkout -b feature/feature_name).
 
-- [Install nginx ingress controller](https://kubernetes.github.io/ingress-nginx/deploy/#aws):
+2 - Commit your changes (git commit -am 'Add some things').
 
-    ```bash
-    kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.48.1/deploy/static/provider/aws/deploy.yaml
-    ```
+3 - Push to the branch (git push origin feature/feature_name).
 
-- [Install cert-manager](https://cert-manager.io/docs/installation/kubernetes/):
-
-    ```bash
-    kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.4.0/cert-manager.yaml
-    ```
+4 - Create a new Pull Request.
