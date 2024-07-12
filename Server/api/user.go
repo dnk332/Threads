@@ -232,7 +232,6 @@ func (s *Server) loginUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, rsp)
 }
 
-// TODO: Error 401 when refresh token expired
 // logoutUser handles the user logout process
 func (s *Server) logoutUser(ctx *gin.Context) {
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)

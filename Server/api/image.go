@@ -9,10 +9,21 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
 	"github.com/aws/smithy-go"
+	"github.com/briandnk/Threads/token"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+	"strconv"
+	"time"
 )
+
+type uploadImageResponse struct {
+	Url       string    `json:"url"`
+	ImageName string    `json:"image_name"`
+	ImageType string    `json:"image_type"`
+	Size      float64   `json:"size"`
+	CreatedAt time.Time `json:"created_at"`
+}
 
 func (s *Server) uploadImage(c *gin.Context) {
 	file, err := c.FormFile("image")
@@ -26,6 +37,17 @@ func (s *Server) uploadImage(c *gin.Context) {
 	if imageName == "" {
 		log.Printf("[ERROR] Image name is required")
 		c.JSON(errorResponse(http.StatusBadRequest, errors.New("image name is required")))
+		return
+	}
+
+	authPayload := c.MustGet(authorizationPayloadKey).(*token.Payload)
+	userID := authPayload.UserID
+	imageName = strconv.FormatInt(userID, 10) + "_" + imageName
+
+	imageType := c.PostForm("image_type")
+	if imageType == "" {
+		log.Printf("[ERROR] Image type is required")
+		c.JSON(errorResponse(http.StatusBadRequest, errors.New("image type is required")))
 		return
 	}
 
@@ -69,7 +91,28 @@ func (s *Server) uploadImage(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"response": result})
+	output, err := s3Client.GetObject(c, &s3.GetObjectInput{
+		Bucket: aws.String(s.config.AwsBucketName),
+		Key:    aws.String(imageName),
+	})
+	if err != nil {
+		log.Printf("[ERROR] Failed to read image: %v", err)
+		c.JSON(errorResponse(http.StatusInternalServerError, errors.New("failed to read image")))
+		return
+	}
+
+	imageSize := int64(*output.ContentLength)
+
+	//Create image response
+	response := uploadImageResponse{
+		Url:       result.Location,
+		ImageName: imageName,
+		ImageType: imageType,
+		Size:      float64(imageSize) / 1024.0,
+		CreatedAt: time.Now(),
+	}
+
+	c.JSON(http.StatusOK, gin.H{"response": response})
 }
 
 type deleteObjectRequest struct {
