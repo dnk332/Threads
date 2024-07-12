@@ -56,7 +56,8 @@ func (s *Server) setupRouter() {
 		authRoutes.POST("/posts/like", s.likePost)
 		authRoutes.POST("/posts/unlike", s.unlikePost)
 
-		authRoutes.POST("/uploads", s.uploadImage)
+		authRoutes.POST("images", s.uploadImage)
+		authRoutes.DELETE("images", s.deleteImage)
 	}
 
 	s.router = router
