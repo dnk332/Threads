@@ -32,7 +32,7 @@ type verifyTokenResponse struct {
 }
 
 // VerifyToken handles the verification of JWT access tokens
-func (server *Server) VerifyToken(ctx *gin.Context) {
+func (s *Server) VerifyToken(ctx *gin.Context) {
 	var req verifyTokenRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		log.Printf("[ERROR] Failed to parse request body: %v", err)
@@ -41,7 +41,7 @@ func (server *Server) VerifyToken(ctx *gin.Context) {
 	}
 
 	// Verify access token
-	_, err := server.tokenMaker.VerifyToken(req.AccessToken)
+	_, err := s.tokenMaker.VerifyToken(req.AccessToken)
 	if err != nil {
 		log.Printf("[ERROR] Invalid token: %v", err)
 		ctx.JSON(http.StatusUnauthorized, verifyTokenResponse{Code: "jwt_auth_invalid_token"})
@@ -51,7 +51,7 @@ func (server *Server) VerifyToken(ctx *gin.Context) {
 }
 
 // refreshAccessToken handles the renewal of JWT access tokens using a refresh token
-func (server *Server) refreshAccessToken(ctx *gin.Context) {
+func (s *Server) refreshAccessToken(ctx *gin.Context) {
 	var req refreshAccessTokenRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		log.Printf("[ERROR] Failed to parse request body: %v", err)
@@ -60,7 +60,7 @@ func (server *Server) refreshAccessToken(ctx *gin.Context) {
 	}
 
 	// Verify refresh token
-	refreshPayload, err := server.tokenMaker.VerifyToken(req.RefreshToken)
+	refreshPayload, err := s.tokenMaker.VerifyToken(req.RefreshToken)
 	if err != nil {
 		log.Printf("[ERROR] Invalid refresh token: %v", err)
 		ctx.JSON(errorResponse(http.StatusUnauthorized, errors.New("invalid refresh token")))
@@ -68,7 +68,7 @@ func (server *Server) refreshAccessToken(ctx *gin.Context) {
 	}
 
 	// Check if session exists
-	session, err := server.store.GetSession(ctx, refreshPayload.ID)
+	session, err := s.store.GetSession(ctx, refreshPayload.ID)
 	if err != nil {
 		if errors.Is(err, db.ErrRecordNotFound) {
 			log.Printf("[ERROR] Session not found: %v", err)
@@ -109,9 +109,9 @@ func (server *Server) refreshAccessToken(ctx *gin.Context) {
 	}
 
 	// Create new access token
-	accessToken, accessPayload, err := server.tokenMaker.CreateToken(
+	accessToken, accessPayload, err := s.tokenMaker.CreateToken(
 		refreshPayload.UserID,
-		server.config.AccessTokenDuration,
+		s.config.AccessTokenDuration,
 	)
 	if err != nil {
 		log.Printf("[ERROR] Failed to create access token: %v", err)

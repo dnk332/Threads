@@ -13,11 +13,11 @@ type Interaction struct {
 	// CountReply  int `json:"count_reply"`
 }
 
-func (server *Server) getInteractionOfPost(ctx *gin.Context, postId int64) Interaction {
-	countLikes := server.countLikeOfPost(ctx, postId)
+func (s *Server) getInteractionOfPost(ctx *gin.Context, postId int64) Interaction {
+	countLikes := s.countLikeOfPost(ctx, postId)
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
 
-	likeStatus := server.checkLikeStatusOfUser(ctx, db.CheckLikeStatusOfUserParams{
+	likeStatus := s.checkLikeStatusOfUser(ctx, db.CheckLikeStatusOfUserParams{
 		PostID:   postId,
 		AuthorID: authPayload.UserID,
 	})

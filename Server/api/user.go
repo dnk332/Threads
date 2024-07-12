@@ -40,7 +40,7 @@ func createUserResponse(user db.User) userResponse {
 }
 
 // createUser handles the user creation process
-func (server *Server) createUser(ctx *gin.Context) {
+func (s *Server) createUser(ctx *gin.Context) {
 	var req createUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		log.Printf("[ERROR] Failed to parse request body: %v", err)
@@ -62,7 +62,7 @@ func (server *Server) createUser(ctx *gin.Context) {
 	}
 
 	// Create user
-	user, err := server.store.CreateUser(ctx, arg)
+	user, err := s.store.CreateUser(ctx, arg)
 	if err != nil {
 		if db.ErrorCode(err) == db.UniqueViolation {
 			log.Printf("[ERROR] User with username: %s already exists", req.Username)
@@ -84,7 +84,7 @@ type getAccountRequest struct {
 }
 
 // getUser retrieves a user by ID and checks permissions
-func (server *Server) getUser(ctx *gin.Context) {
+func (s *Server) getUser(ctx *gin.Context) {
 	var req getAccountRequest
 
 	if err := ctx.ShouldBindUri(&req); err != nil {
@@ -94,7 +94,7 @@ func (server *Server) getUser(ctx *gin.Context) {
 	}
 
 	// Check is user id is valid or not
-	user, valid := server.validUser(ctx, req.ID)
+	user, valid := s.validUser(ctx, req.ID)
 	if !valid {
 		log.Printf("[ERROR] User not found: %d", req.ID)
 		return
@@ -104,7 +104,7 @@ func (server *Server) getUser(ctx *gin.Context) {
 }
 
 // validUser checks if a user ID is valid and returns the user if so
-func (server *Server) validUser(ctx *gin.Context, userId int64) (db.User, bool) {
+func (s *Server) validUser(ctx *gin.Context, userId int64) (db.User, bool) {
 	// Check is user id is valid or not
 	if userId < 1 {
 		log.Printf("[ERROR] Invalid user ID: %d", userId)
@@ -113,7 +113,7 @@ func (server *Server) validUser(ctx *gin.Context, userId int64) (db.User, bool) 
 	}
 
 	// Check if user exists or not
-	user, err := server.store.GetUserById(ctx, userId)
+	user, err := s.store.GetUserById(ctx, userId)
 	if err != nil {
 		if errors.Is(err, db.ErrRecordNotFound) {
 			log.Printf("[ERROR] User with ID: %d not found", userId)
@@ -152,7 +152,7 @@ type loginUserResponse struct {
 }
 
 // loginUser handles the user login process
-func (server *Server) loginUser(ctx *gin.Context) {
+func (s *Server) loginUser(ctx *gin.Context) {
 	var req loginUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(errorBindJSONResponse(http.StatusBadRequest, err))
@@ -161,7 +161,7 @@ func (server *Server) loginUser(ctx *gin.Context) {
 	}
 
 	// Check if user exists or not
-	user, err := server.store.GetUserByName(ctx, req.Username)
+	user, err := s.store.GetUserByName(ctx, req.Username)
 	if err != nil {
 		if errors.Is(err, db.ErrRecordNotFound) {
 			ctx.JSON(errorResponse(http.StatusUnauthorized, errors.New("username or password is incorrect")))
@@ -182,9 +182,9 @@ func (server *Server) loginUser(ctx *gin.Context) {
 	}
 
 	// Create access and refresh tokens
-	accessToken, accessPayload, err := server.tokenMaker.CreateToken(
+	accessToken, accessPayload, err := s.tokenMaker.CreateToken(
 		user.ID,
-		server.config.AccessTokenDuration,
+		s.config.AccessTokenDuration,
 	)
 	if err != nil {
 		err := errors.New("failed to create access token")
@@ -194,9 +194,9 @@ func (server *Server) loginUser(ctx *gin.Context) {
 	}
 
 	// Create refresh token
-	refreshToken, refreshPayload, err := server.tokenMaker.CreateToken(
+	refreshToken, refreshPayload, err := s.tokenMaker.CreateToken(
 		user.ID,
-		server.config.RefreshTokenDuration,
+		s.config.RefreshTokenDuration,
 	)
 	if err != nil {
 		ctx.JSON(errorResponse(http.StatusInternalServerError, errors.New("failed to create refresh token")))
@@ -205,7 +205,7 @@ func (server *Server) loginUser(ctx *gin.Context) {
 	}
 
 	// Create session
-	session, err := server.store.CreateSession(ctx, db.CreateSessionParams{
+	session, err := s.store.CreateSession(ctx, db.CreateSessionParams{
 		ID:           refreshPayload.ID,
 		UserID:       user.ID,
 		RefreshToken: refreshToken,
@@ -234,11 +234,11 @@ func (server *Server) loginUser(ctx *gin.Context) {
 
 // TODO: Error 401 when refresh token expired
 // logoutUser handles the user logout process
-func (server *Server) logoutUser(ctx *gin.Context) {
+func (s *Server) logoutUser(ctx *gin.Context) {
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
 
 	// Check if session exists
-	session, err := server.store.GetSessionByUserID(ctx, authPayload.UserID)
+	session, err := s.store.GetSessionByUserID(ctx, authPayload.UserID)
 	if err != nil {
 		ctx.JSON(errorResponse(http.StatusUnauthorized, errors.New("session not found")))
 		log.Printf("[ERROR] Failed to get session: %v", err)
@@ -246,7 +246,7 @@ func (server *Server) logoutUser(ctx *gin.Context) {
 	}
 
 	// Delete session
-	err = server.store.DeleteSession(ctx, session.ID)
+	err = s.store.DeleteSession(ctx, session.ID)
 	if err != nil {
 		ctx.JSON(errorResponse(http.StatusInternalServerError, err))
 		log.Printf("[ERROR] Failed to delete session: %v", err)

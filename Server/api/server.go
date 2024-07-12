@@ -33,34 +33,36 @@ func NewServer(config utils.Config, store db.Store) (*Server, error) {
 	return server, nil
 }
 
-func (server *Server) setupRouter() {
+func (s *Server) setupRouter() {
 	router := gin.Default()
 
 	// Routes that do not require authentication
-	router.POST("/users", server.createUser)
-	router.POST("/users/login", server.loginUser)
-	router.GET("/users/:id", server.getUser)
-	router.POST("/tokens/verify", server.VerifyToken)
-	router.POST("/tokens/refresh", server.refreshAccessToken)
+	router.POST("/users", s.createUser)
+	router.POST("/users/login", s.loginUser)
+	router.GET("/users/:id", s.getUser)
+	router.POST("/tokens/verify", s.VerifyToken)
+	router.POST("/tokens/refresh", s.refreshAccessToken)
 
 	// Routes that require authentication
-	authRoutes := router.Group("/").Use(authMiddleware(server.tokenMaker))
+	authRoutes := router.Group("/").Use(authMiddleware(s.tokenMaker))
 	{
-		authRoutes.POST("/user-profiles", server.createUserProfile)
-		authRoutes.GET("/user-profiles/:user_id", server.getUserProfile)
-		authRoutes.GET("/users/logout", server.logoutUser)
+		authRoutes.POST("/user-profiles", s.createUserProfile)
+		authRoutes.GET("/user-profiles/:user_id", s.getUserProfile)
+		authRoutes.GET("/users/logout", s.logoutUser)
 
-		authRoutes.POST("/posts", server.createPost)
-		authRoutes.GET("/posts", server.getListAllPost)
+		authRoutes.POST("/posts", s.createPost)
+		authRoutes.GET("/posts", s.getListAllPost)
 
-		authRoutes.POST("/posts/like", server.likePost)
-		authRoutes.POST("/posts/unlike", server.unlikePost)
+		authRoutes.POST("/posts/like", s.likePost)
+		authRoutes.POST("/posts/unlike", s.unlikePost)
+
+		authRoutes.POST("/uploads", s.uploadImage)
 	}
 
-	server.router = router
+	s.router = router
 }
 
 // Start runs the HTTP server on a specific address.
-func (server *Server) Start(address string) error {
-	return server.router.Run(address)
+func (s *Server) Start(address string) error {
+	return s.router.Run(address)
 }

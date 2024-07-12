@@ -36,7 +36,7 @@ func createPostResponse(post db.Post) postResponse {
 }
 
 // createUser handles the user creation process
-func (server *Server) createPost(ctx *gin.Context) {
+func (s *Server) createPost(ctx *gin.Context) {
 	var req createPostRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		log.Printf("[ERROR] Failed to parse request body: %v", err)
@@ -53,7 +53,7 @@ func (server *Server) createPost(ctx *gin.Context) {
 	}
 
 	// Create post
-	post, err := server.store.CreatePost(ctx, arg)
+	post, err := s.store.CreatePost(ctx, arg)
 	if err != nil {
 		log.Printf("[ERROR] Failed to create post: %v", err)
 		ctx.JSON(errorResponse(http.StatusInternalServerError, err))
@@ -76,7 +76,7 @@ type getListAllPostResponse struct {
 	Interaction Interaction  `json:"interaction"`
 }
 
-func (server *Server) getListAllPost(ctx *gin.Context) {
+func (s *Server) getListAllPost(ctx *gin.Context) {
 	var req getListAllPostRequest
 	if err := ctx.ShouldBindQuery(&req); err != nil {
 		ctx.JSON(errorBindJSONResponse(http.StatusBadRequest, err))
@@ -89,7 +89,7 @@ func (server *Server) getListAllPost(ctx *gin.Context) {
 		Offset: (req.PageID - 1) * req.PageSize,
 	}
 
-	posts, err := server.store.GetListAllPost(ctx, arg)
+	posts, err := s.store.GetListAllPost(ctx, arg)
 	if err != nil {
 		ctx.JSON(errorResponse(http.StatusInternalServerError, err))
 		return
@@ -98,8 +98,8 @@ func (server *Server) getListAllPost(ctx *gin.Context) {
 	response := make([]getListAllPostResponse, 0, len(posts))
 
 	for _, post := range posts {
-		author := server.getAuthorInfo(ctx, post.AuthorID)
-		interaction := server.getInteractionOfPost(ctx, post.ID)
+		author := s.getAuthorInfo(ctx, post.AuthorID)
+		interaction := s.getInteractionOfPost(ctx, post.ID)
 
 		response = append(response, getListAllPostResponse{
 			Id:          post.ID,
