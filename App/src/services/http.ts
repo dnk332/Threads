@@ -8,8 +8,8 @@ import axios, {
 import {store} from '@src/redux/store';
 import {accessTokenSelector, domainSelector} from '@src/redux/selectors';
 import Navigator from '@src/navigation/NavigationService';
-import {deviceInfoSelector} from '@src/redux/selectors/app';
-import {IDeviceInfo} from '@src/redux/reducers/app';
+import {deviceInfoSelector} from '@appRedux/selectors/appSelector';
+import {IDeviceInfo} from '@appRedux/reducers/appReducer';
 import SCREEN_NAME from '@src/navigation/ScreenName';
 import {CustomError} from '@appRedux/sagaHelper/handleErrorMessage'; // Access token retrieval
 

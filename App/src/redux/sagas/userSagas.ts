@@ -17,10 +17,10 @@ import {userProfileModel} from '@src/models/user';
 
 const {userApis} = api;
 
-function* getUserProfileSaga({type, payload}: IGetUserProfileAction) {
+function* getUserProfileSaga({payload}: IGetUserProfileAction) {
   const {params, callback} = payload;
-  yield invoke(
-    function* execution() {
+  yield invoke({
+    execution: function* execution() {
       const {data, success}: ResponseGetUserProfileApi = yield call(
         userApis.getUserProfileApi,
         params.user_id,
@@ -28,19 +28,16 @@ function* getUserProfileSaga({type, payload}: IGetUserProfileAction) {
       callback({data, success});
       yield put(userActions.saveUserProfileAction(userProfileModel(data)));
     },
-    error => {
+    errorCallback: error => {
       callback({success: false, message: error.message});
     },
-    false,
-    type,
-    () => {},
-  );
+  });
 }
 
-function* updateUserProfileSaga({type, payload}: IUpdateUserProfileAction) {
+function* updateUserProfileSaga({payload}: IUpdateUserProfileAction) {
   const {params, callback} = payload;
-  yield invoke(
-    function* execution() {
+  yield invoke({
+    execution: function* execution() {
       const currentAccount = yield select(currentAccountSelector);
       const {data, success}: ResponseUpdateUserProfileApi = yield call(
         userApis.updateUserInfoApi,
@@ -53,13 +50,10 @@ function* updateUserProfileSaga({type, payload}: IUpdateUserProfileAction) {
       callback({data, success});
       yield put(userActions.saveUserProfileAction(userProfileModel(data)));
     },
-    error => {
+    errorCallback: error => {
       callback({success: false, message: error.message});
     },
-    false,
-    type,
-    () => {},
-  );
+  });
 }
 
 function* watchGetUserProfile() {

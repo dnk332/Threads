@@ -1,6 +1,5 @@
-import {put, select} from 'redux-saga/effects';
-import {authActions, loadingActions} from '@actions';
-import {refreshTokenSelector} from '@selectors';
+import {put} from 'redux-saga/effects';
+import {authActions, loadingActions, pendingActions} from '@actions';
 import {
   CustomError,
   handleErrorMessage,
@@ -8,6 +7,7 @@ import {
   isUnauthorizedError,
 } from './handleErrorMessage';
 import {Callback} from '@actionTypes/actionTypeBase';
+import {IListAllAction} from '@actionTypes/pendingActionType';
 
 const {
   showLoadingAction,
@@ -15,15 +15,22 @@ const {
   nonFetchingAction,
   hideLoadingAction,
 } = loadingActions;
-const {logoutAction} = authActions;
 
-export function* invoke(
-  execution: () => any,
-  handleError: ((error: CustomError) => any) | null,
-  showLoading: boolean,
-  actionType: string,
-  errorCallback: (error: CustomError) => any,
-) {
+interface InvokeParams {
+  execution: () => any;
+  errorCallback?: ((error: CustomError) => any) | null;
+  retryCallAction?: IListAllAction | null;
+  showLoading?: boolean;
+  actionType?: string;
+}
+
+export function* invoke({
+  execution,
+  errorCallback = null,
+  retryCallAction = null,
+  showLoading = false,
+  actionType,
+}: InvokeParams) {
   try {
     if (showLoading) {
       yield put(showLoadingAction(actionType));
@@ -31,7 +38,7 @@ export function* invoke(
     yield put(onFetchingAction(actionType));
     yield* execution();
   } catch (error) {
-    yield handleSagaError(error as CustomError, handleError, errorCallback);
+    yield handleSagaError(error as CustomError, errorCallback, retryCallAction);
   } finally {
     yield put(nonFetchingAction(actionType));
     if (showLoading) {
@@ -42,30 +49,28 @@ export function* invoke(
 
 function* handleSagaError(
   error: CustomError,
-  handleError: ((error: CustomError) => any) | null,
-  errorCallback: (error: CustomError) => any,
+  errorCallback: ((error: CustomError) => any) | null,
+  retryCallAction: IListAllAction | null = null,
 ) {
-  const refreshToken = yield select(refreshTokenSelector);
-  console.log('>>>>handleSagaError>>>>', error);
-  if (isNetworkError(error) && typeof handleError === 'function') {
-    yield handleError({
-      message: 'Temporary network issue. Please try again later',
+  if (isNetworkError(error) && errorCallback) {
+    yield errorCallback({
+      message: 'Network issue. Please try again later',
       response: {status: 502},
     });
     return;
   }
 
-  if (isUnauthorizedError(error)) {
-    if (refreshToken) {
-      let callback: Callback = ({success}) => {
-        if (!success) {
-          put(authActions.logoutAction());
-          return;
-        }
-      };
-      yield put(authActions.refreshTokenAction(callback));
-      return;
-    }
+  if (retryCallAction! == null) {
+    yield put(pendingActions.addPendingAction(retryCallAction));
+  }
+
+  while (isUnauthorizedError(error)) {
+    const callback: Callback = ({success}) => {
+      if (success && retryCallAction! == null) {
+        put(pendingActions.tryRecallAction());
+      }
+    };
+    yield put(authActions.refreshTokenAction(callback));
   }
 
   const errorMessage = handleErrorMessage(error);
@@ -73,9 +78,7 @@ function* handleSagaError(
     ? errorMessage.message[0]
     : errorMessage.message;
 
-  if (typeof handleError === 'function') {
-    yield handleError(message);
-  } else if (errorCallback) {
+  if (errorCallback) {
     yield* errorCallback(message);
   }
 }

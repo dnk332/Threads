@@ -5,7 +5,7 @@ import {
 } from '@actionTypes/likeActionTypes';
 
 export const toggleLikePostAction = (
-  action: 'like' | 'unlike',
+  status: 'like' | 'unlike',
   postId: number,
   callback: Callback,
 ): IToggleLikePostAction => ({
@@ -13,7 +13,7 @@ export const toggleLikePostAction = (
   payload: {
     params: {
       postId,
-      action,
+      status,
     },
     callback,
   },

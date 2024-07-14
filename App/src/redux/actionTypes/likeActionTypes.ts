@@ -9,10 +9,10 @@ export type LikeActionType =
 
 export interface IToggleLikePostAction
   extends ActionBase<{
-    action: 'like' | 'unlike';
+    status: 'like' | 'unlike';
     postId: number;
   }> {
   type: typeof LikeActionType.TOGGLE_LIKE;
 }
 
-export type LikeAction = IToggleLikePostAction;
+export type ILikeAction = IToggleLikePostAction;

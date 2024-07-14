@@ -9,13 +9,13 @@ import {
 } from '@src/redux/selectors';
 import Navigator from '@navigators';
 import SCREEN_NAME from '@src/navigation/ScreenName';
-import {getUserProfileAction} from '@src/redux/actions/user';
+import {getUserProfileAction} from '@appRedux/actions/userAction';
 import {Callback} from '@src/redux/actionTypes/actionTypeBase';
 import useSelectorShallow from '@src/hooks/useSelectorShallowEqual';
 import {
   getListAllPostAction,
   saveListAllPostAction,
-} from '@src/redux/actions/post';
+} from '@appRedux/actions/postAction';
 import {IPostType} from '@src/types/post';
 import {postListModel} from '@src/models/post';
 import {useActions} from '@src/hooks/useActions';

@@ -23,14 +23,15 @@ import {
   ResponseVerifyTokenApi,
 } from '@src/services/apiTypes/authApiTypes';
 import {userModel} from '@src/models/user';
+import {refreshTokenAction} from '@appRedux/actions/authAction';
 import {Callback} from '@actionTypes/actionTypeBase';
 
 const {authApis} = api;
 
-function* loginSaga({type, payload}: ILoginAction) {
+function* loginSaga({payload}: ILoginAction) {
   const {params, callback} = payload;
-  yield invoke(
-    function* execution() {
+  yield invoke({
+    execution: function* execution() {
       Navigator.navigateTo(SCREEN_NAME.LOADING_INFO);
       const {data, success}: ResponseLoginApi = yield call(
         authApis.loginApi,
@@ -51,10 +52,7 @@ function* loginSaga({type, payload}: ILoginAction) {
       }
       callback({data, success});
     },
-    null,
-    false,
-    type,
-    function* rollback(error) {
+    errorCallback: function* rollback(error) {
       showAlert({
         title: 'Error',
         message: error.message,
@@ -63,13 +61,13 @@ function* loginSaga({type, payload}: ILoginAction) {
       });
       Navigator.goBack();
     },
-  );
+  });
 }
 
-function* registerSaga({type, payload}: IRegisterAction) {
+function* registerSaga({payload}: IRegisterAction) {
   const {params, callback} = payload;
-  yield invoke(
-    function* execution() {
+  yield invoke({
+    execution: function* execution() {
       const {data, success}: ResponseRegisterApi = yield call(
         authApis.registerApi,
         params.username,
@@ -77,10 +75,7 @@ function* registerSaga({type, payload}: IRegisterAction) {
       );
       callback({data, success});
     },
-    null,
-    false,
-    type,
-    function* rollback(error) {
+    errorCallback: function* rollback(error) {
       showAlert({
         title: 'Error',
         message: error.message,
@@ -89,101 +84,86 @@ function* registerSaga({type, payload}: IRegisterAction) {
       });
       callback({success: false});
     },
-  );
+  });
 }
 
-function* authCheckSaga({type, payload}: IAuthCheckAction) {
+function* logoutSaga({}: ILogoutAction) {
+  // yield call(authApis.logoutApi);
+  yield put(authActions.setTokenAction(null, null));
+  yield put(authActions.setRefreshTokenAction(null));
+  yield put(userActions.saveUserProfileAction(null));
+  Navigator.navigateAndSimpleReset(SCREEN_NAME.LOGIN, 0);
+}
+
+function* authCheckSaga({payload}: IAuthCheckAction) {
   const {callback} = payload || {};
-  yield invoke(
-    function* execution() {
-      const {refreshToken, accessToken} = yield all({
-        refreshToken: select(refreshTokenSelector),
-        accessToken: select(accessTokenSelector),
-      });
-      if (!refreshToken && !accessToken) {
-        callback({success: false, message: 'no token'});
-        yield put(authActions.logoutAction());
+  // Use selectors for both tokens
+  const {accessToken, refreshToken} = yield all({
+    accessToken: select(accessTokenSelector),
+    refreshToken: select(refreshTokenSelector),
+  });
+  if (!refreshToken && !accessToken) {
+    callback({success: false, message: 'no token'});
+    return;
+  }
+  // Check if access token is valid
+  try {
+    const {data, success}: ResponseVerifyTokenApi = yield call(
+      authApis.verifyAccessTokenApi,
+      accessToken,
+    );
+
+    if (data.message === 'jwt_auth_valid_token') {
+      callback({success});
+      return;
+    }
+  } catch (e) {
+    console.error('Access token verification failed:', e);
+  }
+
+  // If access token is expired, try refreshing it
+  try {
+    const callbackRefreshToken: Callback = ({success}) => {
+      if (success) {
+        callback({success});
         return;
       }
-      if (accessToken) {
-        try {
-          const {data, success}: ResponseVerifyTokenApi = yield call(
-            authApis.verifyAccessTokenApi,
-            accessToken,
-          );
-          if (data.message === 'jwt_auth_valid_token') {
-            callback({success});
-            return;
-          }
-        } catch (error) {
-          console.log('verify token fail');
-        }
-      }
-      if (refreshToken) {
-        const checkToken: Callback = ({success, data}) => {
-          if (data.access_token) {
-            put(
-              authActions.setTokenAction(
-                data.access_token,
-                data.access_token_expires_at,
-              ),
-            );
-            callback({success});
-            return;
-          } else {
-            callback({success: false, message: 'all tokens are expired'});
-          }
-        };
-        yield put(authActions.refreshTokenAction(checkToken));
-      }
-    },
-    () => {},
-    false,
-    type,
-    () => {},
-  );
+      callback({success: false});
+    };
+    yield put(refreshTokenAction(callbackRefreshToken));
+  } catch (e) {
+    console.error('Token refresh failed:', e);
+    callback({success: false, message: 'token refresh error'});
+    yield put(authActions.logoutAction());
+  }
 }
 
-function* refreshTokenSaga({type, payload}: IRefreshTokenAction) {
-  const {callback} = payload || {};
-  yield invoke(
-    function* execution() {
-      const refreshToken = yield select(refreshTokenSelector);
-      const {data, success}: ResponseRefreshTokenApi = yield call(
-        authApis.refreshAccessTokenApi,
-        refreshToken,
+function* refreshTokenSaga({payload}: IRefreshTokenAction) {
+  const {callback} = payload;
+  const refreshToken = yield select(refreshTokenSelector);
+  try {
+    const {data, success}: ResponseRefreshTokenApi = yield call(
+      authApis.refreshAccessTokenApi,
+      refreshToken,
+    );
+
+    if (success && data.access_token) {
+      yield put(
+        authActions.setTokenAction(
+          data.access_token,
+          data.access_token_expires_at,
+        ),
       );
-      if (data.access_token) {
-        yield put(
-          authActions.setTokenAction(
-            data.access_token,
-            data.access_token_expires_at,
-          ),
-        );
-      }
       callback({success, data});
-    },
-    () => {},
-    false,
-    type,
-    () => {},
-  );
-}
-
-function* logoutSaga({type}: ILogoutAction) {
-  yield invoke(
-    function* execution() {
-      // yield call(authApis.logoutApi);
-      yield put(authActions.setTokenAction(null, null));
-      yield put(authActions.setRefreshTokenAction(null));
-      yield put(userActions.saveUserProfileAction(null));
-      Navigator.navigateAndSimpleReset(SCREEN_NAME.LOGIN);
-    },
-    () => {},
-    false,
-    type,
-    () => {},
-  );
+    } else {
+      callback({success: false});
+      yield put(authActions.logoutAction());
+    }
+  } catch (e) {
+    console.error('Token refresh failed:', e);
+    callback({success: false});
+    yield put(authActions.logoutAction());
+  }
 }
 
 function* watchLogin() {
@@ -198,12 +178,12 @@ function* watchAuthCheck() {
   yield takeEvery(AuthActionType.AUTH_CHECK, authCheckSaga);
 }
 
-function* watchRefreshToken() {
-  yield takeEvery(AuthActionType.REFRESH_TOKEN, refreshTokenSaga);
-}
-
 function* watchLogout() {
   yield takeEvery(AuthActionType.LOGOUT, logoutSaga);
+}
+
+function* watchRefreshToken() {
+  yield takeEvery(AuthActionType.REFRESH_TOKEN, refreshTokenSaga);
 }
 
 export default function* authSagas() {

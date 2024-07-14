@@ -13,25 +13,24 @@ import {
 
 const {likeApis} = api;
 
-function* toggleLikePostSaga({type, payload}: IToggleLikePostAction) {
-  const {params, callback} = payload;
-  yield invoke(
-    function* execution() {
-      const {postId, action} = params;
+function* toggleLikePostSaga(action: IToggleLikePostAction) {
+  const {params, callback} = action.payload;
+  const {postId, status} = params;
+
+  yield invoke({
+    execution: function* execution() {
       const {data, success}: ResponseLikePostApi | ResponseUnlikePostApi =
         yield call(
-          action === 'like' ? likeApis.likePostApi : likeApis.unlikePostApi,
+          status === 'like' ? likeApis.likePostApi : likeApis.unlikePostApi,
           postId,
         );
       callback({success, data});
     },
-    error => {
+    errorCallback: error => {
       callback({success: false, message: error.message});
     },
-    false,
-    type,
-    () => {},
-  );
+    retryCallAction: action,
+  });
 }
 
 function* watchToggleLikePost() {

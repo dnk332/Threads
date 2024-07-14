@@ -12,7 +12,7 @@ const initialState: IPostState = {
 
 export default function postReducer(
   state: IPostState = initialState,
-  action: postActions.PostAction | likeActions.LikeAction,
+  action: postActions.IPostAction | likeActions.ILikeAction,
 ) {
   switch (action.type) {
     case postActions.PostActionType.SAVE_LIST_ALL_POST:
@@ -32,7 +32,7 @@ export default function postReducer(
         if (item.id === action.payload.params.postId) {
           const newLikeStatus = !item.interaction.likeStatus;
           const newCountLikes =
-            action.payload.params.action === 'like'
+            action.payload.params.status === 'like'
               ? item.interaction.countLikes + 1
               : item.interaction.countLikes - 1;
 

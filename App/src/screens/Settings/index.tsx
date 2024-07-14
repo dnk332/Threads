@@ -1,7 +1,7 @@
 import React from 'react';
 import SettingsScreenView from '@screens/Settings/view';
 
-import {logoutAction} from '@src/redux/actions/auth';
+import {logoutAction} from '@appRedux/actions/authAction';
 import {useActions} from '@src/hooks/useActions';
 
 const SettingsScreen = () => {

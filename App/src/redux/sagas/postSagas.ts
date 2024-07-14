@@ -14,10 +14,10 @@ import {
 
 const {postApis} = api;
 
-function* getListAllPostSaga({type, payload}: IGetListAllPostAction) {
+function* getListAllPostSaga({payload}: IGetListAllPostAction) {
   const {params, callback} = payload;
-  yield invoke(
-    function* execution() {
+  yield invoke({
+    execution: function* execution() {
       const {data, success}: ResponseGetListAllPostApi = yield call(
         postApis.getListAllPostApi,
         params.pageId,
@@ -25,19 +25,16 @@ function* getListAllPostSaga({type, payload}: IGetListAllPostAction) {
       );
       callback({success, data});
     },
-    error => {
+    errorCallback: error => {
       callback({success: false, message: error.message});
     },
-    false,
-    type,
-    () => {},
-  );
+  });
 }
 
-function* createPostSaga({type, payload}: ICreatePostAction) {
+function* createPostSaga({payload}: ICreatePostAction) {
   const {params, callback} = payload;
-  yield invoke(
-    function* execution() {
+  yield invoke({
+    execution: function* execution() {
       const {data, success}: ResponseCreatePostApi = yield call(
         postApis.createPostApi,
         params.author_id,
@@ -45,13 +42,10 @@ function* createPostSaga({type, payload}: ICreatePostAction) {
       );
       callback({success, data});
     },
-    error => {
+    errorCallback: error => {
       callback({success: false, message: error.message});
     },
-    false,
-    type,
-    () => {},
-  );
+  });
 }
 
 function* watchGetListAllPost() {

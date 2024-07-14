@@ -8,10 +8,10 @@ import _ from 'lodash';
 import {AppActionType, IStartAction} from '@actionTypes/appActionTypes';
 import {invoke} from '../sagaHelper/invokeSaga';
 
-function* startApplicationSaga({type, payload}: IStartAction) {
+function* startApplicationSaga({payload}: IStartAction) {
   const {callback} = payload;
-  yield invoke(
-    function* execution() {
+  yield invoke({
+    execution: function* execution() {
       TimeAgo.SetUpTime();
       const domain: string | null = yield select(domainSelector);
       yield put(appActions.setDomainAction(domain ?? Setting.domain));
@@ -30,13 +30,10 @@ function* startApplicationSaga({type, payload}: IStartAction) {
       };
       yield put(authActions.authCheckAction(checkAuth));
     },
-    error => {
+    errorCallback: error => {
       callback({success: false, message: error.message});
     },
-    false,
-    type,
-    () => {},
-  );
+  });
 }
 
 function* watchStartApplication() {

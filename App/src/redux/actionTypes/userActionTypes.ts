@@ -31,7 +31,7 @@ export interface ISetUserProfileAction
   type: typeof UserActionType.SET_PROFILE;
 }
 
-export type UserAction =
+export type IUserAction =
   | IGetUserProfileAction
   | IUpdateUserProfileAction
   | ISetUserProfileAction;

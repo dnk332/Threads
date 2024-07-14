@@ -1,7 +1,7 @@
 import {
   ResponseLikePostApi,
   ResponseUnlikePostApi,
-} from '../apiTypes/likeApiTypes';
+} from '@apiTypes/likeApiTypes';
 import http from '../http';
 
 export const likePostApi = (post_id: number): Promise<ResponseLikePostApi> => {
