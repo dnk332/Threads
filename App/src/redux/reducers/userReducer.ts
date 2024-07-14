@@ -11,7 +11,7 @@ const initialState: IUserState = {
 
 export default function userReducer(
   state: IUserState = initialState,
-  action: actions.UserAction,
+  action: actions.IUserAction,
 ) {
   switch (action.type) {
     case actions.UserActionType.SET_PROFILE:

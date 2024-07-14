@@ -66,14 +66,16 @@ export const setListAccountInfoAction = (
   payload: {params: {accountInfo}},
 });
 
-export const authCheckAction = (callback: Callback): IAuthCheckAction => ({
-  type: AuthActionType.AUTH_CHECK,
-  payload: {callback},
-});
-
 export const refreshTokenAction = (
   callback: Callback,
 ): IRefreshTokenAction => ({
   type: AuthActionType.REFRESH_TOKEN,
+  payload: {
+    callback,
+  },
+});
+
+export const authCheckAction = (callback?: Callback): IAuthCheckAction => ({
+  type: AuthActionType.AUTH_CHECK,
   payload: {callback},
 });

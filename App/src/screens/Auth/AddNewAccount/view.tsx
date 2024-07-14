@@ -37,9 +37,7 @@ const AddNewAccountView: React.FC<AddNewAccountViewProps> = ({
 
   return (
     <AppContainer style={styles.container}>
-      <AwareScrollView
-        containerStyle={styles.content}
-        keyboardShouldPersistTaps={true}>
+      <AwareScrollView keyboardShouldPersistTaps={true}>
         <AppImage
           containerStyle={styles.igImage}
           source={require('@assets/image/instagram-logo.png')}
@@ -72,10 +70,6 @@ const AddNewAccountView: React.FC<AddNewAccountViewProps> = ({
             loading={loading}
           />
         </View>
-        <AppImage
-          containerStyle={styles.metaImage}
-          source={require('@assets/image/meta-logo.png')}
-        />
       </AwareScrollView>
     </AppContainer>
   );
@@ -85,20 +79,16 @@ export default AddNewAccountView;
 
 const styles = AppStyleSheet.create({
   container: {marginTop: 0, paddingTop: 16},
-  contentContainer: {
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-    marginTop: 14,
-    padding: 16,
-  },
   igImage: {
     width: 72,
     height: 72,
     alignSelf: 'center',
+    marginVertical: 30,
   },
   inputField: {
     gap: 16,
     marginHorizontal: 16,
+    marginVertical: 40,
   },
   textInput: {
     borderWidth: 1,
@@ -109,15 +99,6 @@ const styles = AppStyleSheet.create({
   button: {
     width: '100%',
     padding: 16,
-  },
-  metaImage: {
-    width: 66,
-    height: undefined,
-    aspectRatio: 5,
-    alignSelf: 'center',
-  },
-  content: {
-    justifyContent: 'space-around',
-    height: '100%',
+    marginTop: 40,
   },
 });

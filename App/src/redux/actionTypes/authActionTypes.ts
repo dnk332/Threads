@@ -7,12 +7,12 @@ export const AuthActionType = {
   LOGOUT: 'AUTH/LOGOUT',
   SET_TOKEN: 'AUTH/SET_TOKEN',
   SET_REFRESH_TOKEN: 'AUTH/SET_REFRESH_TOKEN',
+  REFRESH_TOKEN: 'AUTH/REFRESH_TOKEN',
   SET_ACCOUNT_INFO: 'AUTH/SET_ACCOUNT_INFO',
   SET_LIST_ACCOUNT_INFO: 'AUTH/SET_LIST_ACCOUNT_INFO',
   AUTH_CHECK: 'AUTH/AUTH_CHECK',
   CURRENT_ACCOUNT_INDEX: 'AUTH/CURRENT_ACCOUNT_INDEX',
   UPDATE_CURRENT_ACCOUNT: 'AUTH/UPDATE_CURRENT_ACCOUNT',
-  REFRESH_TOKEN: 'AUTH/REFRESH_TOKEN',
 } as const;
 
 export type AuthActionType =
@@ -75,7 +75,7 @@ export interface IRefreshTokenAction extends ActionBase<{}> {
   type: typeof AuthActionType.REFRESH_TOKEN;
 }
 
-export type AuthAction =
+export type IAuthAction =
   | ILoginAction
   | ILogoutAction
   | IRegisterAction

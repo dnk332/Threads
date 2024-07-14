@@ -3,6 +3,7 @@ import {
   ResponseGetUserProfileApi,
   ResponseUpdateUserProfileApi,
 } from '@apiTypes/userApiTypes';
+
 export const getUserProfileApi = (
   user_id: number,
 ): Promise<ResponseGetUserProfileApi> => {

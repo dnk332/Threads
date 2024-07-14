@@ -7,7 +7,7 @@ import Navigator from '@navigators';
 import {colors} from '@themes/color';
 import {AppImage} from '@src/components';
 import SCREEN_NAME from '@src/navigation/ScreenName';
-import {startAction} from '@src/redux/actions/app';
+import {startAction} from '@appRedux/actions/appAction';
 import {useActions} from '@src/hooks/useActions';
 
 export default function Splash() {

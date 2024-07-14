@@ -33,7 +33,7 @@ export interface ICreatePostAction
   type: typeof PostActionType.CREATE_POST;
 }
 
-export type PostAction =
+export type IPostAction =
   | IGetListAllPostAction
   | ISaveListAllPostAction
   | ICreatePostAction;

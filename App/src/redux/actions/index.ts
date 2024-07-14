@@ -1,10 +1,11 @@
 import * as actionTypes from './actionTypes';
-import * as authActions from './auth';
-import * as loadingActions from './loading';
-import * as userActions from './user';
-import * as appActions from './app';
-import * as postActions from './post';
-import * as likeActions from './like';
+import * as authActions from './authAction';
+import * as loadingActions from './loadingAction';
+import * as userActions from './userAction';
+import * as appActions from './appAction';
+import * as postActions from './postAction';
+import * as likeActions from './likeAction';
+import * as pendingActions from './pendingAction';
 
 export {
   actionTypes,
@@ -14,4 +15,5 @@ export {
   userActions,
   postActions,
   likeActions,
+  pendingActions,
 };

@@ -1,7 +1,7 @@
 import {
   ResponseCreatePostApi,
   ResponseGetListAllPostApi,
-} from '../apiTypes/postApiTypes';
+} from '@apiTypes/postApiTypes';
 import http from '../http';
 
 export const getListAllPostApi = (

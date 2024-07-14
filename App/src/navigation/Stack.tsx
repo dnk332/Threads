@@ -8,13 +8,13 @@ import BootSplash from 'react-native-bootsplash';
 import RootScreen from '../screens/Root';
 import Navigator from '@navigators';
 import {
+  AddNewAccountScreen,
   ImageViewerScreen,
+  LoadingInfoScreen,
   LoginScreen,
   NewPostScreen,
-  SwitchAccountScreen,
-  AddNewAccountScreen,
   SplashScreen,
-  LoadingInfoScreen,
+  SwitchAccountScreen,
   UpdateUserInfoScreen,
 } from '@screens/index';
 import {IUser} from '@src/types/user';
@@ -31,6 +31,7 @@ export interface NavigationStackParamList {
   LOADING_INFO: undefined;
   SETTINGS: undefined;
   UPDATE_USER_INFO: {currentAccount: IUser};
+
   [key: string]:
     | undefined
     | {

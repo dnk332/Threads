@@ -3,6 +3,7 @@ import {AuthActionType} from './authActionTypes';
 import {LikeActionType} from './likeActionTypes';
 import {PostActionType} from './postActionTypes';
 import {UserActionType} from './userActionTypes';
+import {PendingActionType} from '@actionTypes/pendingActionType';
 
 export type Callback = ({
   success,
@@ -20,7 +21,8 @@ export interface ActionBase<T> {
     | AuthActionType
     | UserActionType
     | PostActionType
-    | LikeActionType;
+    | LikeActionType
+    | PendingActionType;
   payload?: {
     params?: T;
     callback?: Callback;

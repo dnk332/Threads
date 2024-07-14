@@ -18,7 +18,8 @@ export const reviewSelector = state => state.review;
 export const bookingSelector = state => state.booking;
 export const bookingRequestSelector = state => state.booking.request;
 
-export * from './auth';
-export * from './user';
-export * from './post';
-export * from './app';
+export * from './authSelector';
+export * from './userSelector';
+export * from './postSelector';
+export * from './appSelector';
+export * from './pendingSelector';

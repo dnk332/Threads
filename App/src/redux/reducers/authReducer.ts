@@ -20,7 +20,7 @@ const initialState: IAuthState = {
 
 export default function authReducer(
   state: IAuthState = initialState,
-  action: actions.AuthAction,
+  action: actions.IAuthAction,
 ): IAuthState {
   const actionType = actions.AuthActionType;
   switch (action.type) {

@@ -8,7 +8,7 @@ import {
 import NewPostScreenView from './view';
 import {BottomTabsStackParamList} from '@src/screens/Root';
 import {useActions} from '@src/hooks/useActions';
-import {createPostAction} from '@src/redux/actions/post';
+import {createPostAction} from '@appRedux/actions/postAction';
 import useSelectorShallow from '@src/hooks/useSelectorShallowEqual';
 import {currentAccountSelector} from '@src/redux/selectors';
 import {Callback} from '@src/redux/actionTypes/actionTypeBase';
