@@ -14,10 +14,11 @@ import (
 
 // createUserProfileRequest defines the structure for user profile creation requests
 type createUserProfileRequest struct {
-	UserId int64  `json:"user_id"`
-	Name   string `json:"name" binding:"required,lowercase,min=6"`
-	Email  string `json:"email" binding:"required,email"`
-	Bio    string `json:"bio"`
+	UserId    int64  `json:"user_id"`
+	Name      string `json:"name" binding:"required,lowercase,min=6"`
+	Email     string `json:"email" binding:"required,email"`
+	Bio       string `json:"bio"`
+	AvatarUrl string `json:"avatar_url"`
 }
 
 // createUserProfileResponse defines the structure for user profile responses
@@ -26,12 +27,13 @@ type createUserProfileResponse struct {
 	Name      string    `json:"name"`
 	Email     string    `json:"email"`
 	Bio       string    `json:"bio"`
+	AvatarUrl string    `json:"avatar_url"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
 // createUserProfileRes maps a db.UserProfile to createUserProfileResponse
-func createUserProfileRes(userProfile db.UserProfile) createUserProfileResponse {
+func createUserProfileRes(userProfile db.UserProfile, avatarUrl string) createUserProfileResponse {
 	return createUserProfileResponse{
 		UserId:    userProfile.UserID,
 		Name:      userProfile.Name,
@@ -39,6 +41,7 @@ func createUserProfileRes(userProfile db.UserProfile) createUserProfileResponse 
 		Bio:       userProfile.Bio,
 		CreatedAt: userProfile.CreatedAt,
 		UpdatedAt: userProfile.UpdatedAt,
+		AvatarUrl: avatarUrl,
 	}
 }
 
@@ -94,7 +97,14 @@ func (s *Server) createUserProfile(ctx *gin.Context) {
 		return
 	}
 
-	rsp := createUserProfileRes(userProfile)
+	err = s.setUserAvatar(ctx, req.AvatarUrl, userProfile)
+	if err != nil {
+		ctx.JSON(errorResponse(http.StatusInternalServerError, err))
+		log.Printf("[ERROR] Failed to set user avatar: %v", err)
+		return
+	}
+
+	rsp := createUserProfileRes(userProfile, req.AvatarUrl)
 
 	ctx.JSON(http.StatusOK, rsp)
 }
@@ -110,17 +120,19 @@ type getUserProfileResponse struct {
 	Name      string    `json:"name"`
 	Email     string    `json:"email"`
 	Bio       string    `json:"bio"`
+	AvatarUrl string    `json:"avatar_url"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
 // getUserProfileRes maps a db.UserProfile to getUserProfileResponse
-func getUserProfileRes(userProfile db.UserProfile) getUserProfileResponse {
+func getUserProfileRes(userProfile db.UserProfile, avatarUrl string) getUserProfileResponse {
 	return getUserProfileResponse{
 		UserId:    userProfile.UserID,
 		Name:      userProfile.Name,
 		Email:     userProfile.Email,
 		Bio:       userProfile.Bio,
+		AvatarUrl: avatarUrl,
 		CreatedAt: userProfile.CreatedAt,
 		UpdatedAt: userProfile.UpdatedAt,
 	}
@@ -157,6 +169,14 @@ func (s *Server) getUserProfile(ctx *gin.Context) {
 		return
 	}
 
-	rsp := getUserProfileRes(userProfile)
+	avatar, err := s.getImage(ctx, "user_profile", userProfile.ID)
+
+	if err != nil {
+		ctx.JSON(errorResponse(http.StatusInternalServerError, err))
+		log.Printf("[ERROR] Failed to get user avatar: %v", err)
+		return
+	}
+	rsp := getUserProfileRes(userProfile, avatar)
+
 	ctx.JSON(http.StatusOK, rsp)
 }

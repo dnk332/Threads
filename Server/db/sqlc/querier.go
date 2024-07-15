@@ -11,6 +11,8 @@ import (
 )
 
 type Querier interface {
+	// Set user avatar
+	AddPostImage(ctx context.Context, arg AddPostImageParams) (Media, error)
 	// Check like status of user
 	CheckLikeStatusOfUser(ctx context.Context, arg CheckLikeStatusOfUserParams) (bool, error)
 	// Count like of post
@@ -35,6 +37,8 @@ type Querier interface {
 	GetAllLikesOfPost(ctx context.Context, arg GetAllLikesOfPostParams) ([]Like, error)
 	// Get all likes of user
 	GetAllLikesOfUser(ctx context.Context, arg GetAllLikesOfUserParams) ([]Like, error)
+	// Get image
+	GetImage(ctx context.Context, arg GetImageParams) (Media, error)
 	// Get a list of all posts
 	GetListAllPost(ctx context.Context, arg GetListAllPostParams) ([]Post, error)
 	// Get a list of all posts of one user
@@ -61,6 +65,8 @@ type Querier interface {
 	SearchPostByTextContent(ctx context.Context, arg SearchPostByTextContentParams) ([]Post, error)
 	// Search user by username
 	SearchUserByUsername(ctx context.Context, arg SearchUserByUsernameParams) ([]User, error)
+	// Set user avatar
+	SetUserAvatar(ctx context.Context, arg SetUserAvatarParams) (Media, error)
 	// Unlike a post
 	UnlikePost(ctx context.Context, arg UnlikePostParams) error
 	// Update a post

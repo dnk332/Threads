@@ -36,6 +36,21 @@ func (m *MockStore) EXPECT() *MockStoreMockRecorder {
 	return m.recorder
 }
 
+// AddPostImage mocks base method.
+func (m *MockStore) AddPostImage(arg0 context.Context, arg1 db.AddPostImageParams) (db.Media, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AddPostImage", arg0, arg1)
+	ret0, _ := ret[0].(db.Media)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AddPostImage indicates an expected call of AddPostImage.
+func (mr *MockStoreMockRecorder) AddPostImage(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddPostImage", reflect.TypeOf((*MockStore)(nil).AddPostImage), arg0, arg1)
+}
+
 // CheckLikeStatusOfUser mocks base method.
 func (m *MockStore) CheckLikeStatusOfUser(arg0 context.Context, arg1 db.CheckLikeStatusOfUserParams) (bool, error) {
 	m.ctrl.T.Helper()
@@ -225,6 +240,21 @@ func (m *MockStore) GetAllLikesOfUser(arg0 context.Context, arg1 db.GetAllLikesO
 func (mr *MockStoreMockRecorder) GetAllLikesOfUser(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllLikesOfUser", reflect.TypeOf((*MockStore)(nil).GetAllLikesOfUser), arg0, arg1)
+}
+
+// GetImage mocks base method.
+func (m *MockStore) GetImage(arg0 context.Context, arg1 db.GetImageParams) (db.Media, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetImage", arg0, arg1)
+	ret0, _ := ret[0].(db.Media)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetImage indicates an expected call of GetImage.
+func (mr *MockStoreMockRecorder) GetImage(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetImage", reflect.TypeOf((*MockStore)(nil).GetImage), arg0, arg1)
 }
 
 // GetListAllPost mocks base method.
@@ -420,6 +450,21 @@ func (m *MockStore) SearchUserByUsername(arg0 context.Context, arg1 db.SearchUse
 func (mr *MockStoreMockRecorder) SearchUserByUsername(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchUserByUsername", reflect.TypeOf((*MockStore)(nil).SearchUserByUsername), arg0, arg1)
+}
+
+// SetUserAvatar mocks base method.
+func (m *MockStore) SetUserAvatar(arg0 context.Context, arg1 db.SetUserAvatarParams) (db.Media, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetUserAvatar", arg0, arg1)
+	ret0, _ := ret[0].(db.Media)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SetUserAvatar indicates an expected call of SetUserAvatar.
+func (mr *MockStoreMockRecorder) SetUserAvatar(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetUserAvatar", reflect.TypeOf((*MockStore)(nil).SetUserAvatar), arg0, arg1)
 }
 
 // UnlikePost mocks base method.

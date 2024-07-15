@@ -1,19 +1,15 @@
 import {all, put, select, takeEvery} from 'redux-saga/effects';
 import {
+  IListAllAction,
   ITryRecallAction,
   PendingActionType,
 } from '@appRedux/actions/types/pendingActionType';
 import {pendingActionSelector} from '@appRedux/selectors/pendingSelector';
 import {logoutAction} from '@appRedux/actions/authAction';
-import {IUserAction} from '@appRedux/actions/types/userActionTypes';
-import {IPostAction} from '@appRedux/actions/types/postActionTypes';
-import {ILikeAction} from '@appRedux/actions/types/likeActionTypes';
-import {IAuthAction} from '@appRedux/actions/types/authActionTypes';
 import {pendingActions} from '@actions';
 
 function* tryRecallSaga(action: ITryRecallAction) {
-  const pendingAction: IUserAction | IPostAction | ILikeAction | IAuthAction =
-    yield select(pendingActionSelector);
+  const pendingAction: IListAllAction = yield select(pendingActionSelector);
   console.log('pendingAction', pendingAction);
   try {
     yield put(pendingAction);

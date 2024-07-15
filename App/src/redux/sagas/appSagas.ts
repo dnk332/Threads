@@ -15,7 +15,6 @@ function* startApplicationSaga({payload}: IStartAction) {
   const {callback} = payload;
   yield invoke({
     execution: function* execution() {
-      console.log('run startApplicationSaga');
       TimeAgo.SetUpTime();
       const domain: string | null = yield select(domainSelector);
       yield put(appActions.setDomainAction(domain ?? Setting.domain));

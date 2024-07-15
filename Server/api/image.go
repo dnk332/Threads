@@ -116,7 +116,7 @@ func (s *Server) uploadImage(c *gin.Context) {
 }
 
 type deleteObjectRequest struct {
-	Key string `form:"key" binding:"required"`
+	ImageName string `json:"image_name" binding:"required"`
 }
 
 func (s *Server) deleteImage(c *gin.Context) {
@@ -150,7 +150,7 @@ func (s *Server) deleteImage(c *gin.Context) {
 	// Create the input for the DeleteObject call
 	input := &s3.DeleteObjectInput{
 		Bucket: aws.String(s.config.AwsBucketName),
-		Key:    aws.String(req.Key),
+		Key:    aws.String(req.ImageName),
 	}
 
 	// Call the DeleteObject function
@@ -159,12 +159,12 @@ func (s *Server) deleteImage(c *gin.Context) {
 		var noKey *types.NoSuchKey
 		var apiErr *smithy.GenericAPIError
 		if errors.As(err, &noKey) {
-			log.Printf("Object %s does not exist in %s.\n", req.Key, s.config.AwsBucketName)
+			log.Printf("Object %s does not exist in %s.\n", req.ImageName, s.config.AwsBucketName)
 			err = noKey
 		} else if errors.As(err, &apiErr) {
 			switch apiErr.ErrorCode() {
 			case "AccessDenied":
-				log.Printf("Access denied: cannot delete object %s from %s.\n", req.Key, s.config.AwsBucketName)
+				log.Printf("Access denied: cannot delete object %s from %s.\n", req.ImageName, s.config.AwsBucketName)
 				err = nil
 			}
 		}
