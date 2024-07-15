@@ -1,4 +1,4 @@
-import * as actions from '@actionTypes/appActionTypes';
+import * as actions from '@appRedux/actions/types/appActionTypes';
 
 export interface IDeviceInfo {
   deviceId: string;

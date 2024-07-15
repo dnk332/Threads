@@ -5,13 +5,17 @@ import {domainSelector} from '@selectors';
 import {Setting} from '@configs';
 import * as TimeAgo from '@hooks/hookTime/SetUpTime';
 import _ from 'lodash';
-import {AppActionType, IStartAction} from '@actionTypes/appActionTypes';
-import {invoke} from '../sagaHelper/invokeSaga';
+import {
+  AppActionType,
+  IStartAction,
+} from '@appRedux/actions/types/appActionTypes';
+import {invoke} from '@appRedux/helper/invokeSaga';
 
 function* startApplicationSaga({payload}: IStartAction) {
   const {callback} = payload;
   yield invoke({
     execution: function* execution() {
+      console.log('run startApplicationSaga');
       TimeAgo.SetUpTime();
       const domain: string | null = yield select(domainSelector);
       yield put(appActions.setDomainAction(domain ?? Setting.domain));

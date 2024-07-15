@@ -76,10 +76,18 @@ func (s *Server) createUserProfile(ctx *gin.Context) {
 	// Create user profile
 	userProfile, err := s.store.CreateUserProfile(ctx, arg)
 	if err != nil {
+		log.Println("db.ErrorCode(err)", db.ErrorCode(err), db.ErrorField(err))
 		if db.ErrorCode(err) == db.UniqueViolation {
-			ctx.JSON(errorResponse(http.StatusConflict, errors.New("email already in use")))
-			log.Printf("[ERROR] Email already in use")
-			return
+			if db.ErrorField(err) == "user_profiles_email_key" {
+				ctx.JSON(errorResponse(http.StatusConflict, errors.New("email already in use")))
+				log.Printf("[ERROR] Email already in use")
+				return
+			}
+			if db.ErrorField(err) == "user_profiles_user_id_key" {
+				ctx.JSON(errorResponse(http.StatusConflict, errors.New("user already has a profile")))
+				log.Printf("[ERROR] User already has a profile")
+				return
+			}
 		}
 		ctx.JSON(errorResponse(http.StatusInternalServerError, err))
 		log.Printf("[ERROR] Failed to create user profile: %v", err)

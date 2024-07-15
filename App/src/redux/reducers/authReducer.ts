@@ -1,6 +1,6 @@
 import {IUser} from '@src/types/user';
 import _ from 'lodash';
-import * as actions from '@actionTypes/authActionTypes';
+import * as actions from '@appRedux/actions/types/authActionTypes';
 
 export interface IAuthState {
   token: string | null;

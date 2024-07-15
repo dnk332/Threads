@@ -1,12 +1,12 @@
 import {all, call, takeLatest} from 'redux-saga/effects';
 
 import api from '@src/services/apis';
-import {invoke} from '../sagaHelper/invokeSaga';
+import {invoke} from '@appRedux/helper/invokeSaga';
 import {
   ICreatePostAction,
   IGetListAllPostAction,
   PostActionType,
-} from '@actionTypes/postActionTypes';
+} from '@appRedux/actions/types/postActionTypes';
 import {
   ResponseCreatePostApi,
   ResponseGetListAllPostApi,
@@ -18,12 +18,12 @@ function* getListAllPostSaga({payload}: IGetListAllPostAction) {
   const {params, callback} = payload;
   yield invoke({
     execution: function* execution() {
-      const {data, success}: ResponseGetListAllPostApi = yield call(
+      const {data}: ResponseGetListAllPostApi = yield call(
         postApis.getListAllPostApi,
         params.pageId,
         params.pageSize,
       );
-      callback({success, data});
+      callback({success: true, data});
     },
     errorCallback: error => {
       callback({success: false, message: error.message});
@@ -35,12 +35,12 @@ function* createPostSaga({payload}: ICreatePostAction) {
   const {params, callback} = payload;
   yield invoke({
     execution: function* execution() {
-      const {data, success}: ResponseCreatePostApi = yield call(
+      const {data}: ResponseCreatePostApi = yield call(
         postApis.createPostApi,
         params.author_id,
         params.text_content,
       );
-      callback({success, data});
+      callback({success: true, data});
     },
     errorCallback: error => {
       callback({success: false, message: error.message});

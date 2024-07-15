@@ -4,7 +4,7 @@ import {RouteProp} from '@react-navigation/native';
 import AddNewAccountView from '@screens/Auth/AddNewAccount/view';
 import {NavigationStackParamList} from '@src/navigation/Stack';
 import {loginAction, registerAction} from '@appRedux/actions/authAction';
-import {Callback} from '@src/redux/actionTypes/actionTypeBase';
+import {Callback} from '@appRedux/actions/types/actionTypeBase';
 import {useActions} from '@src/hooks/useActions';
 
 type AddNewAccountScreenRouteProp = RouteProp<

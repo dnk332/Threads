@@ -1,5 +1,5 @@
-import * as postActions from '@actionTypes/postActionTypes';
-import * as likeActions from '@actionTypes/likeActionTypes';
+import * as postActions from '@appRedux/actions/types/postActionTypes';
+import * as likeActions from '@appRedux/actions/types/likeActionTypes';
 import {IPostType} from '@src/types/post';
 
 export interface IPostState {

@@ -79,8 +79,8 @@ const styles = AppStyleSheet.create({
     paddingVertical: 16,
   },
   lottieView: {
-    width: 35,
-    height: 35,
+    width: 20,
+    height: 20,
     backgroundColor: 'transparent',
   },
 });

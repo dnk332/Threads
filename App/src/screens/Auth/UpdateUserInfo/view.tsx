@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {forwardRef, useImperativeHandle} from 'react';
 import {useFormik} from 'formik';
 import {View} from 'react-native';
 
@@ -14,6 +14,7 @@ import {AppStyleSheet} from '@themes/responsive';
 import {colors} from '@themes/color';
 import {IUserProfile} from '@src/types/user';
 import {UPDATE_USER_PROFILE_FORM_SCHEME} from './validate';
+import ErrorCode from '@constants/errorCode';
 
 interface IUserProfileSubset
   extends Pick<IUserProfile, 'name' | 'email' | 'bio'> {}
@@ -22,15 +23,20 @@ interface UpdateUserInfoViewProps {
   onUpdateUserProfile: (data: IUserProfileSubset) => void;
 }
 
+export interface UpdateUserInfoViewRef {
+  onError: (code: string) => void;
+}
+
 const initValues: IUserProfileSubset = {
   name: '',
   email: '',
   bio: '',
 };
 
-const UpdateUserInfoView: React.FC<UpdateUserInfoViewProps> = ({
-  onUpdateUserProfile,
-}) => {
+const UpdateUserInfoView = forwardRef<
+  UpdateUserInfoViewRef,
+  UpdateUserInfoViewProps
+>(({onUpdateUserProfile}, ref) => {
   const formik = useFormik({
     initialValues: initValues,
     onSubmit: values => {
@@ -38,6 +44,15 @@ const UpdateUserInfoView: React.FC<UpdateUserInfoViewProps> = ({
     },
     validationSchema: UPDATE_USER_PROFILE_FORM_SCHEME,
   });
+
+  useImperativeHandle(ref, () => ({
+    onError: (code: string) => {
+      console.log('err code', code);
+      if (code === ErrorCode.CONFLICT) {
+        formik.setFieldError('email', 'This email is already taken.');
+      }
+    },
+  }));
 
   return (
     <AppContainer style={styles.container}>
@@ -90,7 +105,7 @@ const UpdateUserInfoView: React.FC<UpdateUserInfoViewProps> = ({
       </DissmissKeyboardView>
     </AppContainer>
   );
-};
+});
 
 export default UpdateUserInfoView;
 

@@ -4,7 +4,7 @@ import PostTextView from './PostText';
 import {IAuthor, IInteraction, IPostText} from '@src/types/post';
 import {useActions} from '@hooks/useActions';
 import {toggleLikePostAction} from '@appRedux/actions/likeAction';
-import {Callback} from '@actionTypes/actionTypeBase';
+import {Callback} from '@appRedux/actions/types/actionTypeBase';
 
 export interface PostTextProps {
   userData: IAuthor;

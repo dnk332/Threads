@@ -4,7 +4,7 @@ import {
   IListAllAction,
   ITryRecallAction,
   PendingActionType,
-} from '@actionTypes/pendingActionType';
+} from '@appRedux/actions/types/pendingActionType';
 
 export const tryRecallAction = (): ITryRecallAction => ({
   type: PendingActionType.TRY_RECALL,

@@ -13,12 +13,13 @@ import {
   LoadingInfoScreen,
   LoginScreen,
   NewPostScreen,
-  SplashScreen,
   SwitchAccountScreen,
   UpdateUserInfoScreen,
 } from '@screens/index';
 import {IUser} from '@src/types/user';
 import SCREEN_NAME from './ScreenName';
+import {useActions} from '@hooks/useActions';
+import {startAction} from '@appRedux/actions/appAction';
 
 export interface NavigationStackParamList {
   ROOT: undefined;
@@ -52,18 +53,34 @@ export type NavigationParams = {
 const Stack = createNativeStackNavigator<NavigationStackParamList>();
 
 function StackScreens() {
+  const actions = useActions({
+    startAction,
+  });
+  const HideSplash = async (): Promise<void> => {
+    await BootSplash.hide({fade: true});
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve();
+      }, 1000);
+    });
+  };
+
+  const onAppReady = () => {
+    actions.startAction(async response => {
+      await HideSplash();
+      if (response.success) {
+        Navigator.navigateAndSimpleReset(SCREEN_NAME.ROOT);
+        return;
+      }
+    });
+  };
   return (
-    <NavigationContainer
-      onReady={() => {
-        BootSplash.hide({fade: true});
-      }}
-      ref={Navigator.navigationRef}>
+    <NavigationContainer onReady={onAppReady} ref={Navigator.navigationRef}>
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
         }}
-        initialRouteName={SCREEN_NAME.SPLASH}>
-        <Stack.Screen name={SCREEN_NAME.SPLASH} component={SplashScreen} />
+        initialRouteName={SCREEN_NAME.LOGIN}>
         <Stack.Screen name={SCREEN_NAME.ROOT} component={RootScreen} />
         <Stack.Screen name={SCREEN_NAME.LOGIN} component={LoginScreen} />
         <Stack.Screen

@@ -11,7 +11,7 @@ import {useActions} from '@src/hooks/useActions';
 import {createPostAction} from '@appRedux/actions/postAction';
 import useSelectorShallow from '@src/hooks/useSelectorShallowEqual';
 import {currentAccountSelector} from '@src/redux/selectors';
-import {Callback} from '@src/redux/actionTypes/actionTypeBase';
+import {Callback} from '@appRedux/actions/types/actionTypeBase';
 import Navigator from '@navigators';
 
 type DetailsScreenRouteProp = RouteProp<BottomTabsStackParamList, 'NEW_POST'>;

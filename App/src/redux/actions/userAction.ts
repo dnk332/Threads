@@ -3,8 +3,8 @@ import {
   ISetUserProfileAction,
   IUpdateUserProfileAction,
   UserActionType,
-} from '@actionTypes/userActionTypes';
-import {Callback} from '@actionTypes/actionTypeBase';
+} from '@appRedux/actions/types/userActionTypes';
+import {Callback} from '@appRedux/actions/types/actionTypeBase';
 import {IUserProfile} from '@src/types/user';
 
 export const saveUserProfileAction = (

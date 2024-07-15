@@ -2,11 +2,11 @@ import {all, call, put, select, takeEvery} from 'redux-saga/effects';
 
 import {authActions, userActions} from '@actions';
 import api from '@src/services/apis';
-import {invoke} from '@appRedux/sagaHelper/invokeSaga';
+import {invoke} from '@appRedux/helper/invokeSaga';
 import Navigator from '@navigators';
 import {accessTokenSelector, refreshTokenSelector} from '@selectors';
 import SCREEN_NAME from '@src/navigation/ScreenName';
-import showAlert from '@appRedux/sagaHelper/handleErrorAlert';
+import showAlert from '@appRedux/helper/handleErrorAlert';
 
 import {
   AuthActionType,
@@ -15,7 +15,7 @@ import {
   ILogoutAction,
   IRefreshTokenAction,
   IRegisterAction,
-} from '@actionTypes/authActionTypes';
+} from '@appRedux/actions/types/authActionTypes';
 import {
   ResponseLoginApi,
   ResponseRefreshTokenApi,
@@ -24,7 +24,7 @@ import {
 } from '@src/services/apiTypes/authApiTypes';
 import {userModel} from '@src/models/user';
 import {refreshTokenAction} from '@appRedux/actions/authAction';
-import {Callback} from '@actionTypes/actionTypeBase';
+import {Callback} from '@appRedux/actions/types/actionTypeBase';
 
 const {authApis} = api;
 
@@ -33,24 +33,23 @@ function* loginSaga({payload}: ILoginAction) {
   yield invoke({
     execution: function* execution() {
       Navigator.navigateTo(SCREEN_NAME.LOADING_INFO);
-      const {data, success}: ResponseLoginApi = yield call(
+      const {data}: ResponseLoginApi = yield call(
         authApis.loginApi,
         params.username,
         params.password,
       );
-      if (success) {
-        yield put(
-          authActions.setTokenAction(
-            data.access_token,
-            data.access_token_expires_at,
-          ),
-        );
-        yield put(authActions.setRefreshTokenAction(data.refresh_token));
-        yield put(authActions.setAccountInfoAction(userModel(data.user)));
-        yield put(authActions.setListAccountInfoAction(userModel(data.user)));
-        Navigator.navigateAndSimpleReset(SCREEN_NAME.ROOT);
-      }
-      callback({data, success});
+
+      yield put(
+        authActions.setTokenAction(
+          data.access_token,
+          data.access_token_expires_at,
+        ),
+      );
+      yield put(authActions.setRefreshTokenAction(data.refresh_token));
+      yield put(authActions.setAccountInfoAction(userModel(data.user)));
+      yield put(authActions.setListAccountInfoAction(userModel(data.user)));
+      Navigator.navigateAndSimpleReset(SCREEN_NAME.ROOT);
+      callback({data, success: true});
     },
     errorCallback: function* rollback(error) {
       showAlert({
@@ -68,12 +67,12 @@ function* registerSaga({payload}: IRegisterAction) {
   const {params, callback} = payload;
   yield invoke({
     execution: function* execution() {
-      const {data, success}: ResponseRegisterApi = yield call(
+      const {data}: ResponseRegisterApi = yield call(
         authApis.registerApi,
         params.username,
         params.password,
       );
-      callback({data, success});
+      callback({data, success: true});
     },
     errorCallback: function* rollback(error) {
       showAlert({
@@ -108,13 +107,13 @@ function* authCheckSaga({payload}: IAuthCheckAction) {
   }
   // Check if access token is valid
   try {
-    const {data, success}: ResponseVerifyTokenApi = yield call(
+    const {data}: ResponseVerifyTokenApi = yield call(
       authApis.verifyAccessTokenApi,
       accessToken,
     );
 
     if (data.message === 'jwt_auth_valid_token') {
-      callback({success});
+      callback({success: true});
       return;
     }
   } catch (e) {
@@ -142,19 +141,19 @@ function* refreshTokenSaga({payload}: IRefreshTokenAction) {
   const {callback} = payload;
   const refreshToken = yield select(refreshTokenSelector);
   try {
-    const {data, success}: ResponseRefreshTokenApi = yield call(
+    const {data}: ResponseRefreshTokenApi = yield call(
       authApis.refreshAccessTokenApi,
       refreshToken,
     );
 
-    if (success && data.access_token) {
+    if (data.access_token) {
       yield put(
         authActions.setTokenAction(
           data.access_token,
           data.access_token_expires_at,
         ),
       );
-      callback({success, data});
+      callback({success: true, data});
     } else {
       callback({success: false});
       yield put(authActions.logoutAction());

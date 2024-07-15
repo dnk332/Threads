@@ -6,8 +6,8 @@ import {
   isNetworkError,
   isUnauthorizedError,
 } from './handleErrorMessage';
-import {Callback} from '@actionTypes/actionTypeBase';
-import {IListAllAction} from '@actionTypes/pendingActionType';
+import {Callback} from '@appRedux/actions/types/actionTypeBase';
+import {IListAllAction} from '@appRedux/actions/types/pendingActionType';
 
 const {
   showLoadingAction,
@@ -60,13 +60,15 @@ function* handleSagaError(
     return;
   }
 
-  if (retryCallAction! == null) {
+  if (retryCallAction) {
+    console.log('add pending action', retryCallAction);
     yield put(pendingActions.addPendingAction(retryCallAction));
   }
 
   while (isUnauthorizedError(error)) {
     const callback: Callback = ({success}) => {
-      if (success && retryCallAction! == null) {
+      if (success && retryCallAction) {
+        console.log('call pending action');
         put(pendingActions.tryRecallAction());
       }
     };

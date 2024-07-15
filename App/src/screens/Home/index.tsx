@@ -10,7 +10,7 @@ import {
 import Navigator from '@navigators';
 import SCREEN_NAME from '@src/navigation/ScreenName';
 import {getUserProfileAction} from '@appRedux/actions/userAction';
-import {Callback} from '@src/redux/actionTypes/actionTypeBase';
+import {Callback} from '@appRedux/actions/types/actionTypeBase';
 import useSelectorShallow from '@src/hooks/useSelectorShallowEqual';
 import {
   getListAllPostAction,
@@ -48,6 +48,7 @@ const HomeScreen: React.FC = () => {
 
   const getListPost = useCallback(
     (pageId: number = 1) => {
+      console.warn('call action getListPost');
       const callback: Callback = ({
         data,
         success,
@@ -72,12 +73,13 @@ const HomeScreen: React.FC = () => {
       return;
     }
     const pageNumber = Math.round(listAllPost.length / SIZE_PAGE);
-    if (listAllPost.length === pageNumber * SIZE_PAGE) {
+    if (pageNumber > 0 && listAllPost.length === pageNumber * SIZE_PAGE) {
       isLoading.current = true;
       setLoading(true);
       getListPost(pageNumber + 1);
     }
   };
+
   const onRefresh = useCallback(() => {
     if (isLoading.current === true) {
       return;

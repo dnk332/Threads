@@ -1,11 +1,11 @@
 import {all, call, takeLatest} from 'redux-saga/effects';
 
 import api from '@src/services/apis';
-import {invoke} from '../sagaHelper/invokeSaga';
+import {invoke} from '@appRedux/helper/invokeSaga';
 import {
   IToggleLikePostAction,
   LikeActionType,
-} from '@actionTypes/likeActionTypes';
+} from '@appRedux/actions/types/likeActionTypes';
 import {
   ResponseLikePostApi,
   ResponseUnlikePostApi,
@@ -19,12 +19,11 @@ function* toggleLikePostSaga(action: IToggleLikePostAction) {
 
   yield invoke({
     execution: function* execution() {
-      const {data, success}: ResponseLikePostApi | ResponseUnlikePostApi =
-        yield call(
-          status === 'like' ? likeApis.likePostApi : likeApis.unlikePostApi,
-          postId,
-        );
-      callback({success, data});
+      const {data}: ResponseLikePostApi | ResponseUnlikePostApi = yield call(
+        status === 'like' ? likeApis.likePostApi : likeApis.unlikePostApi,
+        postId,
+      );
+      callback({success: true, data});
     },
     errorCallback: error => {
       callback({success: false, message: error.message});

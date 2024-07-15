@@ -1,10 +1,10 @@
-import {Callback} from '@actionTypes/actionTypeBase';
+import {Callback} from '@appRedux/actions/types/actionTypeBase';
 import {
   ICreatePostAction,
   IGetListAllPostAction,
   ISaveListAllPostAction,
   PostActionType,
-} from '@actionTypes/postActionTypes';
+} from '@appRedux/actions/types/postActionTypes';
 import {IPostType} from '@src/types/post';
 
 export const getListAllPostAction = (

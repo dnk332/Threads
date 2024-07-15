@@ -1,8 +1,8 @@
-import * as requestActions from '@actionTypes/pendingActionType';
-import {IUserAction} from '@actionTypes/userActionTypes';
-import {IPostAction} from '@actionTypes/postActionTypes';
-import {ILikeAction} from '@actionTypes/likeActionTypes';
-import {IAuthAction} from '@actionTypes/authActionTypes';
+import * as requestActions from '@appRedux/actions/types/pendingActionType';
+import {IUserAction} from '@appRedux/actions/types/userActionTypes';
+import {IPostAction} from '@appRedux/actions/types/postActionTypes';
+import {ILikeAction} from '@appRedux/actions/types/likeActionTypes';
+import {IAuthAction} from '@appRedux/actions/types/authActionTypes';
 
 export interface IPendingState {
   pendingAction: IUserAction | IPostAction | ILikeAction | IAuthAction;
