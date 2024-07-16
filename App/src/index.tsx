@@ -8,7 +8,7 @@ import {PortalProvider} from '@gorhom/portal';
 
 import layout from '@themes/layout';
 import {PersistGate} from 'redux-persist/integration/react';
-import {store, persistor} from './redux/store';
+import {store, persistor} from '@store';
 
 const Index = () => {
   return (

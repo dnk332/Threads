@@ -1,6 +1,7 @@
 export const Setting = {
   name: 'Threads',
   appVersion: '0.0.1',
+  // domain: 'https://5349-113-185-79-60.ngrok-free.app/',
   domain: 'http://localhost:8082',
   defaultLanguage: 'en',
   languageSupport: [

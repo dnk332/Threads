@@ -5,6 +5,7 @@ import userSagas from './userSagas';
 import postSagas from './postSagas';
 import likeSagas from './likeSagas';
 import pendingSagas from './pendingSaga';
+import otherSagas from './otherSagas';
 
 export default function* rootSaga() {
   yield all([
@@ -14,5 +15,6 @@ export default function* rootSaga() {
     postSagas(),
     likeSagas(),
     pendingSagas(),
+    otherSagas(),
   ]);
 }

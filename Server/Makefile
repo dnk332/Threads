@@ -24,6 +24,8 @@ test:
 	go test -v -cover ./...
 server:
 	go run main.go
+ngrok:
+	ngrok http http://localhost:8082
 mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/briandnk/Threads/db/sqlc Store
 

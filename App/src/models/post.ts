@@ -1,5 +1,5 @@
 import {IAuthor, IMedia, IPost, IPostText, IPostType} from '@src/types/post';
-import {transformObjectKeysToCamelCase} from '@src/utils/transformText';
+import {transformObjectKeysToCamelCase} from '@utils/TransformText';
 
 export function postTextModel(post: any): IPostText & Record<string, any> {
   const transformed = transformObjectKeysToCamelCase(post);

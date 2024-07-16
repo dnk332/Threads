@@ -4,6 +4,7 @@ import {LikeActionType} from './likeActionTypes';
 import {PostActionType} from './postActionTypes';
 import {UserActionType} from './userActionTypes';
 import {PendingActionType} from '@appRedux/actions/types/pendingActionType';
+import {OtherActionType} from '@appRedux/actions/types/otherActionTypes';
 
 export type Callback = ({
   success,
@@ -23,7 +24,8 @@ export interface ActionBase<T> {
     | UserActionType
     | PostActionType
     | LikeActionType
-    | PendingActionType;
+    | PendingActionType
+    | OtherActionType;
   payload?: {
     params?: T;
     callback?: Callback;

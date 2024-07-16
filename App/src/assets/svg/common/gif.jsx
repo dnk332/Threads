@@ -2,7 +2,7 @@ import * as React from 'react';
 import Svg, {ClipPath, Defs, G, Path, Rect} from 'react-native-svg';
 import {memo} from 'react';
 import {moderateScale} from '@themes/responsive';
-import colors from '@themes/color';
+import {colors} from '@themes/color';
 
 const SvgComponent = ({size = 25, color = colors.black}) => (
   <Svg

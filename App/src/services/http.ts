@@ -106,6 +106,10 @@ class HTTP {
         config.params = params;
         response = await this.http[method](endPoint, config);
       } else {
+        if (params instanceof FormData) {
+          config.headers['Content-Type'] = 'multipart/form-data';
+          console.log('FormData params', params);
+        }
         response = await this.http[method](endPoint, params, config);
       }
 

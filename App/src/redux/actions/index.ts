@@ -6,6 +6,7 @@ import * as appActions from './appAction';
 import * as postActions from './postAction';
 import * as likeActions from './likeAction';
 import * as pendingActions from './pendingAction';
+import * as otherActions from './otherAction';
 
 export {
   actionTypes,
@@ -16,4 +17,5 @@ export {
   postActions,
   likeActions,
   pendingActions,
+  otherActions,
 };

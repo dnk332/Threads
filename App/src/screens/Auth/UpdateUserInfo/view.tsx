@@ -1,6 +1,6 @@
-import React, {forwardRef, useImperativeHandle} from 'react';
+import React, {forwardRef, useImperativeHandle, useState} from 'react';
 import {useFormik} from 'formik';
-import {View} from 'react-native';
+import {ActivityIndicator, Pressable, View} from 'react-native';
 
 import {
   AppButton,
@@ -15,28 +15,35 @@ import {colors} from '@themes/color';
 import {IUserProfile} from '@src/types/user';
 import {UPDATE_USER_PROFILE_FORM_SCHEME} from './validate';
 import ErrorCode from '@constants/errorCode';
+import SvgComponent from '@svg/index';
 
 interface IUserProfileSubset
-  extends Pick<IUserProfile, 'name' | 'email' | 'bio'> {}
+  extends Pick<IUserProfile, 'name' | 'email' | 'bio' | 'avatar_url'> {}
 
 interface UpdateUserInfoViewProps {
   onUpdateUserProfile: (data: IUserProfileSubset) => void;
+  onUploadImage: () => void;
 }
 
 export interface UpdateUserInfoViewRef {
   onError: (code: string) => void;
+  toggleLoading: () => void;
+  updateAvatar: (url: string) => void;
 }
 
 const initValues: IUserProfileSubset = {
   name: '',
   email: '',
   bio: '',
+  avatar_url: '',
 };
 
 const UpdateUserInfoView = forwardRef<
   UpdateUserInfoViewRef,
   UpdateUserInfoViewProps
->(({onUpdateUserProfile}, ref) => {
+>(({onUpdateUserProfile, onUploadImage}, ref) => {
+  const [loading, setLoading] = useState<boolean>(false);
+
   const formik = useFormik({
     initialValues: initValues,
     onSubmit: values => {
@@ -47,10 +54,15 @@ const UpdateUserInfoView = forwardRef<
 
   useImperativeHandle(ref, () => ({
     onError: (code: string) => {
-      console.log('err code', code);
       if (code === ErrorCode.CONFLICT) {
         formik.setFieldError('email', 'This email is already taken.');
       }
+    },
+    toggleLoading: () => {
+      setLoading(prevStatus => !prevStatus);
+    },
+    updateAvatar: (url: string) => {
+      formik.setFieldValue('avatar_url', url);
     },
   }));
 
@@ -61,6 +73,24 @@ const UpdateUserInfoView = forwardRef<
           Update User Profile
         </AppText>
         <View style={styles.inputField}>
+          <Pressable onPress={onUploadImage} style={styles.avatarContainer}>
+            {formik.values.avatar_url ? (
+              <AppImage
+                containerStyle={styles.avatar}
+                source={{uri: formik.values.avatar_url}}
+              />
+            ) : (
+              <View style={styles.emptyAvatar}>
+                <View style={styles.plus}>
+                  {loading ? (
+                    <ActivityIndicator color={colors.white} />
+                  ) : (
+                    <SvgComponent size={35} name={'EMPTY_IMAGE'} />
+                  )}
+                </View>
+              </View>
+            )}
+          </Pressable>
           <AppFormInput
             onChangeText={value =>
               formik.setFieldValue('name', value.toLowerCase())
@@ -136,4 +166,26 @@ const styles = AppStyleSheet.create({
     justifyContent: 'space-around',
     height: '100%',
   },
+  avatar: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'gray',
+  },
+  avatarContainer: {
+    marginVertical: 16,
+    backgroundColor: 'red',
+    width: 100,
+    height: 100,
+    borderRadius: 100,
+    alignSelf: 'center',
+    overflow: 'hidden',
+  },
+  emptyAvatar: {
+    backgroundColor: 'gray',
+    justifyContent: 'center',
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+  },
+  plus: {},
 });
