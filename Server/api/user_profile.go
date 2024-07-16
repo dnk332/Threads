@@ -18,7 +18,7 @@ type createUserProfileRequest struct {
 	Name      string `json:"name" binding:"required,lowercase,min=6"`
 	Email     string `json:"email" binding:"required,email"`
 	Bio       string `json:"bio"`
-	AvatarUrl string `json:"avatar_url"`
+	AvatarUrl string `json:"avatar_url" binding:"required"`
 }
 
 // createUserProfileResponse defines the structure for user profile responses
@@ -97,14 +97,14 @@ func (s *Server) createUserProfile(ctx *gin.Context) {
 		return
 	}
 
-	err = s.setUserAvatar(ctx, req.AvatarUrl, userProfile)
+	avatar, err := s.setUserAvatar(ctx, req.AvatarUrl, userProfile)
 	if err != nil {
 		ctx.JSON(errorResponse(http.StatusInternalServerError, err))
 		log.Printf("[ERROR] Failed to set user avatar: %v", err)
 		return
 	}
 
-	rsp := createUserProfileRes(userProfile, req.AvatarUrl)
+	rsp := createUserProfileRes(userProfile, avatar.Link)
 
 	ctx.JSON(http.StatusOK, rsp)
 }

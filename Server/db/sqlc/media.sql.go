@@ -10,82 +10,82 @@ import (
 )
 
 const addPostImage = `-- name: AddPostImage :one
-INSERT INTO Medias (content, type, object_type, object_id)
-VALUES ($1, 'image', 'post', $2) RETURNING id, content, type, order_column, created_at, object_type, object_id
+INSERT INTO Medias (link, type, reference_object, reference_object_id)
+VALUES ($1, 'image', 'post', $2) RETURNING id, link, type, order_column, created_at, reference_object, reference_object_id
 `
 
 type AddPostImageParams struct {
-	Content  string `json:"content"`
-	ObjectID int64  `json:"object_id"`
+	Link              string `json:"link"`
+	ReferenceObjectID int64  `json:"reference_object_id"`
 }
 
 // Set user avatar
 func (q *Queries) AddPostImage(ctx context.Context, arg AddPostImageParams) (Media, error) {
-	row := q.db.QueryRow(ctx, addPostImage, arg.Content, arg.ObjectID)
+	row := q.db.QueryRow(ctx, addPostImage, arg.Link, arg.ReferenceObjectID)
 	var i Media
 	err := row.Scan(
 		&i.ID,
-		&i.Content,
+		&i.Link,
 		&i.Type,
 		&i.OrderColumn,
 		&i.CreatedAt,
-		&i.ObjectType,
-		&i.ObjectID,
+		&i.ReferenceObject,
+		&i.ReferenceObjectID,
 	)
 	return i, err
 }
 
 const getImage = `-- name: GetImage :one
-SELECT id, content, type, order_column, created_at, object_type, object_id
+SELECT id, link, type, order_column, created_at, reference_object, reference_object_id
 FROM Medias
-WHERE object_type = $1
-  AND object_id = $2
+WHERE reference_object = $1
+  AND reference_object_id = $2
   AND type = 'image'
 `
 
 type GetImageParams struct {
-	ObjectType string `json:"object_type"`
-	ObjectID   int64  `json:"object_id"`
+	ReferenceObject   string `json:"reference_object"`
+	ReferenceObjectID int64  `json:"reference_object_id"`
 }
 
 // Get image
 func (q *Queries) GetImage(ctx context.Context, arg GetImageParams) (Media, error) {
-	row := q.db.QueryRow(ctx, getImage, arg.ObjectType, arg.ObjectID)
+	row := q.db.QueryRow(ctx, getImage, arg.ReferenceObject, arg.ReferenceObjectID)
 	var i Media
 	err := row.Scan(
 		&i.ID,
-		&i.Content,
+		&i.Link,
 		&i.Type,
 		&i.OrderColumn,
 		&i.CreatedAt,
-		&i.ObjectType,
-		&i.ObjectID,
+		&i.ReferenceObject,
+		&i.ReferenceObjectID,
 	)
 	return i, err
 }
 
 const setUserAvatar = `-- name: SetUserAvatar :one
-INSERT INTO Medias (content, type, object_type, object_id)
-VALUES ($1, 'image', 'user_profile', $2) RETURNING id, content, type, order_column, created_at, object_type, object_id
+INSERT INTO Medias (link, type, reference_object, reference_object_id)
+VALUES ($1, 'image', 'user_profile', $2) RETURNING id, link, type, order_column, created_at, reference_object, reference_object_id
 `
 
 type SetUserAvatarParams struct {
-	Content  string `json:"content"`
-	ObjectID int64  `json:"object_id"`
+	Link              string `json:"link"`
+	ReferenceObjectID int64  `json:"reference_object_id"`
 }
 
 // Set user avatar
 func (q *Queries) SetUserAvatar(ctx context.Context, arg SetUserAvatarParams) (Media, error) {
-	row := q.db.QueryRow(ctx, setUserAvatar, arg.Content, arg.ObjectID)
+	row := q.db.QueryRow(ctx, setUserAvatar, arg.Link, arg.ReferenceObjectID)
 	var i Media
 	err := row.Scan(
 		&i.ID,
-		&i.Content,
+		&i.Link,
 		&i.Type,
 		&i.OrderColumn,
 		&i.CreatedAt,
-		&i.ObjectType,
-		&i.ObjectID,
+		&i.ReferenceObject,
+		&i.ReferenceObjectID,
 	)
 	return i, err
 }

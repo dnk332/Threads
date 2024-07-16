@@ -2,6 +2,7 @@ package api
 
 import (
 	"bytes"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -22,10 +23,26 @@ import (
 
 func randomUserProfile(user db.User) (userProfile db.UserProfile) {
 	userProfile = db.UserProfile{
-		UserID: user.ID,
-		Name:   utils.RandomString(7),
-		Email:  utils.RandomEmail(),
-		Bio:    utils.RandomString(10),
+		ID:        utils.RandomInt(1, 1000),
+		UserID:    user.ID,
+		Name:      utils.RandomString(7),
+		Email:     utils.RandomEmail(),
+		Bio:       utils.RandomString(10),
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+	return
+}
+
+func randomImage(userProfile db.UserProfile) (image db.Media) {
+	image = db.Media{
+		ID:                utils.RandomInt(1, 1000),
+		Link:              utils.RandomString(20),
+		ReferenceObjectID: userProfile.ID,
+		Type:              "image",
+		OrderColumn:       0,
+		ReferenceObject:   "user_profile",
+		CreatedAt:         time.Now(),
 	}
 	return
 }
@@ -62,6 +79,7 @@ func requireBodyMatchGetUserProfile(t *testing.T, body *bytes.Buffer, userProfil
 func TestCreateUserProfileAPI(t *testing.T) {
 	user, _ := randomUser(t)
 	userProfile := randomUserProfile(user)
+	avatar := randomImage(userProfile)
 
 	testCases := []struct {
 		name          string
@@ -73,10 +91,11 @@ func TestCreateUserProfileAPI(t *testing.T) {
 		{
 			name: "OK",
 			body: gin.H{
-				"user_id": userProfile.UserID,
-				"name":    userProfile.Name,
-				"email":   userProfile.Email,
-				"bio":     userProfile.Bio,
+				"user_id":    userProfile.UserID,
+				"name":       userProfile.Name,
+				"email":      userProfile.Email,
+				"bio":        userProfile.Bio,
+				"avatar_url": avatar.Link,
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
@@ -88,14 +107,13 @@ func TestCreateUserProfileAPI(t *testing.T) {
 					Return(user, nil)
 
 				argSetAvatar := db.SetUserAvatarParams{
-					ObjectID: userProfile.UserID,
-					Content:  utils.RandomString(10),
+					Link:              avatar.Link,
+					ReferenceObjectID: avatar.ReferenceObjectID,
 				}
-				//TODO: Update test cases
 				store.EXPECT().
 					SetUserAvatar(gomock.Any(), gomock.Eq(argSetAvatar)).
 					Times(1).
-					Return(nil)
+					Return(avatar, nil)
 
 				arg := db.CreateUserProfileParams{
 					UserID: userProfile.UserID,
@@ -209,39 +227,40 @@ func TestCreateUserProfileAPI(t *testing.T) {
 				require.Equal(t, http.StatusUnauthorized, recorder.Code)
 			},
 		},
-		//{
-		//	name: "DuplicateUserProfile",
-		//	body: gin.H{
-		//		"user_id": userProfile.UserID,
-		//		"name":    userProfile.Name,
-		//		"email":   userProfile.Email,
-		//		"bio":     userProfile.Bio,
-		//	},
-		//	setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
-		//		addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
-		//	},
-		//	buildStubs: func(store *mockdb.MockStore) {
-		//		store.EXPECT().
-		//			GetUserById(gomock.Any(), user.ID).
-		//			Times(1).
-		//			Return(user, nil)
-		//
-		//		arg := db.CreateUserProfileParams{
-		//			UserID: userProfile.UserID,
-		//			Name:   userProfile.Name,
-		//			Email:  userProfile.Email,
-		//			Bio:    userProfile.Bio,
-		//		}
-		//		store.EXPECT().
-		//			CreateUserProfile(gomock.Any(), gomock.Eq(arg)).
-		//			Times(1).
-		//			Return(db.UserProfile{}, db.ErrUniqueViolation)
-		//
-		//	},
-		//	checkResponse: func(recorder *httptest.ResponseRecorder) {
-		//		require.Equal(t, http.StatusConflict, recorder.Code)
-		//	},
-		//},
+		{
+			name: "DuplicateUserProfile",
+			body: gin.H{
+				"user_id":    userProfile.UserID,
+				"name":       userProfile.Name,
+				"email":      userProfile.Email,
+				"bio":        userProfile.Bio,
+				"avatar_url": avatar.Link,
+			},
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
+			},
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					GetUserById(gomock.Any(), user.ID).
+					Times(1).
+					Return(user, nil)
+
+				arg := db.CreateUserProfileParams{
+					UserID: userProfile.UserID,
+					Name:   userProfile.Name,
+					Email:  userProfile.Email,
+					Bio:    userProfile.Bio,
+				}
+				store.EXPECT().
+					CreateUserProfile(gomock.Any(), gomock.Eq(arg)).
+					Times(1).
+					Return(db.UserProfile{}, sql.ErrConnDone)
+
+			},
+			checkResponse: func(recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusInternalServerError, recorder.Code)
+			},
+		},
 	}
 
 	for i := range testCases {
@@ -275,6 +294,7 @@ func TestCreateUserProfileAPI(t *testing.T) {
 func TestGetUserProfileAPI(t *testing.T) {
 	user, _ := randomUser(t)
 	userProfile := randomUserProfile(user)
+	avatar := randomImage(userProfile)
 
 	testCases := []struct {
 		name          string
@@ -296,14 +316,14 @@ func TestGetUserProfileAPI(t *testing.T) {
 					Return(user, nil)
 				//TODO: Update test cases
 				argGetAvatar := db.GetImageParams{
-					ObjectID:   userProfile.UserID,
-					ObjectType: "user_profile",
+					ReferenceObject:   "user_profile",
+					ReferenceObjectID: userProfile.ID,
 				}
 
 				store.EXPECT().
 					GetImage(gomock.Any(), gomock.Eq(argGetAvatar)).
 					Times(1).
-					Return(utils.RandomString(10), nil)
+					Return(avatar, nil)
 
 				store.EXPECT().
 					GetUserProfileById(gomock.Any(), userProfile.UserID).

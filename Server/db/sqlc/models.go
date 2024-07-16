@@ -69,13 +69,13 @@ type Like struct {
 }
 
 type Media struct {
-	ID          int64      `json:"id"`
-	Content     string     `json:"content"`
-	Type        MediaTypes `json:"type"`
-	OrderColumn int32      `json:"order_column"`
-	CreatedAt   time.Time  `json:"created_at"`
-	ObjectType  string     `json:"object_type"`
-	ObjectID    int64      `json:"object_id"`
+	ID                int64      `json:"id"`
+	Link              string     `json:"link"`
+	Type              MediaTypes `json:"type"`
+	OrderColumn       int32      `json:"order_column"`
+	CreatedAt         time.Time  `json:"created_at"`
+	ReferenceObject   string     `json:"reference_object"`
+	ReferenceObjectID int64      `json:"reference_object_id"`
 }
 
 type Post struct {

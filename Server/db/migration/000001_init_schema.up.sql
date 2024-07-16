@@ -48,28 +48,32 @@ CREATE TABLE likes
 );
 
 -- Function to check if object_id exists in posts or user_profiles
-CREATE OR REPLACE FUNCTION validate_object_id(object_type varchar, object_id bigint) RETURNS BOOLEAN AS $$
+CREATE
+OR REPLACE FUNCTION validate_object_id(reference_object varchar, reference_object_id bigint) RETURNS BOOLEAN AS $$
 BEGIN
-    IF object_type = 'post' THEN
-        RETURN EXISTS (SELECT 1 FROM posts WHERE id = object_id);
-    ELSIF object_type = 'user_profile' THEN
-        RETURN EXISTS (SELECT 1 FROM user_profiles WHERE id = object_id);
+    IF
+reference_object = 'post' THEN
+        RETURN EXISTS (SELECT 1 FROM posts WHERE id = reference_object_id);
+    ELSIF
+reference_object = 'user_profile' THEN
+        RETURN EXISTS (SELECT 1 FROM user_profiles WHERE id = reference_object_id);
 ELSE
         RETURN FALSE;
 END IF;
 END;
-$$ LANGUAGE plpgsql;
+$$
+LANGUAGE plpgsql;
 
 CREATE TABLE medias
 (
-    id           bigserial PRIMARY KEY,
-    content      varchar     NOT NULL,
-    type         media_types NOT NULL,
-    order_column int         NOT NULL DEFAULT 0,
-    created_at   timestamptz NOT NULL DEFAULT now(),
-    object_type  varchar(50) NOT NULL CHECK (object_type IN ('post', 'user_profile')),
-    object_id    bigint      NOT NULL,
-    CONSTRAINT check_object_reference CHECK (validate_object_id(object_type, object_id))
+    id                  bigserial PRIMARY KEY,
+    link                varchar     NOT NULL,
+    type                media_types NOT NULL,
+    order_column        int         NOT NULL DEFAULT 0,
+    created_at          timestamptz NOT NULL DEFAULT now(),
+    reference_object    varchar(50) NOT NULL CHECK (reference_object IN ('post', 'user_profile')),
+    reference_object_id bigint      NOT NULL,
+    CONSTRAINT check_object_reference CHECK (validate_object_id(reference_object, reference_object_id))
 );
 
 CREATE TABLE reposts
