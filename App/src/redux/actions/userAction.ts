@@ -35,6 +35,7 @@ export const updateUserProfileAction = (
   name: string,
   email: string,
   bio: string,
+  avatar_url: string,
   callback: Callback,
 ): IUpdateUserProfileAction => ({
   type: UserActionType.UPDATE_PROFILE,
@@ -43,6 +44,7 @@ export const updateUserProfileAction = (
       name,
       email,
       bio,
+      avatar_url,
     },
     callback,
   },

@@ -17,6 +17,7 @@ export interface IAuthor {
   userName: string;
   name: string;
   email: string;
+  authorAvatar: string;
 }
 
 export interface IPostText {

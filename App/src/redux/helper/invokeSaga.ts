@@ -8,6 +8,7 @@ import {
 } from './handleErrorMessage';
 import {Callback} from '@appRedux/actions/types/actionTypeBase';
 import {IListAllAction} from '@appRedux/actions/types/pendingActionType';
+import {isFunction} from 'formik';
 
 const {
   showLoadingAction,
@@ -65,7 +66,8 @@ function* handleSagaError(
     yield put(pendingActions.addPendingAction(retryCallAction));
   }
 
-  while (isUnauthorizedError(error)) {
+  if (isUnauthorizedError(error)) {
+    console.log('retryCallAction', retryCallAction);
     const callback: Callback = ({success}) => {
       if (success && retryCallAction) {
         console.log('call pending action');
@@ -80,7 +82,7 @@ function* handleSagaError(
     ? errorMessage.message[0]
     : errorMessage.message;
 
-  if (errorCallback) {
-    yield* errorCallback(message);
+  if (isFunction(errorCallback)) {
+    yield errorCallback(message);
   }
 }

@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/base64"
 	"errors"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -14,20 +15,23 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
+	"time"
 )
 
 type uploadImageResponse struct {
-	Url       string  `json:"url"`
-	ImageName string  `json:"image_name"`
-	ImageType string  `json:"image_type"`
-	Size      float64 `json:"size"`
+	Uri       string    `json:"uri"`
+	ImageName string    `json:"image_name"`
+	ImageType string    `json:"image_type"`
+	Size      float64   `json:"size"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 func (s *Server) uploadImage(c *gin.Context) {
-	file, err := c.FormFile("url")
-	if err != nil {
-		log.Printf("[ERROR] Failed to get image: %v", err)
-		c.JSON(errorResponse(http.StatusInternalServerError, errors.New("failed to get image")))
+	base64Data := c.PostForm("file") // Assuming base64 data is sent under the key "base64Data"
+	if base64Data == "" {
+		log.Printf("[ERROR] Base64 data is required")
+		c.JSON(errorResponse(http.StatusBadRequest, errors.New("base64 data is required")))
 		return
 	}
 
@@ -49,13 +53,14 @@ func (s *Server) uploadImage(c *gin.Context) {
 		return
 	}
 
-	fileContent, err := file.Open()
+	// Decode base64 data
+	base64Decoded, err := base64.StdEncoding.DecodeString(base64Data)
 	if err != nil {
-		log.Printf("[ERROR] Failed to open image: %v", err)
-		c.JSON(errorResponse(http.StatusInternalServerError, errors.New("failed to open image")))
+		log.Printf("[ERROR] Failed to decode base64 data: %v", err)
+		c.JSON(errorResponse(http.StatusBadRequest, errors.New("failed to decode base64 data")))
+
 		return
 	}
-	defer fileContent.Close()
 
 	awsConfig, err := config.LoadDefaultConfig(c,
 		config.WithRegion(s.config.AwsRegion),
@@ -79,7 +84,7 @@ func (s *Server) uploadImage(c *gin.Context) {
 	uploadInput := &s3.PutObjectInput{
 		Bucket: aws.String(s.config.AwsBucketName),
 		Key:    aws.String(imageName),
-		Body:   fileContent,
+		Body:   strings.NewReader(string(base64Decoded)),
 	}
 
 	result, err := uploader.Upload(c, uploadInput)
@@ -103,13 +108,14 @@ func (s *Server) uploadImage(c *gin.Context) {
 
 	//Create image response
 	response := uploadImageResponse{
-		Url:       result.Location,
+		Uri:       result.Location,
 		ImageName: imageName,
 		ImageType: imageType,
 		Size:      float64(imageSize) / 1024.0,
+		CreatedAt: time.Now(),
 	}
 
-	c.JSON(http.StatusOK, gin.H{"response": response})
+	c.JSON(http.StatusOK, response)
 }
 
 type deleteObjectRequest struct {

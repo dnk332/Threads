@@ -74,7 +74,7 @@ const UpdateUserInfoView = forwardRef<
         </AppText>
         <View style={styles.inputField}>
           <Pressable onPress={onUploadImage} style={styles.avatarContainer}>
-            {formik.values.avatar_url ? (
+            {formik.values.avatar_url && !loading ? (
               <AppImage
                 containerStyle={styles.avatar}
                 source={{uri: formik.values.avatar_url}}

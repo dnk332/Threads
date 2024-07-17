@@ -8,18 +8,23 @@ import {
   View,
 } from 'react-native';
 
-import {AppContainer, AppText, AppInput, Avatar} from '@components';
+import {AppContainer, AppInput, AppText, Avatar} from '@components';
 import {AppStyleSheet} from '@themes/responsive';
 import layout from '@themes/layout';
 import {colors} from '@themes/color';
 import SvgComponent from '@svg/index';
 import HandelKeyboard from '@utils/KeyboardInfo';
+import {IUserProfile} from '@src/types/user';
 
 interface NewPostScreenProps {
   createPost: (textContent: string) => void;
+  userInfo: IUserProfile;
 }
 
-const NewPostScreenView: React.FC<NewPostScreenProps> = ({createPost}) => {
+const NewPostScreenView: React.FC<NewPostScreenProps> = ({
+  createPost,
+  userInfo,
+}) => {
   const inputAccessoryViewID = 'postThreadInput';
   const {heightKB} = HandelKeyboard();
   const [contentViewHeight, setContentViewHeight] = useState<number>(0);
@@ -40,7 +45,7 @@ const NewPostScreenView: React.FC<NewPostScreenProps> = ({createPost}) => {
           style={[layout.row, layout.fill]}>
           <Avatar
             source={{
-              uri: 'https://images.pexels.com/photos/61100/pexels-photo-61100.jpeg',
+              uri: userInfo.avatar_url,
             }}
           />
           <View>
@@ -54,7 +59,7 @@ const NewPostScreenView: React.FC<NewPostScreenProps> = ({createPost}) => {
               <View style={[styles.line]} />
               <Avatar
                 source={{
-                  uri: 'https://images.pexels.com/photos/61100/pexels-photo-61100.jpeg',
+                  uri: userInfo.avatar_url,
                 }}
                 imgStyle={styles.tagImg}
               />
@@ -76,7 +81,7 @@ const NewPostScreenView: React.FC<NewPostScreenProps> = ({createPost}) => {
                   styles.header,
                 ]}>
                 <AppText fontSize={16} fontWeight={600}>
-                  Brian
+                  {userInfo.name}
                 </AppText>
                 <View style={styles.btnContainer}>
                   {thread !== '' && (

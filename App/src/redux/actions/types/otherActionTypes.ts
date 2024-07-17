@@ -1,5 +1,5 @@
 import {ActionBase} from './actionTypeBase';
-import {IImage} from '@src/types/other';
+import {IImageFile} from '@src/types/other';
 
 export const OtherActionType = {
   UPLOAD_IMAGE: 'OTHER/UPLOAD_IMAGE',
@@ -8,7 +8,7 @@ export const OtherActionType = {
 export type OtherActionType =
   (typeof OtherActionType)[keyof typeof OtherActionType];
 
-export interface IUploadImageAction extends ActionBase<IImage> {
+export interface IUploadImageAction extends ActionBase<IImageFile> {
   type: typeof OtherActionType.UPLOAD_IMAGE;
 }
 

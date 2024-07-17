@@ -121,7 +121,7 @@ const Header = forwardRef<number | null, any>(
           <Animated.View style={contentStyleAnimated}>
             <Avatar
               source={{
-                uri: 'https://images.pexels.com/photos/61100/pexels-photo-61100.jpeg',
+                uri: props.currentUser.avatar_url,
               }}
               imgStyle={styles.avatar}
             />

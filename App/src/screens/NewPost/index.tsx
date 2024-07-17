@@ -10,7 +10,10 @@ import {BottomTabsStackParamList} from '@src/screens/Root';
 import {useActions} from '@src/hooks/useActions';
 import {createPostAction} from '@appRedux/actions/postAction';
 import useSelectorShallow from '@src/hooks/useSelectorShallowEqual';
-import {currentAccountSelector} from '@src/redux/selectors';
+import {
+  currentAccountSelector,
+  currentUserProfileSelector,
+} from '@src/redux/selectors';
 import {Callback} from '@appRedux/actions/types/actionTypeBase';
 import Navigator from '@navigators';
 
@@ -22,7 +25,8 @@ export type NewPostScreenProps = {
 };
 
 const NewPostScreen = () => {
-  const userInfo = useSelectorShallow(currentAccountSelector);
+  const accountInfo = useSelectorShallow(currentAccountSelector);
+  const userInfo = useSelectorShallow(currentUserProfileSelector);
   const actions = useActions({
     createPostAction,
   });
@@ -32,9 +36,9 @@ const NewPostScreen = () => {
         Navigator.goBack();
       }
     };
-    actions.createPostAction(userInfo.user_id, textContent, callback);
+    actions.createPostAction(accountInfo.user_id, textContent, callback);
   };
-  return <NewPostScreenView createPost={createPost} />;
+  return <NewPostScreenView createPost={createPost} userInfo={userInfo} />;
 };
 
 export default NewPostScreen;

@@ -14,6 +14,7 @@ export const updateUserInfoApi = (
   name: string,
   email: string,
   bio: string,
+  avatar_url: string,
 ): Promise<ResponseUpdateUserProfileApi> => {
   return http.post('/user-profiles', {
     params: {
@@ -21,6 +22,7 @@ export const updateUserInfoApi = (
       name,
       email,
       bio,
+      avatar_url,
     },
   });
 };

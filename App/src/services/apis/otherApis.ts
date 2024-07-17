@@ -1,15 +1,14 @@
 import {ResponseUploadImageApi} from '@apiTypes/otherApiTypes';
 import http from '../http';
-import {IImage} from '@src/types/other';
+import {IImageFile} from '@src/types/other';
 
 export const uploadImageApi = (
-  props: IImage,
+  props: IImageFile,
 ): Promise<ResponseUploadImageApi> => {
   const formData = new FormData();
-  formData.append('url', props.url);
-  formData.append('name', props.name);
+  formData.append('file', props.uri);
   formData.append('type', props.type);
-  formData.append('type', props.size.toString());
+  formData.append('name', props.name);
   return http.post('uploads', {
     params: formData,
   });

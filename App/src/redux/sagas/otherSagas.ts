@@ -12,7 +12,6 @@ const {otherApis} = api;
 
 function* uploadImageSaga(action: IUploadImageAction) {
   const {params, callback} = action.payload;
-  console.log('uploadImageSaga started', action);
 
   yield invoke({
     execution: function* execution() {

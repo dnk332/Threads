@@ -39,6 +39,8 @@ type ImagePickerCallback = (
     width: number;
     height: number;
     size: number;
+    sourceURL: string;
+    data: string;
   }> | null,
 ) => void;
 
@@ -51,6 +53,7 @@ export const openImagePicker = (
       mediaType: 'photo',
       multiple: false,
       cropping: true,
+      includeBase64: true,
       ...configOptions,
       ...options,
     })
@@ -64,6 +67,8 @@ export const openImagePicker = (
               width: images.width,
               height: images.height,
               size: images.size,
+              sourceURL: images.sourceURL,
+              data: images.data,
             },
           ]);
         } else if (Array.isArray(images) && images.length > 0) {
@@ -74,6 +79,8 @@ export const openImagePicker = (
             width: i.width,
             height: i.height,
             size: i.size,
+            sourceURL: i.sourceURL,
+            data: i.data,
           }));
           callback(null, list);
         } else {

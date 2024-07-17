@@ -36,11 +36,9 @@ const HomeScreen: React.FC = () => {
   const isLoading = useRef<boolean>(false);
 
   const getUserProfile = useCallback(() => {
-    const callback: Callback = ({success}) => {
+    const callback: Callback = ({success, message}) => {
       if (!success) {
-        Navigator.navigateTo(SCREEN_NAME.UPDATE_USER_INFO, {
-          currentAccount,
-        });
+        Navigator.navigateTo(SCREEN_NAME.UPDATE_USER_INFO);
       }
     };
     actions.getUserProfileAction(currentAccount.user_id, callback);
@@ -48,7 +46,6 @@ const HomeScreen: React.FC = () => {
 
   const getListPost = useCallback(
     (pageId: number = 1) => {
-      console.warn('call action getListPost');
       const callback: Callback = ({
         data,
         success,

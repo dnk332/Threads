@@ -60,6 +60,7 @@ const PostText = ({
   likeStatus,
 }: PostTextViewProps) => {
   const sheetRef = useRef<any>();
+
   return (
     <Fragment>
       <View>
@@ -73,7 +74,7 @@ const PostText = ({
           ]}>
           <Avatar
             source={{
-              uri: '',
+              uri: userData.authorAvatar,
             }}
           />
           <View style={styles.contentContainer}>

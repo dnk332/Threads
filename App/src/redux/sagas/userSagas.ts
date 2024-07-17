@@ -45,6 +45,7 @@ function* updateUserProfileSaga({payload}: IUpdateUserProfileAction) {
         params.name,
         params.email,
         params.bio,
+        params.avatar_url,
       );
       callback({data, success: true});
       yield put(userActions.saveUserProfileAction(userProfileModel(data)));

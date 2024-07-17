@@ -1,5 +1,4 @@
 import React, {useRef} from 'react';
-import {Alert} from 'react-native';
 
 import UpdateUserInfoView, {
   UpdateUserInfoViewRef,
@@ -14,23 +13,28 @@ import {NavigationStackParamList} from '@src/navigation/Stack';
 import {useActions} from '@src/hooks/useActions';
 import {openImagePicker} from '@utils/ImagePicker';
 import {uploadImageAction} from '@appRedux/actions/otherAction';
-import {IImage} from '@src/types/other';
+import {IImageFile} from '@src/types/other';
 
 interface IUserProfileSubset
   extends Pick<IUserProfile, 'name' | 'email' | 'bio'> {}
 
-type NewPostScreenProps = NativeStackScreenProps<
+type UpdateUserInfoScreenProps = NativeStackScreenProps<
   NavigationStackParamList,
   typeof SCREEN_NAME.UPDATE_USER_INFO
 >;
-const UpdateUserInfo: React.FC<NewPostScreenProps> = ({}) => {
+const UpdateUserInfo: React.FC<UpdateUserInfoScreenProps> = ({}) => {
   const actions = useActions({
     updateUserProfileAction,
     uploadImageAction,
   });
   const formRef = useRef<UpdateUserInfoViewRef>();
 
-  const onUpdateUserProfile = ({name, email, bio}: IUserProfileSubset) => {
+  const onUpdateUserProfile = ({
+    name,
+    email,
+    bio,
+    avatar_url,
+  }: IUserProfileSubset) => {
     const callback: Callback = ({success, code}) => {
       if (success) {
         Navigator.goBack();
@@ -38,40 +42,42 @@ const UpdateUserInfo: React.FC<NewPostScreenProps> = ({}) => {
         formRef.current.onError(code);
       }
     };
-    actions.updateUserProfileAction(name, email, bio, callback);
+    actions.updateUserProfileAction(name, email, bio, avatar_url, callback);
   };
 
   const onUploadImage = () => {
-    formRef.current.toggleLoading();
-    openImagePicker((error, image) => {
-      if (error) {
-        console.log('onUploadImage error', error);
-        Alert.alert('Error', 'Have error when upload image');
-        return;
-      }
-      console.log('onUploadImage data', image);
-      const callback: Callback = ({
-        success,
-        data,
-      }: {
-        success: boolean;
-        data: IImage;
-      }) => {
-        if (success) {
+    openImagePicker(
+      (error, image) => {
+        formRef.current.toggleLoading();
+        if (error) {
           formRef.current.toggleLoading();
-          formRef.current.updateAvatar(data.url);
+          return;
         }
-      };
-      actions.uploadImageAction(
-        {
-          url: image[0].uri,
-          name: image[0].name,
-          size: image[0].size,
-          type: image[0].type,
-        },
-        callback,
-      );
-    });
+        const callback: Callback = ({
+          success,
+          data,
+        }: {
+          success: boolean;
+          data: IImageFile;
+        }) => {
+          if (success) {
+            formRef.current.updateAvatar(data.uri);
+            formRef.current.toggleLoading();
+          }
+        };
+        actions.uploadImageAction(
+          {
+            uri: image[0].data,
+            name: image[0].name,
+            type: image[0].type,
+          },
+          callback,
+        );
+      },
+      {
+        multiple: false,
+      },
+    );
   };
 
   return (

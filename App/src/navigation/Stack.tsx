@@ -31,7 +31,7 @@ export interface NavigationStackParamList {
   SPLASH: undefined;
   LOADING_INFO: undefined;
   SETTINGS: undefined;
-  UPDATE_USER_INFO: {currentAccount: IUser};
+  UPDATE_USER_INFO: undefined;
 
   [key: string]:
     | undefined
