@@ -9,7 +9,7 @@ import LoginScreen from '@src/screens/Auth/Login';
 import SwitchAccountScreen from '@src/screens/Auth/SwitchAccount';
 import AddNewAccountScreen from '@src/screens/Auth/AddNewAccount';
 import UpdateUserInfoScreen from '@src/screens/Auth/UpdateUserInfo';
-import LoadingInfoScreen from '@src/screens/Auth/LoadingInfo';
+import LoadingInfoScreen from '@src/screens/LoadingInfo';
 import SettingsScreen from '@src/screens/Settings';
 
 export {

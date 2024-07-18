@@ -1,7 +1,10 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {RouteProp} from '@react-navigation/native';
 
-import AddNewAccountView from '@screens/Auth/AddNewAccount/view';
+import AddNewAccountView, {
+  AddNewAccountViewRef,
+  LoginParams,
+} from '@screens/Auth/AddNewAccount/view';
 import {NavigationStackParamList} from '@src/navigation/Stack';
 import {loginAction, registerAction} from '@appRedux/actions/authAction';
 import {Callback} from '@appRedux/actions/types/actionTypeBase';
@@ -17,35 +20,40 @@ type AddNewAccountProps = {
 };
 
 const AddNewAccount: React.FC<AddNewAccountProps> = ({route}) => {
-  const username = route.params?.username ?? '';
+  const usernameValue = route.params?.username ?? '';
   const waitToLogin = route.params?.waitToLogin ?? false;
-  console.log('waitToLogin', waitToLogin);
+
+  const formRef = useRef<AddNewAccountViewRef>();
+
   const actions = useActions({
     loginAction,
     registerAction,
   });
-  const onRegister = (
-    usernameValue: string,
-    passwordValue: string,
-    setLoadingValue: (value: boolean) => void,
-  ) => {
-    let callback: Callback = ({success}) => {
-      if (success) {
-        actions.loginAction(usernameValue, passwordValue, () => {});
-      }
-      setLoadingValue(false);
+
+  const onSubmit = ({username, password}: LoginParams) => {
+    formRef.current.setLoadingState(true);
+    let callbackLogin: Callback = ({}) => {
+      formRef.current.setLoadingState(false);
     };
-    setLoadingValue(true);
+
     if (waitToLogin) {
-      actions.loginAction(usernameValue, passwordValue, () => {
-        setLoadingValue(false);
-      });
+      actions.loginAction(username, password, callbackLogin);
     } else {
-      actions.registerAction(usernameValue, passwordValue, callback);
+      let callbackRegister: Callback = () => {
+        formRef.current.setLoadingState(false);
+        actions.loginAction(username, password, () => {});
+      };
+      actions.registerAction(username, password, callbackRegister);
     }
   };
 
-  return <AddNewAccountView username={username} onRegister={onRegister} />;
+  return (
+    <AddNewAccountView
+      ref={formRef}
+      usernameValue={usernameValue}
+      onSubmit={onSubmit}
+    />
+  );
 };
 
 export default AddNewAccount;

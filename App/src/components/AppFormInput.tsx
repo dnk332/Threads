@@ -52,8 +52,8 @@ const AppFormInput = forwardRef(
       fontFamily: useDefaultFont
         ? undefined
         : typeof fontWeight === 'string'
-        ? fontWeight
-        : AppFonts[fontWeight],
+          ? fontWeight
+          : AppFonts[fontWeight],
       color,
       fontSize: ResponsiveFont(size),
       ...(lineHeightRatio && {
@@ -71,7 +71,7 @@ const AppFormInput = forwardRef(
           {...restProps}
         />
         {error && messageError && (
-          <AppText fontSize={12} color={colors.red} style={styles.errorMessage}>
+          <AppText fontSize={13} color={colors.red} style={styles.errorMessage}>
             {messageError}
           </AppText>
         )}

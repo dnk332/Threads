@@ -38,6 +38,9 @@ const NewPostScreen = () => {
     };
     actions.createPostAction(accountInfo.user_id, textContent, callback);
   };
+
+  const uploadImage = () => {};
+
   return <NewPostScreenView createPost={createPost} userInfo={userInfo} />;
 };
 

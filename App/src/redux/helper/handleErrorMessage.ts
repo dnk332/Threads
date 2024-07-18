@@ -25,8 +25,6 @@ export function handleErrorMessage(err: CustomError) {
     const {data, status} = response;
 
     switch (status) {
-      case 401:
-        return {status: 'EXP_TOKEN', message: 'Login session expired'};
       case 502:
         return {
           message:

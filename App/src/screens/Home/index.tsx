@@ -1,14 +1,8 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import _ from 'lodash';
 import {useIsFocused} from '@react-navigation/native';
 
 import HomeScreenView from './view';
-import {
-  currentAccountSelector,
-  listAllPostSelector,
-} from '@src/redux/selectors';
-import Navigator from '@navigators';
-import SCREEN_NAME from '@src/navigation/ScreenName';
+import {listAllPostSelector} from '@src/redux/selectors';
 import {getUserProfileAction} from '@appRedux/actions/userAction';
 import {Callback} from '@appRedux/actions/types/actionTypeBase';
 import useSelectorShallow from '@src/hooks/useSelectorShallowEqual';
@@ -28,21 +22,12 @@ const HomeScreen: React.FC = () => {
     saveListAllPostAction,
     getListAllPostAction,
   });
-  let currentAccount = useSelectorShallow(currentAccountSelector);
+
   let listAllPost = useSelectorShallow(listAllPostSelector);
 
   const [loading, setLoading] = useState<boolean>(false);
 
   const isLoading = useRef<boolean>(false);
-
-  const getUserProfile = useCallback(() => {
-    const callback: Callback = ({success, message}) => {
-      if (!success) {
-        Navigator.navigateTo(SCREEN_NAME.UPDATE_USER_INFO);
-      }
-    };
-    actions.getUserProfileAction(currentAccount.user_id, callback);
-  }, [actions, currentAccount]);
 
   const getListPost = useCallback(
     (pageId: number = 1) => {
@@ -85,12 +70,6 @@ const HomeScreen: React.FC = () => {
     isLoading.current = true;
     getListPost(1);
   }, [getListPost]);
-
-  useEffect(() => {
-    if (!_.isEmpty(currentAccount)) {
-      getUserProfile();
-    }
-  }, [currentAccount, getUserProfile]);
 
   useEffect(() => {
     if (useIsFocused) {

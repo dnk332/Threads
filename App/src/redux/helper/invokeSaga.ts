@@ -66,8 +66,7 @@ function* handleSagaError(
     yield put(pendingActions.addPendingAction(retryCallAction));
   }
 
-  if (isUnauthorizedError(error)) {
-    console.log('retryCallAction', retryCallAction);
+  if (isUnauthorizedError(error) && retryCallAction) {
     const callback: Callback = ({success}) => {
       if (success && retryCallAction) {
         console.log('call pending action');

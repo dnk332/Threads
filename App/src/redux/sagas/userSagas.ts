@@ -51,7 +51,7 @@ function* updateUserProfileSaga({payload}: IUpdateUserProfileAction) {
       yield put(userActions.saveUserProfileAction(userProfileModel(data)));
     },
     errorCallback: error => {
-      callback({success: false, message: error.message, code: error.code});
+      callback({success: false, message: error.message, errorCode: error.code});
     },
   });
 }

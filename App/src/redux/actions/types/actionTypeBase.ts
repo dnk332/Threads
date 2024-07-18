@@ -14,7 +14,7 @@ export type Callback = ({
   success: boolean;
   data?: any;
   message?: string;
-  code?: string;
+  errorCode?: string;
 }) => void;
 
 export interface ActionBase<T> {

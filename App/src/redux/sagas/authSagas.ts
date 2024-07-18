@@ -32,13 +32,12 @@ function* loginSaga({payload}: ILoginAction) {
   const {params, callback} = payload;
   yield invoke({
     execution: function* execution() {
-      Navigator.navigateTo(SCREEN_NAME.LOADING_INFO);
       const {data}: ResponseLoginApi = yield call(
         authApis.loginApi,
         params.username,
         params.password,
       );
-
+      Navigator.navigateTo(SCREEN_NAME.LOADING_INFO);
       yield put(
         authActions.setTokenAction(
           data.access_token,
@@ -48,17 +47,16 @@ function* loginSaga({payload}: ILoginAction) {
       yield put(authActions.setRefreshTokenAction(data.refresh_token));
       yield put(authActions.setAccountInfoAction(userModel(data.user)));
       yield put(authActions.setListAccountInfoAction(userModel(data.user)));
-      Navigator.navigateAndSimpleReset(SCREEN_NAME.ROOT);
       callback({data, success: true});
     },
-    errorCallback: function* rollback(error) {
+    errorCallback: error => {
       showAlert({
         title: 'Error',
         message: error.message,
         buttons: [{text: 'OK'}],
         cancelable: false,
       });
-      Navigator.goBack();
+      callback({success: false});
     },
   });
 }
@@ -72,9 +70,11 @@ function* registerSaga({payload}: IRegisterAction) {
         params.username,
         params.password,
       );
+      console.log('success');
       callback({data, success: true});
     },
-    errorCallback: function* rollback(error) {
+    errorCallback: error => {
+      console.log('error', error);
       showAlert({
         title: 'Error',
         message: error.message,

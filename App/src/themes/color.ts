@@ -8,7 +8,7 @@ const colors = {
   transparent: 'transparent',
   background_secondary: '#101010',
   blue: '#0070FA',
-  red: '#F70F0F',
+  red: '#C40C0C',
   green: '#059212',
   yellow: '#FFDB00',
 

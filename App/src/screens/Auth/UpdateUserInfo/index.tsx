@@ -16,7 +16,7 @@ import {uploadImageAction} from '@appRedux/actions/otherAction';
 import {IImageFile} from '@src/types/other';
 
 interface IUserProfileSubset
-  extends Pick<IUserProfile, 'name' | 'email' | 'bio'> {}
+  extends Pick<IUserProfile, 'name' | 'email' | 'bio' | 'avatar_url'> {}
 
 type UpdateUserInfoScreenProps = NativeStackScreenProps<
   NavigationStackParamList,
@@ -35,11 +35,11 @@ const UpdateUserInfo: React.FC<UpdateUserInfoScreenProps> = ({}) => {
     bio,
     avatar_url,
   }: IUserProfileSubset) => {
-    const callback: Callback = ({success, code}) => {
+    const callback: Callback = ({success, errorCode}) => {
       if (success) {
-        Navigator.goBack();
-      } else if (code) {
-        formRef.current.onError(code);
+        Navigator.navigateAndSimpleReset(SCREEN_NAME.ROOT);
+      } else if (errorCode) {
+        formRef.current.onError(errorCode);
       }
     };
     actions.updateUserProfileAction(name, email, bio, avatar_url, callback);
