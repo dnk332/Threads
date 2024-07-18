@@ -2,14 +2,15 @@ import React, {useCallback} from 'react';
 import {FlashList} from '@shopify/flash-list';
 import {View} from 'react-native';
 
-import {Media} from '@localTypes/post';
+import {IMedia} from '@localTypes/post';
 import {AppStyleSheet} from '@themes/responsive';
-// import {PostImage} from '@components';
+// import {PostImageItem} from '@components';
 import {PostImage} from '@src/components/PostContent';
 
 interface MediaContentProps {
-  content: Media[];
+  content: IMedia[];
 }
+
 const ItemSeparator = () => {
   return <View style={styles.space} />;
 };
