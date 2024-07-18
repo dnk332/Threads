@@ -1,10 +1,12 @@
 import {IPostType} from '@src/types/post';
 import {ActionBase} from './actionTypeBase';
+import {IImage} from '@src/types/other';
 
 export const PostActionType = {
   GET_LIST_ALL_POST: 'POST/GET_LIST_ALL_POST',
   SAVE_LIST_ALL_POST: 'POST/SAVE_LIST_ALL_POST',
   CREATE_POST: 'POST/CREATE_POST',
+  CREATING_POST: 'POST/CREATING_POST',
 } as const;
 
 export type PostActionType =
@@ -27,13 +29,21 @@ export interface ISaveListAllPostAction
 
 export interface ICreatePostAction
   extends ActionBase<{
-    author_id: number;
     text_content: string;
+    images: IImage[];
   }> {
   type: typeof PostActionType.CREATE_POST;
+}
+
+export interface ICreatingPostAction
+  extends ActionBase<{
+    status: boolean;
+  }> {
+  type: typeof PostActionType.CREATING_POST;
 }
 
 export type IPostAction =
   | IGetListAllPostAction
   | ISaveListAllPostAction
-  | ICreatePostAction;
+  | ICreatePostAction
+  | ICreatingPostAction;

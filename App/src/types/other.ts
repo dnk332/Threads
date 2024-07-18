@@ -1,10 +1,5 @@
-export interface IImageFile {
-  uri: string;
-  name: string;
-  type: string;
-}
-
 export interface IImage {
+  index: number;
   uri: string;
   type: string;
   name: string;
@@ -14,3 +9,6 @@ export interface IImage {
   sourceURL: string;
   data: string;
 }
+
+export interface IImageFile
+  extends Pick<IImage, 'uri' | 'name' | 'type' | 'index'> {}

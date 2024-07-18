@@ -12,7 +12,8 @@ import (
 
 // createUserRequest defines the structure for user creation requests
 type createPostRequest struct {
-	TextContent string `json:"text_content" binding:"required"`
+	TextContent  string                `json:"text_content" binding:"required"`
+	ImageContent []uploadImageResponse `json:"images_content"`
 }
 
 // userResponse defines the structure for user responses
@@ -46,6 +47,11 @@ func (s *Server) createPost(ctx *gin.Context) {
 
 	// Check is user is authenticated or not
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
+
+	for key, image := range req.ImageContent {
+		log.Printf("image[%v]: %v ", key, image)
+	}
+	//TODO: upload images, create post image and add to post
 
 	arg := db.CreatePostParams{
 		AuthorID:    authPayload.UserID,

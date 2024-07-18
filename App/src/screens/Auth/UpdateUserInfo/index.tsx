@@ -65,14 +65,7 @@ const UpdateUserInfo: React.FC<UpdateUserInfoScreenProps> = ({}) => {
             formRef.current.toggleLoading();
           }
         };
-        actions.uploadImageAction(
-          {
-            uri: image[0].data,
-            name: image[0].name,
-            type: image[0].type,
-          },
-          callback,
-        );
+        actions.uploadImageAction(image, callback);
       },
       {
         multiple: false,

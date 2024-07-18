@@ -2,11 +2,11 @@ import {
   IUploadImageAction,
   OtherActionType,
 } from '@appRedux/actions/types/otherActionTypes';
-import {IImageFile} from '@src/types/other';
+import {IImage} from '@src/types/other';
 import {Callback} from '@appRedux/actions/types/actionTypeBase';
 
 export const uploadImageAction = (
-  props: IImageFile,
+  props: IImage[],
   callback: Callback,
 ): IUploadImageAction => ({
   type: OtherActionType.UPLOAD_IMAGE,

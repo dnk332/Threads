@@ -5,10 +5,12 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {Provider} from 'react-redux';
 import {PortalProvider} from '@gorhom/portal';
+import Toast from 'react-native-toast-message';
 
 import layout from '@themes/layout';
 import {PersistGate} from 'redux-persist/integration/react';
-import {store, persistor} from '@store';
+import {persistor, store} from '@store';
+import {toastConfig} from '@utils/ToastConfig';
 
 const Index = () => {
   return (
@@ -19,6 +21,13 @@ const Index = () => {
             <PersistGate loading={null} persistor={persistor}>
               <Fragment>
                 <StackScreens />
+                <Toast
+                  topOffset={47}
+                  config={toastConfig}
+                  autoHide={false}
+                  position={'bottom'}
+                  bottomOffset={100}
+                />
               </Fragment>
             </PersistGate>
           </Provider>

@@ -20,7 +20,7 @@ import {FlashList} from '@shopify/flash-list';
 import PostImageItem from '@screens/NewPost/Components/PostImageItem';
 
 interface NewPostScreenProps {
-  createPost: (textContent: string) => void;
+  createPost: (textContent: string, images: IImage[]) => void;
   uploadImage: () => void;
   userInfo: IUserProfile;
 }
@@ -133,7 +133,7 @@ const NewPostScreenView = forwardRef<NewPostScreenRef, NewPostScreenProps>(
                   <FlashList
                     horizontal={true}
                     data={images}
-                    keyExtractor={item => item.name}
+                    keyExtractor={item => item.index.toString()}
                     renderItem={({item}) => (
                       <PostImageItem deleteImage={deleteImage} image={item} />
                     )}
@@ -193,7 +193,7 @@ const NewPostScreenView = forwardRef<NewPostScreenRef, NewPostScreenProps>(
             </Pressable>
             {thread.length > 0 ? (
               <Pressable
-                onPress={() => createPost(thread)}
+                onPress={() => createPost(thread, images)}
                 style={[styles.fragment, styles.submitBtn]}>
                 <AppText fontSize={13} fontWeight={600}>
                   Post

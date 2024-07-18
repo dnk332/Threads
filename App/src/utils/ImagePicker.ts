@@ -41,6 +41,7 @@ type ImagePickerCallback = (
     size: number;
     sourceURL: string;
     data: string;
+    index: number;
   }> | null,
 ) => void;
 
@@ -69,10 +70,11 @@ export const openImagePicker = (
               size: images.size,
               sourceURL: images.sourceURL,
               data: images.data,
+              index: 0,
             },
           ]);
         } else if (Array.isArray(images) && images.length > 0) {
-          const list = images.map(i => ({
+          const list = images.map((i, index) => ({
             uri: i.path,
             type: i.mime,
             name: i.filename || 'image_noname',
@@ -81,6 +83,7 @@ export const openImagePicker = (
             size: i.size,
             sourceURL: i.sourceURL,
             data: i.data,
+            index,
           }));
           callback(null, list);
         } else {
