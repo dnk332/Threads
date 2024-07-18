@@ -69,7 +69,7 @@ function StackScreens() {
     actions.startAction(async response => {
       await HideSplash();
       if (response.success) {
-        Navigator.navigateAndSimpleReset(SCREEN_NAME.ROOT);
+        Navigator.navigateAndSimpleReset(SCREEN_NAME.LOADING_INFO);
         return;
       }
     });
