@@ -13,7 +13,7 @@ import layout from '@themes/layout';
 import layoutValue from '@themes/layoutValue';
 import {colors} from '@themes/color';
 import {AppStyleSheet} from '@themes/responsive';
-import {Avatar, AppButton, AppText} from '@components';
+import {AppButton, AppText, Avatar} from '@components';
 import Navigator from '@navigators';
 import SCREEN_NAME from '@src/navigation/ScreenName';
 import {IUser, IUserProfile} from '@src/types/user';
@@ -26,7 +26,6 @@ interface HeaderProps {
 const Header = forwardRef<number | null, any>(
   (props: HeaderProps, headerRef) => {
     const scrollY = useCurrentTabScrollY();
-
     const headerStyleAnimated = useAnimatedStyle(() => {
       return {
         opacity: scrollY.value < 1 ? withTiming(1) : withTiming(0),

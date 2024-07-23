@@ -15,7 +15,7 @@ import layout from '@themes/layout';
 
 import {colors} from '@themes/color';
 import {AppStyleSheet} from '@themes/responsive';
-import {AppText, AppContainer} from '@components';
+import {AppContainer, AppText} from '@components';
 
 import ThreadsTab from '@screens/UserDetail/Components/ThreadsTab';
 import RepliesTab from '@screens/UserDetail/Components/RepliesTab';
