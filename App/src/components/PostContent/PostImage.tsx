@@ -44,17 +44,18 @@ const PostImage = ({link}: PostImageProps) => {
         Navigator.navigateTo(SCREEN_NAME.IMAGE_VIEWER, {imageLink: link})
       }>
       <AppImage
-        style={[
-          styles.image,
-          {
-            width:
-              dimensions.width > dimensions.height ? imageWidth : undefined,
-            height: imageHeight,
-            aspectRatio:
-              dimensions.width > dimensions.height ? undefined : aspectRatio,
-          },
-        ]}
+        style={{
+          width: imageWidth,
+          height: imageHeight,
+          // width:
+          //   dimensions.width > dimensions.height ? imageWidth : undefined,
+          // height: imageHeight,
+          // aspectRatio:
+          //   dimensions.width > dimensions.height ? undefined : aspectRatio,
+        }}
         source={{uri: link}}
+        blurHashEnabled={true}
+        containerStyle={styles.image}
       />
     </Pressable>
   );

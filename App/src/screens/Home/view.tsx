@@ -15,7 +15,7 @@ import Animated, {
 import {colors} from '@themes/color';
 import {AppStyleSheet} from '@src/themes/responsive';
 import {IPostType} from '@src/types/post';
-import {AppText, PostText} from '@src/components';
+import {AppText, PostItem} from '@src/components';
 
 type HomeScreenViewProps = {
   listPost: IPostType[];
@@ -96,10 +96,12 @@ const HomeScreenView: React.FC<HomeScreenViewProps> = ({
 
   const _renderItem = useCallback(({item}: {item: IPostType}) => {
     return (
-      <PostText
-        userData={item.author}
+      <PostItem
         postData={item.post}
+        authorData={item.author}
         interaction={item.interaction}
+        haveReplies={false}
+        isRootPost={true}
       />
     );
     // const isRepliesPost = item.replies.length > 0;

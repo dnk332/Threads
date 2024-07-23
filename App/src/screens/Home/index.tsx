@@ -26,6 +26,7 @@ const HomeScreen: React.FC = () => {
   let listAllPost = useSelectorShallow(listAllPostSelector);
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [isEndOfList, setIsEndOfList] = useState<boolean>(false);
 
   const isLoading = useRef<boolean>(false);
 
@@ -38,12 +39,15 @@ const HomeScreen: React.FC = () => {
         data: IPostType[];
         success: boolean;
       }) => {
-        if (success) {
+        if (success && data.length > 0) {
           const convertData = postListModel(data);
           actions.saveListAllPostAction(convertData, pageId > 1);
         }
         isLoading.current = false;
         setLoading(false);
+        if (data.length < SIZE_PAGE) {
+          setIsEndOfList(true);
+        }
       };
       actions.getListAllPostAction(pageId, SIZE_PAGE, callback);
     },
@@ -54,7 +58,11 @@ const HomeScreen: React.FC = () => {
     if (isLoading.current === true) {
       return;
     }
+    if (isEndOfList) {
+      return;
+    }
     const pageNumber = Math.round(listAllPost.length / SIZE_PAGE);
+
     if (pageNumber > 0 && listAllPost.length === pageNumber * SIZE_PAGE) {
       isLoading.current = true;
       setLoading(true);
@@ -67,9 +75,10 @@ const HomeScreen: React.FC = () => {
       return;
     }
     setLoading(true);
+    setIsEndOfList(false);
     isLoading.current = true;
     getListPost(1);
-  }, [getListPost]);
+  }, []);
 
   useEffect(() => {
     if (useIsFocused) {

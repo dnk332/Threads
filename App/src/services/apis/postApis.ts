@@ -15,7 +15,9 @@ export const getListAllPostApi = (
 export const createPostApi = (
   author_id: number,
   text_content: string,
-  images: IImageFile[],
+  images_content: IImageFile[],
 ): Promise<ResponseCreatePostApi> => {
-  return http.post('/posts', {params: {author_id, text_content, images}});
+  return http.post('/posts', {
+    params: {author_id, text_content, images_content},
+  });
 };

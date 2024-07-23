@@ -12,3 +12,13 @@ export interface IImage {
 
 export interface IImageFile
   extends Pick<IImage, 'uri' | 'name' | 'type' | 'index'> {}
+
+export interface IMedia {
+  id: number;
+  link: string;
+  type: string;
+  orderColumn: number;
+  createdAt: string;
+  referenceObject: string;
+  referenceObjectId: number;
+}

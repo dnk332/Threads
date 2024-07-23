@@ -39,6 +39,8 @@ type Querier interface {
 	GetAllLikesOfUser(ctx context.Context, arg GetAllLikesOfUserParams) ([]Like, error)
 	// Get image
 	GetImage(ctx context.Context, arg GetImageParams) (Media, error)
+	// Get image
+	GetImagesForPost(ctx context.Context, referenceObjectID int64) ([]Media, error)
 	// Get a list of all posts
 	GetListAllPost(ctx context.Context, arg GetListAllPostParams) ([]Post, error)
 	// Get a list of all posts of one user

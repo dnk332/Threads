@@ -12,27 +12,29 @@ import (
 
 // createUserRequest defines the structure for user creation requests
 type createPostRequest struct {
-	TextContent  string                `json:"text_content" binding:"required"`
-	ImageContent []uploadImageResponse `json:"images_content"`
+	TextContent  string  `json:"text_content" binding:"required"`
+	ImageContent []Image `json:"images_content"`
 }
 
 // userResponse defines the structure for user responses
 type postResponse struct {
-	ID          int64     `json:"id"`
-	AuthorID    int64     `json:"author_id"`
-	TextContent string    `json:"text_content"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	ID           int64      `json:"id"`
+	AuthorID     int64      `json:"author_id"`
+	TextContent  string     `json:"text_content"`
+	ImageContent []db.Media `json:"image_content"`
+	CreatedAt    time.Time  `json:"created_at"`
+	UpdatedAt    time.Time  `json:"updated_at"`
 }
 
 // createUserResponse maps a db.User to userResponse
-func createPostResponse(post db.Post) postResponse {
+func createPostResponse(post db.Post, images []db.Media) postResponse {
 	return postResponse{
-		ID:          post.ID,
-		AuthorID:    post.AuthorID,
-		TextContent: post.TextContent,
-		CreatedAt:   post.CreatedAt,
-		UpdatedAt:   post.UpdatedAt,
+		ID:           post.ID,
+		AuthorID:     post.AuthorID,
+		TextContent:  post.TextContent,
+		ImageContent: images,
+		CreatedAt:    post.CreatedAt,
+		UpdatedAt:    post.UpdatedAt,
 	}
 }
 
@@ -48,11 +50,6 @@ func (s *Server) createPost(ctx *gin.Context) {
 	// Check is user is authenticated or not
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
 
-	for key, image := range req.ImageContent {
-		log.Printf("image[%v]: %v ", key, image)
-	}
-	//TODO: upload images, create post image and add to post
-
 	arg := db.CreatePostParams{
 		AuthorID:    authPayload.UserID,
 		TextContent: req.TextContent,
@@ -66,7 +63,23 @@ func (s *Server) createPost(ctx *gin.Context) {
 		return
 	}
 
-	rsp := createPostResponse(post)
+	// Create post images
+	var postImages []db.Media
+	for _, image := range req.ImageContent {
+		postImage, err := s.store.AddPostImage(ctx, db.AddPostImageParams{
+			Link:              image.Uri,
+			OrderColumn:       int32(image.Index),
+			ReferenceObjectID: post.ID,
+		})
+		if err != nil {
+			log.Printf("[ERROR] Failed to create post image: %v", err)
+			ctx.JSON(errorResponse(http.StatusInternalServerError, err))
+			return
+		}
+		postImages = append(postImages, postImage)
+	}
+
+	rsp := createPostResponse(post, postImages)
 	ctx.JSON(http.StatusOK, rsp)
 }
 
@@ -107,9 +120,20 @@ func (s *Server) getListAllPost(ctx *gin.Context) {
 		author := s.getAuthorInfo(ctx, post.AuthorID)
 		interaction := s.getInteractionOfPost(ctx, post.ID)
 
+		images, err := s.store.GetImagesForPost(ctx, post.ID)
+		if err != nil {
+			response = append(response, getListAllPostResponse{
+				Id:          post.ID,
+				Post:        createPostResponse(post, []db.Media{}),
+				Author:      author,
+				Interaction: interaction,
+			})
+			return
+		}
+
 		response = append(response, getListAllPostResponse{
 			Id:          post.ID,
-			Post:        createPostResponse(post),
+			Post:        createPostResponse(post, images),
 			Author:      author,
 			Interaction: interaction,
 		})

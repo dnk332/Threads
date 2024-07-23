@@ -8,7 +8,7 @@ import {
   AppFormInput,
   AppImage,
   AppText,
-  DissmissKeyboardView,
+  DismissKeyboardView,
 } from '@components';
 import {AppStyleSheet} from '@themes/responsive';
 import {colors} from '@themes/color';
@@ -68,7 +68,7 @@ const UpdateUserInfoView = forwardRef<
 
   return (
     <AppContainer style={styles.container}>
-      <DissmissKeyboardView style={styles.content}>
+      <DismissKeyboardView style={styles.content}>
         <AppText align="center" fontWeight={700} fontSize={26}>
           Update User Profile
         </AppText>
@@ -132,7 +132,7 @@ const UpdateUserInfoView = forwardRef<
             source={require('@assets/image/meta-logo.png')}
           />
         </View>
-      </DissmissKeyboardView>
+      </DismissKeyboardView>
     </AppContainer>
   );
 });

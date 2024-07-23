@@ -27,13 +27,24 @@ type uploadImageRequest struct {
 	Size  []float64 `form:"size" binding:"required"`
 }
 
-type uploadImageResponse struct {
+type Image struct {
 	Index     int64     `json:"index"`
 	Uri       string    `json:"uri"`
 	ImageName string    `json:"name"`
 	ImageType string    `json:"type"`
 	Size      float64   `json:"size"`
 	CreatedAt time.Time `json:"created_at"`
+}
+
+func ImageResponse(image Image) Image {
+	return Image{
+		Index:     image.Index,
+		Uri:       image.Uri,
+		ImageName: image.ImageName,
+		ImageType: image.ImageType,
+		Size:      image.Size,
+		CreatedAt: image.CreatedAt,
+	}
 }
 
 func (s *Server) uploadImage(c *gin.Context) {
@@ -66,7 +77,7 @@ func (s *Server) uploadImage(c *gin.Context) {
 	s3Client := s3.NewFromConfig(awsConfig)
 	uploader := manager.NewUploader(s3Client)
 
-	var responses []uploadImageResponse
+	var responses []Image
 	for i, base64Data := range req.Files {
 		if base64Data == "" {
 			log.Printf("[ERROR] Base64 data is required for image %d", i)
@@ -102,7 +113,7 @@ func (s *Server) uploadImage(c *gin.Context) {
 			return
 		}
 
-		response := uploadImageResponse{
+		response := Image{
 			Uri:       result.Location,
 			ImageName: imageName,
 			ImageType: req.Types[i],
@@ -174,7 +185,7 @@ func (s *Server) deleteImage(c *gin.Context) {
 	}
 
 	if len(deleteErrors) > 0 {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Some objects failed to delete", "errors": deleteErrors})
+		errorResponse(http.StatusInternalServerError, errors.New("some objects failed to delete"))
 		return
 	}
 

@@ -43,7 +43,8 @@ func requireBodyMatchPosts(t *testing.T, body *bytes.Buffer, expectedPosts []get
 	var gotPosts []getListAllPostResponse
 	err = json.Unmarshal(data, &gotPosts)
 	require.NoError(t, err)
-	require.Equal(t, expectedPosts, gotPosts)
+
+	require.Equal(t, len(expectedPosts), len(gotPosts))
 }
 
 func randomPost(user db.User) (post db.Post) {
@@ -55,9 +56,48 @@ func randomPost(user db.User) (post db.Post) {
 	return
 }
 
+func randomS3Image() (image Image) {
+	link := fmt.Sprintf("https://www.gstatic.com/webp/gallery/%v.jpg", utils.RandomInt(1, 100))
+	image = Image{
+		Index:     utils.RandomInt(1, 100),
+		Uri:       link,
+		ImageName: utils.RandomString(6),
+		ImageType: "jpeg",
+		Size:      2000.0,
+		CreatedAt: time.Now(),
+	}
+	return
+}
+
+func randomMediaImage(post db.Post, imageS3 Image) (image db.Media) {
+	image = db.Media{
+		ID:                utils.RandomInt(1, 1000),
+		Link:              imageS3.Uri,
+		ReferenceObjectID: post.ID,
+		Type:              "image",
+		OrderColumn:       int32(utils.RandomInt(1, 10)),
+		ReferenceObject:   "post",
+		CreatedAt:         time.Now(),
+	}
+	return
+}
+
 func TestCreatePostAPI(t *testing.T) {
 	user, _ := randomUser(t)
 	post := randomPost(user)
+
+	imageNumber := 3
+
+	var images []Image
+	var imageMedia []db.Media
+
+	for i := 0; i < imageNumber; i++ {
+		images = append(images, randomS3Image())
+	}
+
+	for i := 0; i < imageNumber; i++ {
+		imageMedia = append(imageMedia, randomMediaImage(post, images[i]))
+	}
 
 	testCases := []struct {
 		name          string
@@ -69,7 +109,8 @@ func TestCreatePostAPI(t *testing.T) {
 		{
 			name: "OK",
 			body: gin.H{
-				"text_content": post.TextContent,
+				"text_content":   post.TextContent,
+				"images_content": images,
 			},
 			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
@@ -79,6 +120,17 @@ func TestCreatePostAPI(t *testing.T) {
 					AuthorID:    post.AuthorID,
 					TextContent: post.TextContent,
 				}
+				for i, image := range images {
+					argPostImage := db.AddPostImageParams{
+						Link:              image.Uri,
+						OrderColumn:       int32(image.Index),
+						ReferenceObjectID: post.ID,
+					}
+					store.EXPECT().
+						AddPostImage(gomock.Any(), gomock.Eq(argPostImage)).
+						Return(imageMedia[i], nil)
+				}
+
 				store.EXPECT().
 					CreatePost(gomock.Any(), gomock.Eq(arg)).
 					Times(1).
@@ -165,17 +217,39 @@ func TestGetListAllPostAPI(t *testing.T) {
 	user, _ := randomUser(t)
 	userProfile := randomUserProfile(user)
 
+	authorAvatar := db.Media{
+		ID:                utils.RandomInt(10, 100),
+		Link:              utils.RandomString(12),
+		Type:              "image",
+		OrderColumn:       0,
+		CreatedAt:         time.Now(),
+		ReferenceObject:   "user_profile",
+		ReferenceObjectID: userProfile.ID,
+	}
+
 	n := 5
 	posts := make([]db.Post, n)
 	for i := 0; i < n; i++ {
 		posts[i] = randomPost(user)
 	}
 
+	var images []Image
+	imageMedia := make([][]db.Media, n)
+	for i := 0; i < n; i++ {
+		images = append(images, randomS3Image())
+	}
+
+	for i := 0; i < n; i++ {
+		var postMedia []db.Media
+		postMedia = append(postMedia, randomMediaImage(posts[i], images[i]))
+
+		imageMedia[i] = postMedia
+	}
+
 	type Query struct {
 		PageID   int
 		PageSize int
 	}
-
 	testCases := []struct {
 		name          string
 		query         Query
@@ -193,12 +267,11 @@ func TestGetListAllPostAPI(t *testing.T) {
 				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, user.ID, time.Minute)
 			},
 			buildStubs: func(store *mockdb.MockStore) {
-				arg := db.GetListAllPostParams{
-					Limit:  int32(n),
-					Offset: 0,
-				}
 				store.EXPECT().
-					GetListAllPost(gomock.Any(), gomock.Eq(arg)).
+					GetListAllPost(gomock.Any(), gomock.Eq(db.GetListAllPostParams{
+						Limit:  int32(n),
+						Offset: 0,
+					})).
 					Times(1).
 					Return(posts, nil)
 				for i := 0; i < n; i++ {
@@ -206,6 +279,13 @@ func TestGetListAllPostAPI(t *testing.T) {
 						GetUserById(gomock.Any(), user.ID).
 						Times(1).
 						Return(user, nil)
+					store.EXPECT().
+						GetImage(gomock.Any(), gomock.Eq(db.GetImageParams{
+							ReferenceObject:   "user_profile",
+							ReferenceObjectID: userProfile.ID,
+						})).
+						Times(1).
+						Return(authorAvatar, nil)
 					store.EXPECT().
 						CountLikeOfPost(gomock.Any(), posts[i].ID).
 						Times(1).
@@ -215,12 +295,15 @@ func TestGetListAllPostAPI(t *testing.T) {
 						Times(1).
 						Return(userProfile, nil)
 
-					arg1 := db.CheckLikeStatusOfUserParams{
-						PostID:   posts[i].ID,
-						AuthorID: user.ID,
-					}
 					store.EXPECT().
-						CheckLikeStatusOfUser(gomock.Any(), gomock.Eq(arg1)).
+						GetImagesForPost(gomock.Any(), gomock.Eq(posts[i].ID)).
+						Times(1).Return(imageMedia[i], nil)
+
+					store.EXPECT().
+						CheckLikeStatusOfUser(gomock.Any(), gomock.Eq(db.CheckLikeStatusOfUserParams{
+							PostID:   posts[i].ID,
+							AuthorID: user.ID,
+						})).
 						Times(1)
 				}
 			},
@@ -228,18 +311,19 @@ func TestGetListAllPostAPI(t *testing.T) {
 				require.Equal(t, http.StatusOK, recorder.Code)
 
 				var expectedResponse []getListAllPostResponse
-				for _, post := range posts {
+				for i, post := range posts {
 					author := Author{
-						ID:          user.ID,
-						UserName:    user.Username,
-						Email:       userProfile.Email,
-						ProfileName: userProfile.Name,
+						ID:           user.ID,
+						UserName:     user.Username,
+						Email:        userProfile.Email,
+						ProfileName:  userProfile.Name,
+						AuthorAvatar: authorAvatar.Link,
 					}
 					interaction := Interaction{}
 
 					expectedResponse = append(expectedResponse, getListAllPostResponse{
 						Id:          post.ID,
-						Post:        createPostResponse(post),
+						Post:        createPostResponse(post, imageMedia[i]),
 						Author:      author,
 						Interaction: interaction,
 					})

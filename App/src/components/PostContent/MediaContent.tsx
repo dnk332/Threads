@@ -2,7 +2,7 @@ import React, {useCallback} from 'react';
 import {FlashList} from '@shopify/flash-list';
 import {View} from 'react-native';
 
-import {IMedia} from '@localTypes/post';
+import {IMedia} from '@localTypes/other';
 import {AppStyleSheet} from '@themes/responsive';
 // import {PostImageItem} from '@components';
 import {PostImage} from '@src/components/PostContent';
@@ -19,9 +19,9 @@ const Spacer = () => {
 };
 
 const MediaContent = ({content = []}: MediaContentProps) => {
-  const RenderItem = useCallback(({item}) => {
+  const RenderItem = useCallback(({item}: {item: IMedia}) => {
     return (
-      <View key={item.id}>
+      <View key={item.orderColumn}>
         <PostImage link={item.link} />
       </View>
     );
