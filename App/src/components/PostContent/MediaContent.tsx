@@ -19,18 +19,21 @@ const Spacer = () => {
 };
 
 const MediaContent = ({content = []}: MediaContentProps) => {
-  const RenderItem = useCallback(({item}: {item: IMedia}) => {
-    return (
-      <View key={item.orderColumn}>
-        <PostImage link={item.link} />
-      </View>
-    );
-  }, []);
+  const RenderItem = useCallback(
+    ({index, item}: {index: number; item: IMedia}) => {
+      return (
+        <View key={item.orderColumn}>
+          <PostImage link={item.link} index={index} listImage={content} />
+        </View>
+      );
+    },
+    [],
+  );
 
   return (
     <FlashList
       data={content}
-      renderItem={({item}) => <RenderItem item={item} />}
+      renderItem={({index, item}) => <RenderItem index={index} item={item} />}
       keyExtractor={item => item.id.toString()}
       horizontal
       showsHorizontalScrollIndicator={false}

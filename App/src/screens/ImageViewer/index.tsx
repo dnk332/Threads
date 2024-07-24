@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useRef} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 
@@ -6,6 +6,9 @@ import layout from '@themes/layout';
 import {NavigationStackParamList} from '@navigation/Stack';
 import {AppContainer, AppImage} from '@components';
 import SCREEN_NAME from '@src/navigation/ScreenName';
+import {FlashList} from '@shopify/flash-list';
+import {IMedia} from '@src/types/other';
+import {height, width} from '@utils/DeviceInfo';
 
 type ImageViewerScreenRouteProp = RouteProp<
   NavigationStackParamList,
@@ -17,14 +20,37 @@ type ImageViewerProps = {
 };
 
 const ImageViewerScreen = ({route}: ImageViewerProps) => {
-  const {imageLink} = route.params;
+  const {imageLink, index, listImage} = route.params;
+  const sliderRef = useRef<FlashList<IMedia>>(null);
+
+  const RenderImage = useCallback(({item}: {item: IMedia}) => {
+    return (
+      <AppImage
+        resizeMode="cover"
+        style={styles.image}
+        source={{uri: item.link}}
+      />
+    );
+  }, []);
+
   return (
     <AppContainer haveBackButton={true}>
       <View style={[layout.fill, styles.container]}>
-        <AppImage
-          resizeMode="cover"
-          style={styles.image}
-          source={{uri: imageLink}}
+        <FlashList
+          horizontal={true}
+          ref={sliderRef}
+          data={listImage}
+          renderItem={RenderImage}
+          showsHorizontalScrollIndicator={false}
+          pagingEnabled={true}
+          estimatedListSize={{width, height}}
+          estimatedItemSize={4}
+          onLayout={() => {
+            sliderRef.current.scrollToIndex({
+              animated: false,
+              index,
+            });
+          }}
         />
       </View>
     </AppContainer>
@@ -35,13 +61,11 @@ export default ImageViewerScreen;
 
 const styles = StyleSheet.create({
   image: {
-    width: '100%',
+    width: width,
     height: undefined,
     aspectRatio: 2 / 3,
-    borderRadius: 10,
   },
   container: {
-    paddingHorizontal: 16,
     paddingTop: 16,
   },
 });

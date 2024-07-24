@@ -20,10 +20,11 @@ import {IUser} from '@src/types/user';
 import SCREEN_NAME from './ScreenName';
 import {useActions} from '@hooks/useActions';
 import {startAction} from '@appRedux/actions/appAction';
+import {IMedia} from '@src/types/other';
 
 export interface NavigationStackParamList {
   ROOT: undefined;
-  IMAGE_VIEWER: {imageLink: string};
+  IMAGE_VIEWER: {imageLink: string; index: number; listImage: IMedia[]};
   NEW_POST_MODAL: {focused: boolean};
   LOGIN: undefined;
   SWITCH_ACCOUNT: undefined;
@@ -94,6 +95,9 @@ function StackScreens() {
         <Stack.Screen
           name={SCREEN_NAME.IMAGE_VIEWER}
           component={ImageViewerScreen}
+          options={{
+            presentation: 'fullScreenModal',
+          }}
         />
         <Stack.Screen
           options={{
