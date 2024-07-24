@@ -24,7 +24,7 @@ import {IMedia} from '@src/types/other';
 
 export interface NavigationStackParamList {
   ROOT: undefined;
-  IMAGE_VIEWER: {imageLink: string; index: number; listImage: IMedia[]};
+  IMAGE_VIEWER: {imageLink?: string; index: number; listImage: IMedia[]};
   NEW_POST_MODAL: {focused: boolean};
   LOGIN: undefined;
   SWITCH_ACCOUNT: undefined;

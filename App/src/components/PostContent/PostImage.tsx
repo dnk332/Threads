@@ -47,7 +47,6 @@ const PostImage = ({link, listImage, index}: PostImageProps) => {
     <Pressable
       onPress={() =>
         Navigator.navigateTo(SCREEN_NAME.IMAGE_VIEWER, {
-          imageLink: link,
           index,
           listImage,
         })

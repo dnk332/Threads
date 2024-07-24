@@ -20,7 +20,7 @@ type ImageViewerProps = {
 };
 
 const ImageViewerScreen = ({route}: ImageViewerProps) => {
-  const {imageLink, index, listImage} = route.params;
+  const {index, listImage} = route.params;
   const sliderRef = useRef<FlashList<IMedia>>(null);
 
   const RenderImage = useCallback(({item}: {item: IMedia}) => {
