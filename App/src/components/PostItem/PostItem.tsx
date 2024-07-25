@@ -1,5 +1,6 @@
 import React, {Fragment, memo, ReactElement, useRef, useState} from 'react';
 import {Pressable, View} from 'react-native';
+import _ from 'lodash';
 
 import {AppText, Avatar} from '@components';
 import layout from '@themes/layout';
@@ -12,8 +13,10 @@ import ContentHandelArea from '@src/components/PostContent/ContentHandelArea';
 import MediaContent from '@src/components/PostContent/MediaContent';
 import {imageHeight} from '@constants/deviceSize';
 import SvgComponent from '@svg/index';
-import _ from 'lodash';
 import TempAvatar from '@src/components/TempAvatar';
+import Navigator from '@navigators';
+import SCREEN_NAME from '@navigation/ScreenName';
+import {useToggleLike} from '@hooks/useToggleLike';
 
 interface PostItemViewProps {
   authorData: IAuthor;
@@ -23,8 +26,6 @@ interface PostItemViewProps {
   lastReplies?: boolean;
   isReplies?: boolean;
   isRootPost?: boolean;
-  likeStatus?: boolean;
-  handleLike?: () => void;
 }
 
 interface StatusItemProps {
@@ -33,7 +34,7 @@ interface StatusItemProps {
   onPress?: () => void;
 }
 
-const StatusItem = ({
+export const StatusItem = ({
   icon,
   value = 0,
   onPress,
@@ -56,19 +57,30 @@ const PostItem = ({
   authorData,
   postData,
   interaction,
-  handleLike,
   haveReplies,
   lastReplies,
   isReplies,
   isRootPost,
-  likeStatus,
 }: PostItemViewProps) => {
   const sheetRef = useRef<any>();
   const [contentViewHeight, setContentViewHeight] = useState<number>(0);
 
+  const {likeStatus, handleLike} = useToggleLike({
+    postId: postData.id,
+    currentLikeStatus: interaction.likeStatus,
+  });
+
+  const onNavigateToPostDetail = () => {
+    Navigator.navigateTo(SCREEN_NAME.POST_DETAIL, {
+      authorData,
+      postData,
+      interaction,
+    });
+  };
+
   return (
     <Fragment>
-      <View>
+      <Pressable onPress={onNavigateToPostDetail}>
         <View
           style={[
             layout.row,
@@ -148,7 +160,7 @@ const PostItem = ({
           <StatusItem icon={<SvgComponent name={'REPEAT'} />} value={10} />
           <StatusItem icon={<SvgComponent name={'SEND'} />} />
         </View>
-      </View>
+      </Pressable>
       <ActiveBottomSheet sheetRef={sheetRef} />
     </Fragment>
   );

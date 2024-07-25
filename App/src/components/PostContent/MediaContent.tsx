@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 import {FlashList} from '@shopify/flash-list';
-import {View} from 'react-native';
+import {View, ViewStyle} from 'react-native';
 
 import {IMedia} from '@localTypes/other';
 import {AppStyleSheet} from '@themes/responsive';
@@ -9,16 +9,14 @@ import {PostImage} from '@src/components/PostContent';
 
 interface MediaContentProps {
   content: IMedia[];
+  haveSpacer?: boolean;
 }
 
 const ItemSeparator = () => {
   return <View style={styles.space} />;
 };
-const Spacer = () => {
-  return <View style={styles.paddingLeft} />;
-};
 
-const MediaContent = ({content = []}: MediaContentProps) => {
+const MediaContent = ({content = [], haveSpacer = true}: MediaContentProps) => {
   const RenderItem = useCallback(
     ({index, item}: {index: number; item: IMedia}) => {
       return (
@@ -40,7 +38,12 @@ const MediaContent = ({content = []}: MediaContentProps) => {
       scrollEnabled={content.length > 1}
       estimatedItemSize={3}
       ItemSeparatorComponent={ItemSeparator}
-      ListHeaderComponent={Spacer}
+      ListHeaderComponent={() => (
+        <View style={haveSpacer ? styles.paddingLeft : styles.noPaddingLeft} />
+      )}
+      ListFooterComponent={() => (
+        <View style={haveSpacer ? {} : styles.noPaddingLeft} />
+      )}
       nestedScrollEnabled
     />
   );
@@ -51,6 +54,9 @@ export default MediaContent;
 const styles = AppStyleSheet.create({
   paddingLeft: {
     paddingLeft: 64,
+  },
+  noPaddingLeft: {
+    paddingLeft: 16,
   },
   space: {width: 8},
 });

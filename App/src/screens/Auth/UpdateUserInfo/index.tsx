@@ -58,10 +58,10 @@ const UpdateUserInfo: React.FC<UpdateUserInfoScreenProps> = ({}) => {
           data,
         }: {
           success: boolean;
-          data: IImageFile;
+          data: IImageFile[];
         }) => {
           if (success) {
-            formRef.current.updateAvatar(data.uri);
+            formRef.current.updateAvatar(data[0].uri);
             formRef.current.toggleLoading();
           }
         };

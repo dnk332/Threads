@@ -16,15 +16,17 @@ import {
   SwitchAccountScreen,
   UpdateUserInfoScreen,
 } from '@screens/index';
-import {IUser} from '@src/types/user';
 import SCREEN_NAME from './ScreenName';
 import {useActions} from '@hooks/useActions';
 import {startAction} from '@appRedux/actions/appAction';
+import {IUser} from '@src/types/user';
 import {IMedia} from '@src/types/other';
+import PostDetail from '@screens/PostDetail';
+import {IAuthor, IInteraction, IPost} from '@src/types/post';
 
 export interface NavigationStackParamList {
   ROOT: undefined;
-  IMAGE_VIEWER: {imageLink?: string; index: number; listImage: IMedia[]};
+  IMAGE_VIEWER: {imageLink?: string; index?: number; listImage?: IMedia[]};
   NEW_POST_MODAL: {focused: boolean};
   LOGIN: undefined;
   SWITCH_ACCOUNT: undefined;
@@ -33,6 +35,11 @@ export interface NavigationStackParamList {
   LOADING_INFO: undefined;
   SETTINGS: undefined;
   UPDATE_USER_INFO: undefined;
+  POST_DETAIL: {
+    postData?: IPost;
+    authorData?: IAuthor;
+    interaction?: IInteraction;
+  };
 
   [key: string]:
     | undefined
@@ -42,6 +49,9 @@ export interface NavigationStackParamList {
         username?: string;
         waitToLogin?: boolean;
         currentAccount?: IUser;
+        postData?: IPost;
+        authorData?: IAuthor;
+        interaction?: IInteraction;
       };
 }
 
@@ -124,6 +134,7 @@ function StackScreens() {
           name={SCREEN_NAME.NEW_POST_MODAL}
           component={NewPostScreen}
         />
+        <Stack.Screen name={SCREEN_NAME.POST_DETAIL} component={PostDetail} />
       </Stack.Navigator>
     </NavigationContainer>
   );
