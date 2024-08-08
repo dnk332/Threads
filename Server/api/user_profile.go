@@ -180,3 +180,34 @@ func (s *Server) getUserProfile(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, rsp)
 }
+
+// getAllUserProfilesRequest defines the structure for get all user profile retrieval requests
+type getAllUserProfilesRequest struct {
+	PageID   int32 `form:"page_id" binding:"required,min=1"`
+	PageSize int32 `form:"page_size" binding:"required,min=5,max=10"`
+}
+
+func (s *Server) getAllUserProfiles(ctx *gin.Context) {
+	var req getAllUserProfilesRequest
+	if err := ctx.ShouldBindQuery(&req); err != nil {
+		ctx.JSON(errorBindJSONResponse(http.StatusBadRequest, err))
+		log.Printf("[ERROR] Failed to parse request query: %v", err)
+		return
+	}
+
+	// Check is user is authenticated or not
+	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
+
+	// Get all user profiles
+	userProfiles, err := s.store.GetAllUserProfiles(ctx, db.GetAllUserProfilesParams{
+		Limit:  req.PageSize,
+		Offset: (req.PageID - 1) * req.PageSize,
+		UserID: authPayload.UserID,
+	})
+	if err != nil {
+		ctx.JSON(errorResponse(http.StatusNotFound, errors.New("user profiles not found")))
+		log.Printf("[ERROR] Failed to get user profiles: %v", err)
+		return
+	}
+	ctx.JSON(http.StatusOK, userProfiles)
+}

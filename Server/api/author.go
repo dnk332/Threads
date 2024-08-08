@@ -17,10 +17,12 @@ type Author struct {
 func (s *Server) getAuthorInfo(ctx *gin.Context, authorId int64) Author {
 	user, valid := s.validUser(ctx, authorId)
 	if !valid {
+		log.Println("[ERROR] Author not found: ", authorId)
 		return Author{}
 	}
 	userProfile, err := s.store.GetUserProfileById(ctx, authorId)
 	if err != nil {
+		log.Println("[ERROR] Author not found: ", authorId)
 		return Author{}
 	}
 	avatar, err := s.getImage(ctx, "user_profile", userProfile.ID)

@@ -242,6 +242,21 @@ func (mr *MockStoreMockRecorder) GetAllLikesOfUser(arg0, arg1 interface{}) *gomo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllLikesOfUser", reflect.TypeOf((*MockStore)(nil).GetAllLikesOfUser), arg0, arg1)
 }
 
+// GetAllUserProfiles mocks base method.
+func (m *MockStore) GetAllUserProfiles(arg0 context.Context, arg1 db.GetAllUserProfilesParams) ([]db.UserProfile, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAllUserProfiles", arg0, arg1)
+	ret0, _ := ret[0].([]db.UserProfile)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAllUserProfiles indicates an expected call of GetAllUserProfiles.
+func (mr *MockStoreMockRecorder) GetAllUserProfiles(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllUserProfiles", reflect.TypeOf((*MockStore)(nil).GetAllUserProfiles), arg0, arg1)
+}
+
 // GetImage mocks base method.
 func (m *MockStore) GetImage(arg0 context.Context, arg1 db.GetImageParams) (db.Media, error) {
 	m.ctrl.T.Helper()

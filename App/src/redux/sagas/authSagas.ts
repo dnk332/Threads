@@ -70,11 +70,9 @@ function* registerSaga({payload}: IRegisterAction) {
         params.username,
         params.password,
       );
-      console.log('success');
       callback({data, success: true});
     },
     errorCallback: error => {
-      console.log('error', error);
       showAlert({
         title: 'Error',
         message: error.message,

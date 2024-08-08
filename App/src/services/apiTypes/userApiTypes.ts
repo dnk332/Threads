@@ -9,3 +9,8 @@ export interface ResponseUpdateUserProfileApi
   extends ApiResponse<IUserProfile> {
   data: IUserProfile;
 }
+
+export interface ResponseGetAllUserProfileApi
+  extends ApiResponse<IUserProfile[]> {
+  data: IUserProfile[];
+}

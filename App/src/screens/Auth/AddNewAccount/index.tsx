@@ -39,9 +39,11 @@ const AddNewAccount: React.FC<AddNewAccountProps> = ({route}) => {
     if (waitToLogin) {
       actions.loginAction(username, password, callbackLogin);
     } else {
-      let callbackRegister: Callback = () => {
+      let callbackRegister: Callback = ({success}) => {
+        if (success) {
+          actions.loginAction(username, password, () => {});
+        }
         formRef.current.setLoadingState(false);
-        actions.loginAction(username, password, () => {});
       };
       actions.registerAction(username, password, callbackRegister);
     }

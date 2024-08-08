@@ -80,3 +80,23 @@ func TestDeleteUserProfile(t *testing.T) {
 	require.EqualError(t, err, ErrRecordNotFound.Error())
 	require.Empty(t, userProfile2)
 }
+
+func TestGetAllUserProfile(t *testing.T) {
+	currentUserProfile := createRandomUserProfile(t)
+	n := 5
+	userProfiles := make([]UserProfile, n)
+	for i := 0; i < n; i++ {
+		userProfiles[i] = createRandomUserProfile(t)
+	}
+
+	arg := GetAllUserProfilesParams{
+		Limit:  int32(n),
+		Offset: 0,
+		UserID: currentUserProfile.UserID,
+	}
+
+	userProfiles2, err := testStore.GetAllUserProfiles(context.Background(), arg)
+	require.NoError(t, err)
+	require.Len(t, userProfiles2, n)
+
+}

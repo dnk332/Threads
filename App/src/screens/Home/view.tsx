@@ -95,6 +95,7 @@ const HomeScreenView: React.FC<HomeScreenViewProps> = ({
   );
 
   const _renderItem = useCallback(({item}: {item: IPostType}) => {
+    console.log('item', item);
     return (
       <PostItem
         postData={item.post}

@@ -439,3 +439,81 @@ func TestGetUserProfileAPI(t *testing.T) {
 		})
 	}
 }
+
+func TestGetAllUserProfile(t *testing.T) {
+	n := 5
+	users := make([]db.User, n)
+	for i := 0; i < n; i++ {
+		users[i], _ = randomUser(t)
+	}
+	userProfiles := make([]db.UserProfile, n)
+	for i := 0; i < n; i++ {
+		userProfiles[i] = randomUserProfile(users[i])
+	}
+
+	type Query struct {
+		PageID   int
+		PageSize int
+	}
+
+	userID := users[0].ID
+	testCases := []struct {
+		name          string
+		query         Query
+		setupAuth     func(t *testing.T, request *http.Request, tokenMaker token.Maker)
+		buildStubs    func(store *mockdb.MockStore)
+		checkResponse func(t *testing.T, recorder *httptest.ResponseRecorder)
+	}{
+		{
+			name: "OK",
+			query: Query{
+				PageID:   1,
+				PageSize: n,
+			},
+			setupAuth: func(t *testing.T, request *http.Request, tokenMaker token.Maker) {
+				addAuthorization(t, request, tokenMaker, authorizationTypeBearer, userID, time.Minute)
+			},
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().
+					GetAllUserProfiles(gomock.Any(), gomock.Eq(db.GetAllUserProfilesParams{
+						Limit:  int32(n),
+						Offset: 0,
+						UserID: userID,
+					})).
+					Times(1).
+					Return(userProfiles, nil)
+			},
+			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t, http.StatusOK, recorder.Code)
+				//requireBodyMatchUserProfiles(t, recorder.Body, userProfiles)
+			},
+		},
+	}
+	for i := range testCases {
+		tc := testCases[i]
+		t.Run(tc.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			store := mockdb.NewMockStore(ctrl)
+			tc.buildStubs(store)
+
+			server := newTestServer(t, store)
+			recorder := httptest.NewRecorder()
+
+			url := "/user_profiles/all"
+			request, err := http.NewRequest(http.MethodGet, url, nil)
+			require.NoError(t, err)
+
+			// Add query parameters to request URL
+			q := request.URL.Query()
+			q.Add("page_id", fmt.Sprintf("%d", tc.query.PageID))
+			q.Add("page_size", fmt.Sprintf("%d", tc.query.PageSize))
+			request.URL.RawQuery = q.Encode()
+
+			tc.setupAuth(t, request, server.tokenMaker)
+			server.router.ServeHTTP(recorder, request)
+			tc.checkResponse(t, recorder)
+		})
+	}
+}

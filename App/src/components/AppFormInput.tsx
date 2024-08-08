@@ -52,8 +52,8 @@ const AppFormInput = forwardRef(
       fontFamily: useDefaultFont
         ? undefined
         : typeof fontWeight === 'string'
-          ? fontWeight
-          : AppFonts[fontWeight],
+        ? fontWeight
+        : AppFonts[fontWeight],
       color,
       fontSize: ResponsiveFont(size),
       ...(lineHeightRatio && {
