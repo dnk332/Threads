@@ -7,3 +7,7 @@ export const listAllPostSelector = createSelector(
   [getPost],
   post => post.listAllPost,
 );
+export const creatingPostStatusSelector = createSelector(
+  [getPost],
+  post => post.creatingPost,
+);

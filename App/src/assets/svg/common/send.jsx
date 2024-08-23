@@ -2,7 +2,7 @@ import * as React from 'react';
 import Svg, {Path} from 'react-native-svg';
 import {memo} from 'react';
 import {moderateScale} from '@themes/responsive';
-import colors from '@themes/color';
+import {colors} from '@themes/color';
 
 const SvgComponent = ({size = 24, color = colors.black}) => (
   <Svg

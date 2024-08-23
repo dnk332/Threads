@@ -1,13 +1,15 @@
-import * as postActions from '@actionTypes/postActionTypes';
-import * as likeActions from '@actionTypes/likeActionTypes';
+import * as postActions from '@appRedux/actions/types/postActionTypes';
+import * as likeActions from '@appRedux/actions/types/likeActionTypes';
 import {IPostType} from '@src/types/post';
 
 export interface IPostState {
   listAllPost: IPostType[];
+  creatingPost: boolean;
 }
 
 const initialState: IPostState = {
   listAllPost: [],
+  creatingPost: false,
 };
 
 export default function postReducer(
@@ -27,6 +29,8 @@ export default function postReducer(
           listAllPost: action.payload.params.posts,
         };
       }
+    case postActions.PostActionType.CREATING_POST:
+      return {...state, creatingPost: action.payload.params.status};
     case likeActions.LikeActionType.TOGGLE_LIKE:
       const updatedListAllPost = state.listAllPost.map(item => {
         if (item.id === action.payload.params.postId) {

@@ -13,16 +13,20 @@ import {
   LoadingInfoScreen,
   LoginScreen,
   NewPostScreen,
-  SplashScreen,
   SwitchAccountScreen,
   UpdateUserInfoScreen,
 } from '@screens/index';
-import {IUser} from '@src/types/user';
 import SCREEN_NAME from './ScreenName';
+import {useActions} from '@hooks/useActions';
+import {startAction} from '@appRedux/actions/appAction';
+import {IUser} from '@src/types/user';
+import {IMedia} from '@src/types/other';
+import PostDetail from '@screens/PostDetail';
+import {IAuthor, IInteraction, IPost} from '@src/types/post';
 
 export interface NavigationStackParamList {
   ROOT: undefined;
-  IMAGE_VIEWER: {imageLink: string};
+  IMAGE_VIEWER: {imageLink?: string; index?: number; listImage?: IMedia[]};
   NEW_POST_MODAL: {focused: boolean};
   LOGIN: undefined;
   SWITCH_ACCOUNT: undefined;
@@ -30,7 +34,12 @@ export interface NavigationStackParamList {
   SPLASH: undefined;
   LOADING_INFO: undefined;
   SETTINGS: undefined;
-  UPDATE_USER_INFO: {currentAccount: IUser};
+  UPDATE_USER_INFO: undefined;
+  POST_DETAIL: {
+    postData?: IPost;
+    authorData?: IAuthor;
+    interaction?: IInteraction;
+  };
 
   [key: string]:
     | undefined
@@ -40,6 +49,9 @@ export interface NavigationStackParamList {
         username?: string;
         waitToLogin?: boolean;
         currentAccount?: IUser;
+        postData?: IPost;
+        authorData?: IAuthor;
+        interaction?: IInteraction;
       };
 }
 
@@ -52,18 +64,34 @@ export type NavigationParams = {
 const Stack = createNativeStackNavigator<NavigationStackParamList>();
 
 function StackScreens() {
+  const actions = useActions({
+    startAction,
+  });
+  const HideSplash = async (): Promise<void> => {
+    await BootSplash.hide({fade: true});
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve();
+      }, 1000);
+    });
+  };
+
+  const onAppReady = () => {
+    actions.startAction(async response => {
+      await HideSplash();
+      if (response.success) {
+        Navigator.navigateAndSimpleReset(SCREEN_NAME.LOADING_INFO);
+        return;
+      }
+    });
+  };
   return (
-    <NavigationContainer
-      onReady={() => {
-        BootSplash.hide({fade: true});
-      }}
-      ref={Navigator.navigationRef}>
+    <NavigationContainer onReady={onAppReady} ref={Navigator.navigationRef}>
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
         }}
-        initialRouteName={SCREEN_NAME.SPLASH}>
-        <Stack.Screen name={SCREEN_NAME.SPLASH} component={SplashScreen} />
+        initialRouteName={SCREEN_NAME.LOGIN}>
         <Stack.Screen name={SCREEN_NAME.ROOT} component={RootScreen} />
         <Stack.Screen name={SCREEN_NAME.LOGIN} component={LoginScreen} />
         <Stack.Screen
@@ -77,6 +105,9 @@ function StackScreens() {
         <Stack.Screen
           name={SCREEN_NAME.IMAGE_VIEWER}
           component={ImageViewerScreen}
+          options={{
+            presentation: 'fullScreenModal',
+          }}
         />
         <Stack.Screen
           options={{
@@ -103,6 +134,7 @@ function StackScreens() {
           name={SCREEN_NAME.NEW_POST_MODAL}
           component={NewPostScreen}
         />
+        <Stack.Screen name={SCREEN_NAME.POST_DETAIL} component={PostDetail} />
       </Stack.Navigator>
     </NavigationContainer>
   );

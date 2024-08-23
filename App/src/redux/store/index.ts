@@ -1,5 +1,5 @@
-import {createStore, applyMiddleware} from 'redux';
-import {persistStore, persistReducer} from 'redux-persist';
+import {applyMiddleware, legacy_createStore as createStore} from 'redux';
+import {persistReducer, persistStore} from 'redux-persist';
 import createSagaMiddleware from 'redux-saga';
 import autoMergeLevel1 from 'redux-persist/lib/stateReconciler/autoMergeLevel1';
 import AsyncStorage from '@react-native-async-storage/async-storage';

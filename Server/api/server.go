@@ -47,7 +47,9 @@ func (s *Server) setupRouter() {
 	authRoutes := router.Group("/").Use(authMiddleware(s.tokenMaker))
 	{
 		authRoutes.POST("/user-profiles", s.createUserProfile)
+		authRoutes.GET("/user_profiles/all", s.getAllUserProfiles)
 		authRoutes.GET("/user-profiles/:user_id", s.getUserProfile)
+		authRoutes.POST("/user-profiles/:user_id", s.getUserProfile)
 		authRoutes.GET("/users/logout", s.logoutUser)
 
 		authRoutes.POST("/posts", s.createPost)
@@ -56,8 +58,8 @@ func (s *Server) setupRouter() {
 		authRoutes.POST("/posts/like", s.likePost)
 		authRoutes.POST("/posts/unlike", s.unlikePost)
 
-		authRoutes.POST("images", s.uploadImage)
-		authRoutes.DELETE("images", s.deleteImage)
+		authRoutes.POST("uploads", s.uploadImage)
+		authRoutes.DELETE("uploads", s.deleteImage)
 	}
 
 	s.router = router

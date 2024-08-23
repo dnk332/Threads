@@ -1,16 +1,10 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import _ from 'lodash';
 import {useIsFocused} from '@react-navigation/native';
 
 import HomeScreenView from './view';
-import {
-  currentAccountSelector,
-  listAllPostSelector,
-} from '@src/redux/selectors';
-import Navigator from '@navigators';
-import SCREEN_NAME from '@src/navigation/ScreenName';
+import {listAllPostSelector} from '@src/redux/selectors';
 import {getUserProfileAction} from '@appRedux/actions/userAction';
-import {Callback} from '@src/redux/actionTypes/actionTypeBase';
+import {Callback} from '@appRedux/actions/types/actionTypeBase';
 import useSelectorShallow from '@src/hooks/useSelectorShallowEqual';
 import {
   getListAllPostAction,
@@ -28,23 +22,13 @@ const HomeScreen: React.FC = () => {
     saveListAllPostAction,
     getListAllPostAction,
   });
-  let currentAccount = useSelectorShallow(currentAccountSelector);
+
   let listAllPost = useSelectorShallow(listAllPostSelector);
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [isEndOfList, setIsEndOfList] = useState<boolean>(false);
 
   const isLoading = useRef<boolean>(false);
-
-  const getUserProfile = useCallback(() => {
-    const callback: Callback = ({success}) => {
-      if (!success) {
-        Navigator.navigateTo(SCREEN_NAME.UPDATE_USER_INFO, {
-          currentAccount,
-        });
-      }
-    };
-    actions.getUserProfileAction(currentAccount.user_id, callback);
-  }, [actions, currentAccount]);
 
   const getListPost = useCallback(
     (pageId: number = 1) => {
@@ -55,12 +39,15 @@ const HomeScreen: React.FC = () => {
         data: IPostType[];
         success: boolean;
       }) => {
-        if (success) {
+        if (success && data.length > 0) {
           const convertData = postListModel(data);
           actions.saveListAllPostAction(convertData, pageId > 1);
         }
         isLoading.current = false;
         setLoading(false);
+        if (data.length < SIZE_PAGE) {
+          setIsEndOfList(true);
+        }
       };
       actions.getListAllPostAction(pageId, SIZE_PAGE, callback);
     },
@@ -71,27 +58,27 @@ const HomeScreen: React.FC = () => {
     if (isLoading.current === true) {
       return;
     }
+    if (isEndOfList) {
+      return;
+    }
     const pageNumber = Math.round(listAllPost.length / SIZE_PAGE);
-    if (listAllPost.length === pageNumber * SIZE_PAGE) {
+
+    if (pageNumber > 0 && listAllPost.length === pageNumber * SIZE_PAGE) {
       isLoading.current = true;
       setLoading(true);
       getListPost(pageNumber + 1);
     }
   };
+
   const onRefresh = useCallback(() => {
     if (isLoading.current === true) {
       return;
     }
     setLoading(true);
+    setIsEndOfList(false);
     isLoading.current = true;
     getListPost(1);
-  }, [getListPost]);
-
-  useEffect(() => {
-    if (!_.isEmpty(currentAccount)) {
-      getUserProfile();
-    }
-  }, [currentAccount, getUserProfile]);
+  }, []);
 
   useEffect(() => {
     if (useIsFocused) {

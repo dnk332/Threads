@@ -1,5 +1,5 @@
 import {IUser} from '@src/types/user';
-import {Callback} from '@actionTypes/actionTypeBase';
+import {Callback} from '@appRedux/actions/types/actionTypeBase';
 import {
   AuthActionType,
   IAuthCheckAction,
@@ -11,7 +11,7 @@ import {
   ISetListAccountInfoAction,
   ISetRefreshTokenAction,
   ISetTokenAction,
-} from '@actionTypes/authActionTypes';
+} from '@appRedux/actions/types/authActionTypes';
 
 export const loginAction = (
   username: string,

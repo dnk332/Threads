@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {ListRenderItemInfo, FlashList} from '@shopify/flash-list';
+import {FlashList, ListRenderItemInfo} from '@shopify/flash-list';
 import {Pressable, View} from 'react-native';
 
 import {AppStyleSheet} from '@themes/responsive';
@@ -66,6 +66,7 @@ const SwitchAccountView: React.FC<SwitchAccountViewProps> = ({
         estimatedItemSize={10}
         onEndReachedThreshold={16}
         ItemSeparatorComponent={ItemSeparator}
+        ListFooterComponent={() => <View style={styles.space} />}
       />
       <Pressable onPress={onAddAccount} style={styles.addAccountButton}>
         <AppText color={colors.text_gray} fontSize={12} fontWeight={600}>
@@ -128,5 +129,8 @@ const styles = AppStyleSheet.create({
   accountsInfoWrapper: {
     flex: 1,
     paddingBottom: 90,
+  },
+  space: {
+    height: 16,
   },
 });

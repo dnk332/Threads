@@ -5,8 +5,8 @@ import {
   ISetDeviceInfoAction,
   ISetDomainAction,
   IStartAction,
-} from '@actionTypes/appActionTypes';
-import {Callback} from '@actionTypes/actionTypeBase';
+} from '@appRedux/actions/types/appActionTypes';
+import {Callback} from '@appRedux/actions/types/actionTypeBase';
 
 export const startAction = (callback: Callback): IStartAction => ({
   type: AppActionType.START_APPLICATION,

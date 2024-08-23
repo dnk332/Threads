@@ -11,7 +11,7 @@ import Navigator from '@src/navigation/NavigationService';
 import {deviceInfoSelector} from '@appRedux/selectors/appSelector';
 import {IDeviceInfo} from '@appRedux/reducers/appReducer';
 import SCREEN_NAME from '@src/navigation/ScreenName';
-import {CustomError} from '@appRedux/sagaHelper/handleErrorMessage'; // Access token retrieval
+import {CustomError} from '@appRedux/helper/handleErrorMessage'; // Access token retrieval
 
 // Access token retrieval
 const getAccessToken = (): string | undefined =>
@@ -72,7 +72,7 @@ class HTTP {
       (error: any) => {
         const {code, message} = error.response?.data || {};
         if (code && this.exceptionCodes.includes(code)) {
-          Navigator.navigateAndSimpleReset(SCREEN_NAME.SPLASH);
+          Navigator.navigateAndSimpleReset(SCREEN_NAME.LOGIN);
         }
         if (message) {
           error.message = message;
@@ -106,6 +106,10 @@ class HTTP {
         config.params = params;
         response = await this.http[method](endPoint, config);
       } else {
+        if (params instanceof FormData) {
+          config.headers['Content-Type'] = 'multipart/form-data';
+          console.log('FormData params', params);
+        }
         response = await this.http[method](endPoint, params, config);
       }
 
@@ -115,10 +119,7 @@ class HTTP {
         response,
       );
       const data = response.data;
-
-      return typeof data === 'string'
-        ? {message: data, success: true}
-        : {data, success: true};
+      return typeof data === 'string' ? {message: data} : {data};
     } catch (error: any) {
       console.log(`xxxx error ${method.toUpperCase()} xxxx `, endPoint, error);
       let err: CustomError = {

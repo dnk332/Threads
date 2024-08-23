@@ -1,5 +1,5 @@
 import {IUserProfile} from '@src/types/user';
-import * as actions from '@actionTypes/userActionTypes';
+import * as actions from '@appRedux/actions/types/userActionTypes';
 
 export interface IUserState {
   userProfile: IUserProfile;

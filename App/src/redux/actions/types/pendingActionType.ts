@@ -1,14 +1,16 @@
 import {ActionBase} from './actionTypeBase';
-import {IUserAction} from '@actionTypes/userActionTypes';
-import {IPostAction} from '@actionTypes/postActionTypes';
-import {ILikeAction} from '@actionTypes/likeActionTypes';
-import {IAuthAction} from '@actionTypes/authActionTypes';
+import {IUserAction} from '@appRedux/actions/types/userActionTypes';
+import {IPostAction} from '@appRedux/actions/types/postActionTypes';
+import {ILikeAction} from '@appRedux/actions/types/likeActionTypes';
+import {IAuthAction} from '@appRedux/actions/types/authActionTypes';
+import {IOtherAction} from '@appRedux/actions/types/otherActionTypes';
 
 export type IListAllAction =
   | IUserAction
   | IPostAction
   | ILikeAction
-  | IAuthAction;
+  | IAuthAction
+  | IOtherAction;
 
 export const PendingActionType = {
   ADD_PENDING: 'PENDING/ADD_PENDING',

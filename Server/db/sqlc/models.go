@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type MediaTypes string
@@ -70,13 +69,13 @@ type Like struct {
 }
 
 type Media struct {
-	ID             int64       `json:"id"`
-	Content        string      `json:"content"`
-	Type           MediaTypes  `json:"type"`
-	OrderColumn    int32       `json:"order_column"`
-	CreatedAt      time.Time   `json:"created_at"`
-	PostID         pgtype.Int8 `json:"post_id"`
-	UserProfilesID pgtype.Int8 `json:"user_profiles_id"`
+	ID                int64      `json:"id"`
+	Link              string     `json:"link"`
+	Type              MediaTypes `json:"type"`
+	OrderColumn       int32      `json:"order_column"`
+	CreatedAt         time.Time  `json:"created_at"`
+	ReferenceObject   string     `json:"reference_object"`
+	ReferenceObjectID int64      `json:"reference_object_id"`
 }
 
 type Post struct {

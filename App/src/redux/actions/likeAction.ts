@@ -1,8 +1,8 @@
-import {Callback} from '@actionTypes/actionTypeBase';
+import {Callback} from '@appRedux/actions/types/actionTypeBase';
 import {
   IToggleLikePostAction,
   LikeActionType,
-} from '@actionTypes/likeActionTypes';
+} from '@appRedux/actions/types/likeActionTypes';
 
 export const toggleLikePostAction = (
   status: 'like' | 'unlike',

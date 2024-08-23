@@ -25,3 +25,11 @@ func ErrorCode(err error) string {
 	}
 	return ""
 }
+
+func ErrorField(err error) string {
+	var pgErr *pgconn.PgError
+	if errors.As(err, &pgErr) {
+		return pgErr.ConstraintName
+	}
+	return ""
+}

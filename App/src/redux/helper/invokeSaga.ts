@@ -6,8 +6,9 @@ import {
   isNetworkError,
   isUnauthorizedError,
 } from './handleErrorMessage';
-import {Callback} from '@actionTypes/actionTypeBase';
-import {IListAllAction} from '@actionTypes/pendingActionType';
+import {Callback} from '@appRedux/actions/types/actionTypeBase';
+import {IListAllAction} from '@appRedux/actions/types/pendingActionType';
+import {isFunction} from 'formik';
 
 const {
   showLoadingAction,
@@ -60,13 +61,15 @@ function* handleSagaError(
     return;
   }
 
-  if (retryCallAction! == null) {
+  if (retryCallAction) {
+    console.log('add pending action', retryCallAction);
     yield put(pendingActions.addPendingAction(retryCallAction));
   }
 
-  while (isUnauthorizedError(error)) {
+  if (isUnauthorizedError(error) && retryCallAction) {
     const callback: Callback = ({success}) => {
-      if (success && retryCallAction! == null) {
+      if (success && retryCallAction) {
+        console.log('call pending action');
         put(pendingActions.tryRecallAction());
       }
     };
@@ -78,7 +81,7 @@ function* handleSagaError(
     ? errorMessage.message[0]
     : errorMessage.message;
 
-  if (errorCallback) {
-    yield* errorCallback(message);
+  if (isFunction(errorCallback)) {
+    yield errorCallback(message);
   }
 }

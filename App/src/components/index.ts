@@ -3,7 +3,6 @@ import AppInput from '@src/components/AppInput';
 import AwareScrollView from '@src/components/AwareScrollView';
 import AppBottomSheet from '@src/components/AppBottomSheet';
 import AppText from '@src/components/AppText';
-import PostItem from '@src/components/PostContent/PostItem';
 import * as PostContent from '@src/components/PostContent';
 import AppImage from '@src/components/AppImage';
 import AppGroupButton from '@src/components/AppGroupButton';
@@ -11,8 +10,10 @@ import AppButton from '@src/components/AppButton';
 import AppContainer from '@src/components/AppContainer';
 import AppModal from '@src/components/AppModal';
 import AppFormInput from '@src/components/AppFormInput';
-import DissmissKeyboardView from '@src/components/DissmissKeyboardView';
-import PostText from '@src/components/PostText';
+import DismissKeyboardView from '@src/components/DissmissKeyboardView';
+// import PostText from 'src/components/PostItem';
+import PostItem from '@src/components/PostItem';
+import TempAvatar from '@src/components/TempAvatar';
 
 export {
   Avatar,
@@ -28,8 +29,9 @@ export {
   AppContainer,
   AppModal,
   AppFormInput,
-  DissmissKeyboardView,
-  PostText,
+  DismissKeyboardView,
+  TempAvatar,
+  // PostText,
 };
 
 // App component only use for current project
@@ -40,7 +42,7 @@ export const AppComponent = {
   AppGroupButton,
   AppButton,
   PostContent,
-  PostText,
+  // PostText,
 };
 
 // Global component can use for every project
@@ -51,5 +53,6 @@ export const GlobalComponent = {
   AppText,
   AppContainer,
   AppFormInput,
-  DissmissKeyboardView,
+  DismissKeyboardView,
+  TempAvatar,
 };

@@ -1,11 +1,13 @@
-import {Callback} from '@actionTypes/actionTypeBase';
+import {Callback} from '@appRedux/actions/types/actionTypeBase';
 import {
   ICreatePostAction,
+  ICreatingPostAction,
   IGetListAllPostAction,
   ISaveListAllPostAction,
   PostActionType,
-} from '@actionTypes/postActionTypes';
+} from '@appRedux/actions/types/postActionTypes';
 import {IPostType} from '@src/types/post';
+import {IImage} from '@src/types/other';
 
 export const getListAllPostAction = (
   pageId: number,
@@ -36,16 +38,25 @@ export const saveListAllPostAction = (
 });
 
 export const createPostAction = (
-  author_id: number,
   text_content: string,
+  images: IImage[],
   callback: Callback,
 ): ICreatePostAction => ({
   type: PostActionType.CREATE_POST,
   payload: {
     params: {
-      author_id,
       text_content,
+      images,
     },
     callback,
+  },
+});
+
+export const creatingPostAction = (status: boolean): ICreatingPostAction => ({
+  type: PostActionType.CREATING_POST,
+  payload: {
+    params: {
+      status,
+    },
   },
 });

@@ -1,29 +1,32 @@
-import {all, call, takeLatest} from 'redux-saga/effects';
+import {all, call, select, takeLatest} from 'redux-saga/effects';
 
 import api from '@src/services/apis';
-import {invoke} from '../sagaHelper/invokeSaga';
+import {invoke} from '@appRedux/helper/invokeSaga';
 import {
   ICreatePostAction,
   IGetListAllPostAction,
   PostActionType,
-} from '@actionTypes/postActionTypes';
+} from '@appRedux/actions/types/postActionTypes';
 import {
   ResponseCreatePostApi,
   ResponseGetListAllPostApi,
 } from '@src/services/apiTypes/postApiTypes';
+import {currentAccountSelector} from '@selectors';
+import {IUser} from '@src/types/user';
+import {ResponseUploadImageApi} from '@apiTypes/otherApiTypes';
 
-const {postApis} = api;
+const {postApis, otherApis} = api;
 
 function* getListAllPostSaga({payload}: IGetListAllPostAction) {
   const {params, callback} = payload;
   yield invoke({
     execution: function* execution() {
-      const {data, success}: ResponseGetListAllPostApi = yield call(
+      const {data}: ResponseGetListAllPostApi = yield call(
         postApis.getListAllPostApi,
         params.pageId,
         params.pageSize,
       );
-      callback({success, data});
+      callback({success: true, data});
     },
     errorCallback: error => {
       callback({success: false, message: error.message});
@@ -35,12 +38,20 @@ function* createPostSaga({payload}: ICreatePostAction) {
   const {params, callback} = payload;
   yield invoke({
     execution: function* execution() {
-      const {data, success}: ResponseCreatePostApi = yield call(
-        postApis.createPostApi,
-        params.author_id,
-        params.text_content,
+      const account: IUser = yield select(currentAccountSelector);
+
+      const listImage: ResponseUploadImageApi = yield call(
+        otherApis.uploadImageApi,
+        params.images,
       );
-      callback({success, data});
+      console.log('listImage', listImage);
+      const {data}: ResponseCreatePostApi = yield call(
+        postApis.createPostApi,
+        account.user_id,
+        params.text_content,
+        listImage.data,
+      );
+      callback({success: true, data});
     },
     errorCallback: error => {
       callback({success: false, message: error.message});

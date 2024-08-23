@@ -1,11 +1,8 @@
-import * as requestActions from '@actionTypes/pendingActionType';
-import {IUserAction} from '@actionTypes/userActionTypes';
-import {IPostAction} from '@actionTypes/postActionTypes';
-import {ILikeAction} from '@actionTypes/likeActionTypes';
-import {IAuthAction} from '@actionTypes/authActionTypes';
+import * as requestActions from '@appRedux/actions/types/pendingActionType';
+import {IListAllAction} from '@appRedux/actions/types/pendingActionType';
 
 export interface IPendingState {
-  pendingAction: IUserAction | IPostAction | ILikeAction | IAuthAction;
+  pendingAction: IListAllAction;
 }
 
 const initialState: IPendingState = {

@@ -40,6 +40,7 @@ import NOTIFY from '@svg/common/notify';
 import USER_PLUS from '@svg/common/user_plus';
 import USER from '@svg/common/user';
 import LIFEBUOY from '@svg/common/lifebuoy';
+import EMPTY_IMAGE from '@svg/common/empty_image';
 
 export const SVG_NAME = {
   // Root
@@ -85,4 +86,5 @@ export const SVG_NAME = {
   USER_PLUS,
   USER,
   LIFEBUOY,
+  EMPTY_IMAGE,
 };

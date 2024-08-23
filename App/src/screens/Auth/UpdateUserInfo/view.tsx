@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {forwardRef, useImperativeHandle, useState} from 'react';
 import {useFormik} from 'formik';
-import {View} from 'react-native';
+import {ActivityIndicator, Pressable, View} from 'react-native';
 
 import {
   AppButton,
@@ -8,29 +8,42 @@ import {
   AppFormInput,
   AppImage,
   AppText,
-  DissmissKeyboardView,
+  DismissKeyboardView,
 } from '@components';
 import {AppStyleSheet} from '@themes/responsive';
 import {colors} from '@themes/color';
 import {IUserProfile} from '@src/types/user';
 import {UPDATE_USER_PROFILE_FORM_SCHEME} from './validate';
+import ErrorCode from '@constants/errorCode';
+import SvgComponent from '@svg/index';
 
 interface IUserProfileSubset
-  extends Pick<IUserProfile, 'name' | 'email' | 'bio'> {}
+  extends Pick<IUserProfile, 'name' | 'email' | 'bio' | 'avatar_url'> {}
 
 interface UpdateUserInfoViewProps {
   onUpdateUserProfile: (data: IUserProfileSubset) => void;
+  onUploadImage: () => void;
+}
+
+export interface UpdateUserInfoViewRef {
+  onError: (code: string) => void;
+  toggleLoading: () => void;
+  updateAvatar: (url: string) => void;
 }
 
 const initValues: IUserProfileSubset = {
   name: '',
   email: '',
   bio: '',
+  avatar_url: '',
 };
 
-const UpdateUserInfoView: React.FC<UpdateUserInfoViewProps> = ({
-  onUpdateUserProfile,
-}) => {
+const UpdateUserInfoView = forwardRef<
+  UpdateUserInfoViewRef,
+  UpdateUserInfoViewProps
+>(({onUpdateUserProfile, onUploadImage}, ref) => {
+  const [loading, setLoading] = useState<boolean>(false);
+
   const formik = useFormik({
     initialValues: initValues,
     onSubmit: values => {
@@ -39,13 +52,45 @@ const UpdateUserInfoView: React.FC<UpdateUserInfoViewProps> = ({
     validationSchema: UPDATE_USER_PROFILE_FORM_SCHEME,
   });
 
+  useImperativeHandle(ref, () => ({
+    onError: (code: string) => {
+      if (code === ErrorCode.CONFLICT) {
+        formik.setFieldError('email', 'This email is already taken.');
+      }
+    },
+    toggleLoading: () => {
+      setLoading(prevStatus => !prevStatus);
+    },
+    updateAvatar: (url: string) => {
+      formik.setFieldValue('avatar_url', url);
+    },
+  }));
+
   return (
     <AppContainer style={styles.container}>
-      <DissmissKeyboardView style={styles.content}>
+      <DismissKeyboardView style={styles.content}>
         <AppText align="center" fontWeight={700} fontSize={26}>
           Update User Profile
         </AppText>
         <View style={styles.inputField}>
+          <Pressable onPress={onUploadImage} style={styles.avatarContainer}>
+            {formik.values.avatar_url && !loading ? (
+              <AppImage
+                containerStyle={styles.avatar}
+                source={{uri: formik.values.avatar_url}}
+              />
+            ) : (
+              <View style={styles.emptyAvatar}>
+                <View style={styles.plus}>
+                  {loading ? (
+                    <ActivityIndicator color={colors.white} />
+                  ) : (
+                    <SvgComponent size={35} name={'EMPTY_IMAGE'} />
+                  )}
+                </View>
+              </View>
+            )}
+          </Pressable>
           <AppFormInput
             onChangeText={value =>
               formik.setFieldValue('name', value.toLowerCase())
@@ -87,10 +132,10 @@ const UpdateUserInfoView: React.FC<UpdateUserInfoViewProps> = ({
             source={require('@assets/image/meta-logo.png')}
           />
         </View>
-      </DissmissKeyboardView>
+      </DismissKeyboardView>
     </AppContainer>
   );
-};
+});
 
 export default UpdateUserInfoView;
 
@@ -121,4 +166,26 @@ const styles = AppStyleSheet.create({
     justifyContent: 'space-around',
     height: '100%',
   },
+  avatar: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'gray',
+  },
+  avatarContainer: {
+    marginVertical: 16,
+    backgroundColor: 'red',
+    width: 100,
+    height: 100,
+    borderRadius: 100,
+    alignSelf: 'center',
+    overflow: 'hidden',
+  },
+  emptyAvatar: {
+    backgroundColor: 'gray',
+    justifyContent: 'center',
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+  },
+  plus: {},
 });

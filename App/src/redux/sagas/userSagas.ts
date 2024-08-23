@@ -7,12 +7,12 @@ import {
   IGetUserProfileAction,
   IUpdateUserProfileAction,
   UserActionType,
-} from '@actionTypes/userActionTypes';
+} from '@appRedux/actions/types/userActionTypes';
 import {
   ResponseGetUserProfileApi,
   ResponseUpdateUserProfileApi,
 } from '@src/services/apiTypes/userApiTypes';
-import {invoke} from '../sagaHelper/invokeSaga';
+import {invoke} from '@appRedux/helper/invokeSaga';
 import {userProfileModel} from '@src/models/user';
 
 const {userApis} = api;
@@ -21,11 +21,11 @@ function* getUserProfileSaga({payload}: IGetUserProfileAction) {
   const {params, callback} = payload;
   yield invoke({
     execution: function* execution() {
-      const {data, success}: ResponseGetUserProfileApi = yield call(
+      const {data}: ResponseGetUserProfileApi = yield call(
         userApis.getUserProfileApi,
         params.user_id,
       );
-      callback({data, success});
+      callback({data, success: true});
       yield put(userActions.saveUserProfileAction(userProfileModel(data)));
     },
     errorCallback: error => {
@@ -39,19 +39,19 @@ function* updateUserProfileSaga({payload}: IUpdateUserProfileAction) {
   yield invoke({
     execution: function* execution() {
       const currentAccount = yield select(currentAccountSelector);
-      const {data, success}: ResponseUpdateUserProfileApi = yield call(
+      const {data}: ResponseUpdateUserProfileApi = yield call(
         userApis.updateUserInfoApi,
         currentAccount.user_id,
         params.name,
         params.email,
         params.bio,
+        params.avatar_url,
       );
-      console.log('data', data);
-      callback({data, success});
+      callback({data, success: true});
       yield put(userActions.saveUserProfileAction(userProfileModel(data)));
     },
     errorCallback: error => {
-      callback({success: false, message: error.message});
+      callback({success: false, message: error.message, errorCode: error.code});
     },
   });
 }

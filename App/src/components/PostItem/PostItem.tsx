@@ -1,4 +1,4 @@
-import React, {Fragment, memo, ReactElement, useRef} from 'react';
+import React, {Fragment, memo, ReactElement, useRef, useState} from 'react';
 import {Pressable, View} from 'react-native';
 import _ from 'lodash';
 
@@ -6,23 +6,26 @@ import {AppText, Avatar} from '@components';
 import layout from '@themes/layout';
 import {colors} from '@themes/color';
 import {AppStyleSheet} from '@themes/responsive';
-import TimeFromNow from '@hooks/hookTime/TimeAgo';
-import ActiveBottomSheet from '@screens/Home/Components/ActiveBottomSheet';
+import {IAuthor, IInteraction, IPost} from '@localTypes/post';
+import TimeFromNow from '@src/hooks/hookTime/TimeAgo';
+import ActiveBottomSheet from '@src/screens/Home/Components/ActiveBottomSheet';
 import ContentHandelArea from '@src/components/PostContent/ContentHandelArea';
+import MediaContent from '@src/components/PostContent/MediaContent';
+import {imageHeight} from '@constants/deviceSize';
 import SvgComponent from '@svg/index';
+import TempAvatar from '@src/components/TempAvatar';
+import Navigator from '@navigators';
+import SCREEN_NAME from '@navigation/ScreenName';
+import {useToggleLike} from '@hooks/useToggleLike';
 
-import {IAuthor, IInteraction, IPostText} from '@src/types/post';
-
-interface PostTextViewProps {
-  userData: IAuthor;
-  postData: IPostText;
+interface PostItemViewProps {
+  authorData: IAuthor;
+  postData: IPost;
   interaction: IInteraction;
   haveReplies?: boolean;
   lastReplies?: boolean;
   isReplies?: boolean;
   isRootPost?: boolean;
-  handleLike?: () => void;
-  likeStatus?: boolean;
 }
 
 interface StatusItemProps {
@@ -31,7 +34,7 @@ interface StatusItemProps {
   onPress?: () => void;
 }
 
-const StatusItem = ({
+export const StatusItem = ({
   icon,
   value = 0,
   onPress,
@@ -50,19 +53,34 @@ const StatusItem = ({
   );
 };
 
-const PostText = ({
-  userData,
+const PostItem = ({
+  authorData,
   postData,
+  interaction,
+  haveReplies,
+  lastReplies,
   isReplies,
   isRootPost,
-  handleLike,
-  interaction,
-  likeStatus,
-}: PostTextViewProps) => {
+}: PostItemViewProps) => {
   const sheetRef = useRef<any>();
+  const [contentViewHeight, setContentViewHeight] = useState<number>(0);
+
+  const {likeStatus, handleLike} = useToggleLike({
+    postId: postData.id,
+    currentLikeStatus: interaction.likeStatus,
+  });
+
+  const onNavigateToPostDetail = () => {
+    Navigator.navigateTo(SCREEN_NAME.POST_DETAIL, {
+      authorData,
+      postData,
+      interaction,
+    });
+  };
+
   return (
     <Fragment>
-      <View>
+      <Pressable onPress={onNavigateToPostDetail}>
         <View
           style={[
             layout.row,
@@ -71,13 +89,34 @@ const PostText = ({
             isReplies && styles.repliesContainer,
             isRootPost && styles.rootPost,
           ]}>
-          <Avatar
-            source={{
-              uri: '',
-            }}
-          />
+          {_.isEmpty(authorData.authorAvatar) ? (
+            <TempAvatar username={authorData.userName} fontSize={14} />
+          ) : (
+            <Avatar
+              source={{
+                uri: authorData.authorAvatar,
+              }}
+            />
+          )}
+
           <View style={styles.contentContainer}>
-            <View>
+            <View
+              style={[
+                styles.lineWrapper,
+                {
+                  height:
+                    postData.imageContent.length !== 0
+                      ? imageHeight + contentViewHeight + 8
+                      : contentViewHeight,
+                },
+              ]}>
+              {haveReplies && !lastReplies && <View style={[styles.line]} />}
+            </View>
+            <View
+              onLayout={({nativeEvent}) => {
+                const {height} = nativeEvent.layout;
+                setContentViewHeight(height);
+              }}>
               <View
                 style={[
                   layout.row,
@@ -89,11 +128,9 @@ const PostText = ({
                     style={styles.userName}
                     fontSize={16}
                     fontWeight={600}>
-                    {userData.name}
+                    {authorData.userName}
                   </AppText>
-                  {!_.isEmpty(postData.createdAt) && (
-                    <TimeFromNow date={new Date(postData.createdAt)} />
-                  )}
+                  <TimeFromNow date={new Date(postData.createdAt)} />
                 </View>
                 <Pressable onPress={() => sheetRef.current?.snapTo(0)}>
                   <SvgComponent name={'THREE_DOT'} />
@@ -103,8 +140,17 @@ const PostText = ({
             </View>
           </View>
         </View>
-
-        <View style={[layout.row, styles.feature]}>
+        <View style={styles.overlay}>
+          {postData.imageContent.length > 0 && (
+            <MediaContent content={postData.imageContent} />
+          )}
+        </View>
+        <View
+          style={[
+            layout.row,
+            styles.feature,
+            postData.imageContent.length === 0 && styles.space,
+          ]}>
           <StatusItem
             onPress={handleLike}
             icon={<SvgComponent name={likeStatus ? 'HEART_FILL' : 'HEART'} />}
@@ -114,13 +160,13 @@ const PostText = ({
           <StatusItem icon={<SvgComponent name={'REPEAT'} />} value={10} />
           <StatusItem icon={<SvgComponent name={'SEND'} />} />
         </View>
-      </View>
+      </Pressable>
       <ActiveBottomSheet sheetRef={sheetRef} />
     </Fragment>
   );
 };
 
-export default memo(PostText);
+export default memo(PostItem);
 
 const styles = AppStyleSheet.create({
   container: {

@@ -1,9 +1,9 @@
 import React from 'react';
 import {ActivityIndicator, View} from 'react-native';
 
-import {AppStyleSheet} from '@src/themes/responsive';
-import {colors} from '@src/themes/color';
-import {AppText} from '@src/components';
+import {AppStyleSheet} from '@themes/responsive';
+import {colors} from '@themes/color';
+import {AppText} from '@components';
 
 const LoadingInfoView = () => {
   return (

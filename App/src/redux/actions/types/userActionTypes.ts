@@ -16,14 +16,17 @@ export interface IGetUserProfileAction
   }> {
   type: typeof UserActionType.GET_USER_PROFILE;
 }
+
 export interface IUpdateUserProfileAction
   extends ActionBase<{
     name: string;
     email: string;
     bio: string;
+    avatar_url: string;
   }> {
   type: typeof UserActionType.UPDATE_PROFILE;
 }
+
 export interface ISetUserProfileAction
   extends ActionBase<{
     user_profile: IUserProfile;

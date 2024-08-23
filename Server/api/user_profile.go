@@ -14,10 +14,11 @@ import (
 
 // createUserProfileRequest defines the structure for user profile creation requests
 type createUserProfileRequest struct {
-	UserId int64  `json:"user_id"`
-	Name   string `json:"name" binding:"required,lowercase,min=6"`
-	Email  string `json:"email" binding:"required,email"`
-	Bio    string `json:"bio"`
+	UserId    int64  `json:"user_id"`
+	Name      string `json:"name" binding:"required,lowercase,min=6"`
+	Email     string `json:"email" binding:"required,email"`
+	Bio       string `json:"bio"`
+	AvatarUrl string `json:"avatar_url" binding:"required"`
 }
 
 // createUserProfileResponse defines the structure for user profile responses
@@ -26,12 +27,13 @@ type createUserProfileResponse struct {
 	Name      string    `json:"name"`
 	Email     string    `json:"email"`
 	Bio       string    `json:"bio"`
+	AvatarUrl string    `json:"avatar_url"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
 // createUserProfileRes maps a db.UserProfile to createUserProfileResponse
-func createUserProfileRes(userProfile db.UserProfile) createUserProfileResponse {
+func createUserProfileRes(userProfile db.UserProfile, avatarUrl string) createUserProfileResponse {
 	return createUserProfileResponse{
 		UserId:    userProfile.UserID,
 		Name:      userProfile.Name,
@@ -39,6 +41,7 @@ func createUserProfileRes(userProfile db.UserProfile) createUserProfileResponse 
 		Bio:       userProfile.Bio,
 		CreatedAt: userProfile.CreatedAt,
 		UpdatedAt: userProfile.UpdatedAt,
+		AvatarUrl: avatarUrl,
 	}
 }
 
@@ -76,17 +79,32 @@ func (s *Server) createUserProfile(ctx *gin.Context) {
 	// Create user profile
 	userProfile, err := s.store.CreateUserProfile(ctx, arg)
 	if err != nil {
+		log.Println("db.ErrorCode(err)", db.ErrorCode(err), db.ErrorField(err))
 		if db.ErrorCode(err) == db.UniqueViolation {
-			ctx.JSON(errorResponse(http.StatusConflict, errors.New("email already in use")))
-			log.Printf("[ERROR] Email already in use")
-			return
+			if db.ErrorField(err) == "user_profiles_email_key" {
+				ctx.JSON(errorResponse(http.StatusConflict, errors.New("email already in use")))
+				log.Printf("[ERROR] Email already in use")
+				return
+			}
+			if db.ErrorField(err) == "user_profiles_user_id_key" {
+				ctx.JSON(errorResponse(http.StatusConflict, errors.New("user already has a profile")))
+				log.Printf("[ERROR] User already has a profile")
+				return
+			}
 		}
 		ctx.JSON(errorResponse(http.StatusInternalServerError, err))
 		log.Printf("[ERROR] Failed to create user profile: %v", err)
 		return
 	}
 
-	rsp := createUserProfileRes(userProfile)
+	avatar, err := s.setUserAvatar(ctx, req.AvatarUrl, userProfile)
+	if err != nil {
+		ctx.JSON(errorResponse(http.StatusInternalServerError, err))
+		log.Printf("[ERROR] Failed to set user avatar: %v", err)
+		return
+	}
+
+	rsp := createUserProfileRes(userProfile, avatar.Link)
 
 	ctx.JSON(http.StatusOK, rsp)
 }
@@ -102,17 +120,19 @@ type getUserProfileResponse struct {
 	Name      string    `json:"name"`
 	Email     string    `json:"email"`
 	Bio       string    `json:"bio"`
+	AvatarUrl string    `json:"avatar_url"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
 // getUserProfileRes maps a db.UserProfile to getUserProfileResponse
-func getUserProfileRes(userProfile db.UserProfile) getUserProfileResponse {
+func getUserProfileRes(userProfile db.UserProfile, avatarUrl string) getUserProfileResponse {
 	return getUserProfileResponse{
 		UserId:    userProfile.UserID,
 		Name:      userProfile.Name,
 		Email:     userProfile.Email,
 		Bio:       userProfile.Bio,
+		AvatarUrl: avatarUrl,
 		CreatedAt: userProfile.CreatedAt,
 		UpdatedAt: userProfile.UpdatedAt,
 	}
@@ -149,6 +169,45 @@ func (s *Server) getUserProfile(ctx *gin.Context) {
 		return
 	}
 
-	rsp := getUserProfileRes(userProfile)
+	avatar, err := s.getImage(ctx, "user_profile", userProfile.ID)
+
+	if err != nil {
+		ctx.JSON(errorResponse(http.StatusInternalServerError, err))
+		log.Printf("[ERROR] Failed to get user avatar: %v", err)
+		return
+	}
+	rsp := getUserProfileRes(userProfile, avatar)
+
 	ctx.JSON(http.StatusOK, rsp)
+}
+
+// getAllUserProfilesRequest defines the structure for get all user profile retrieval requests
+type getAllUserProfilesRequest struct {
+	PageID   int32 `form:"page_id" binding:"required,min=1"`
+	PageSize int32 `form:"page_size" binding:"required,min=5,max=10"`
+}
+
+func (s *Server) getAllUserProfiles(ctx *gin.Context) {
+	var req getAllUserProfilesRequest
+	if err := ctx.ShouldBindQuery(&req); err != nil {
+		ctx.JSON(errorBindJSONResponse(http.StatusBadRequest, err))
+		log.Printf("[ERROR] Failed to parse request query: %v", err)
+		return
+	}
+
+	// Check is user is authenticated or not
+	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
+
+	// Get all user profiles
+	userProfiles, err := s.store.GetAllUserProfiles(ctx, db.GetAllUserProfilesParams{
+		Limit:  req.PageSize,
+		Offset: (req.PageID - 1) * req.PageSize,
+		UserID: authPayload.UserID,
+	})
+	if err != nil {
+		ctx.JSON(errorResponse(http.StatusNotFound, errors.New("user profiles not found")))
+		log.Printf("[ERROR] Failed to get user profiles: %v", err)
+		return
+	}
+	ctx.JSON(http.StatusOK, userProfiles)
 }

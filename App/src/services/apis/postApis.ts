@@ -3,6 +3,7 @@ import {
   ResponseGetListAllPostApi,
 } from '@apiTypes/postApiTypes';
 import http from '../http';
+import {IImageFile} from '@src/types/other';
 
 export const getListAllPostApi = (
   pageId: number,
@@ -14,6 +15,9 @@ export const getListAllPostApi = (
 export const createPostApi = (
   author_id: number,
   text_content: string,
+  images_content: IImageFile[],
 ): Promise<ResponseCreatePostApi> => {
-  return http.post('/posts', {params: {author_id, text_content}});
+  return http.post('/posts', {
+    params: {author_id, text_content, images_content},
+  });
 };

@@ -7,14 +7,19 @@ import {AppStyleSheet} from '@themes/responsive';
 import {imageHeight, imageWidth} from '@constants/deviceSize';
 import Navigator from '@navigators';
 import SCREEN_NAME from '@src/navigation/ScreenName';
+import {IMedia} from '@src/types/other';
 
 export interface PostImageProps {
   link: string;
+  index: number;
+  listImage: IMedia[];
 }
 
-const PostImage = ({link}: PostImageProps) => {
+const PostImage = ({link, listImage, index}: PostImageProps) => {
   const [dimensions, setValue] = useState<ISize>({width: 0, height: 0});
   const [aspectRatio, setAspectRatio] = useState<number>(0);
+
+  const listImageOfPost = {};
 
   useEffect(() => {
     //get image size
@@ -41,20 +46,24 @@ const PostImage = ({link}: PostImageProps) => {
   return (
     <Pressable
       onPress={() =>
-        Navigator.navigateTo(SCREEN_NAME.IMAGE_VIEWER, {imageLink: link})
+        Navigator.navigateTo(SCREEN_NAME.IMAGE_VIEWER, {
+          index,
+          listImage,
+        })
       }>
       <AppImage
-        style={[
-          styles.image,
-          {
-            width:
-              dimensions.width > dimensions.height ? imageWidth : undefined,
-            height: imageHeight,
-            aspectRatio:
-              dimensions.width > dimensions.height ? undefined : aspectRatio,
-          },
-        ]}
+        style={{
+          width: imageWidth,
+          height: imageHeight,
+          // width:
+          //   dimensions.width > dimensions.height ? imageWidth : undefined,
+          // height: imageHeight,
+          // aspectRatio:
+          //   dimensions.width > dimensions.height ? undefined : aspectRatio,
+        }}
         source={{uri: link}}
+        blurHashEnabled={true}
+        containerStyle={styles.image}
       />
     </Pressable>
   );

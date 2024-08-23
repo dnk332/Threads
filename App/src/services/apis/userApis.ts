@@ -1,5 +1,6 @@
 import http from '../http';
 import {
+  ResponseGetAllUserProfileApi,
   ResponseGetUserProfileApi,
   ResponseUpdateUserProfileApi,
 } from '@apiTypes/userApiTypes';
@@ -14,6 +15,7 @@ export const updateUserInfoApi = (
   name: string,
   email: string,
   bio: string,
+  avatar_url: string,
 ): Promise<ResponseUpdateUserProfileApi> => {
   return http.post('/user-profiles', {
     params: {
@@ -21,6 +23,13 @@ export const updateUserInfoApi = (
       name,
       email,
       bio,
+      avatar_url,
     },
   });
+};
+export const getAllUserProfileApi = (
+  pageId: number,
+  pageSize: number,
+): Promise<ResponseGetAllUserProfileApi> => {
+  return http.get(`/user-profiles?page_id=${pageId}&page_size=${pageSize}`);
 };
